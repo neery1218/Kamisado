@@ -1,18 +1,37 @@
 package com.radiance.kamisado;
 
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
+import android.net.Uri;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.Window;
 
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends ActionBarActivity implements IntroFragment.OnIntroInteractionListener, GamePlayFragment.OnGamePlayInteractionListener {
+
+    public static final int PLAY_PRESSED = 0;
+    public static final int TUTORIAL_PRESSED = 1;
+    private IntroFragment introFragment;
+    private FragmentManager fragmentManager;
+    private FragmentTransaction fragmentTransaction;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         //test
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
+        introFragment = new IntroFragment();//initializing first fragment being used
+
+        //initialize transaction and add to viewgroup
+        fragmentManager = getFragmentManager();
+        fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.add(R.id.fragment_container, introFragment);
+        fragmentTransaction.commit();
+
     }
     //testing on linux asdfasodg
 
@@ -37,5 +56,23 @@ public class MainActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onIntroInteraction(int button) {
+        switch (button){
+            case PLAY_PRESSED:
+                //run gameplay fragment
+                break;
+            case TUTORIAL_PRESSED:
+                //run tutorial fragment
+                break;
+        }
+
+    }
+
+    @Override
+    public void onGamePlayInteraction(Uri uri) {
+
     }
 }
