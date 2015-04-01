@@ -30,11 +30,6 @@ public class IntroFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
         }
-        playButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
-                mListener.onIntroInteraction(MainActivity.PLAY_PRESSED);
-            }
-        });
     }
 
     @Override
@@ -44,6 +39,12 @@ public class IntroFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_intro, container, false);
         playButton = (Button)view.findViewById(R.id.playButton);
         playButton.setText("Play!");
+
+        playButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                mListener.onIntroInteraction(MainActivity.PLAY_PRESSED);
+            }
+        });
 
         return view;
     }
