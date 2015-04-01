@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 
 /**
@@ -14,6 +15,7 @@ import android.view.View;
 public class GameBoard extends View {
 
     private Paint paint;
+    private float x = 100, y = 100;
 
     public GameBoard(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -24,6 +26,13 @@ public class GameBoard extends View {
     @Override
     public void onDraw (Canvas canvas){
         super.onDraw(canvas);
-        canvas.drawRect(0,0,100,100,paint);
+        canvas.drawRect(0, 0, x, y, paint);
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event){
+        x = event.getX(); y = event.getY();
+        invalidate();
+        return true;
     }
 }
