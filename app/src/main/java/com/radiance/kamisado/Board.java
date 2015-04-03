@@ -3,7 +3,7 @@ package com.radiance.kamisado;
 import android.graphics.Color;
 
 public class Board {
-	int[][] board8Color, board8Piece;
+	int[][] board8Color;
 	Piece[] p1, p2;
     private int[] colors = {Color.RED, Color.parseColor("#ED872D"), Color.YELLOW,
             Color.GREEN, Color.BLUE, Color.parseColor("#69359C"), Color.parseColor("#FFB7C5"),
@@ -20,14 +20,11 @@ public class Board {
                 {b,ye,br,p,r,o,pk,g},
                 {p,br,ye,b,g,pk,o,r},
                 {br,g,r,ye,pk,p,b,o}};
-        board8Piece = new int[8][8];
 	}
 	
 	public void resetLeft(){
 		for(int i = 0; i < 8; i++){
 			p1[i].setLoc(i, 0);
-			board8Piece[0][i] = 1;
-			board8Piece[7][i] = 2;
 			p2[i].setLoc(i, 7);
 		}
 	}
@@ -35,8 +32,6 @@ public class Board {
 	public void resetRight(){
 		for(int i = 0; i < 8; i++){
 			p1[7 - i].setLoc(i, 0);
-			board8Piece[0][i] = 1;
-			board8Piece[7][i] = 2;
 			p2[7 - i].setLoc(i, 7);
 		}
 	}

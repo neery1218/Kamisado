@@ -18,7 +18,6 @@ public class GameBoard extends View {
     private float startX = -1, endX = -1, startY = -1, endY = -1, width = -1, height = -1, borderWidth = 0, unitSize = 0;
     private Board board = new Board(this);
     private boolean firstTime = true, pieceSelected = false;
-    private float clickX, clickY;
     private int boardDimension = 8, counter = 0, currColor = -1;
     private Piece[] p1 = new Piece[boardDimension], p2 = new Piece[boardDimension];
     private Piece temp;
@@ -53,8 +52,6 @@ public class GameBoard extends View {
             p1[i] = new Piece(i, 0, board.board8Color[i][0]);
             p2[i] = new Piece(i, boardDimension - 1, board.board8Color[i][boardDimension - 1]);
         }
-
-        Log.d("TAG", "called");
     }
 
     public void drawBoard(Canvas c){
@@ -111,20 +108,18 @@ public class GameBoard extends View {
                 if (p1[i].getX() == x && p1[i].getY() == y && (currColor == -1 || currColor == p1[i].getColor())) {
                     pieceSelected = true;
                     temp = p1[i];
-                    Log.d("TAG", "selected");
                     break;
                 }
             }
         }
         else{
-            if(movable(x, y)){
+            if(movable(x, y) && !blocked(x, y)){
                 temp.setLoc(x, y);
                 invalidate();
                 invalidate();
                 pieceSelected = false;
                 counter++;
                 currColor = board.board8Color[x][y];
-                Log.d("TAG", temp.getX() + " " + temp.getY() + " " + currColor + " moved");
             }
         }
     }
@@ -132,24 +127,21 @@ public class GameBoard extends View {
     public void p2Turn(int x, int y){
         if(!pieceSelected) {
             for (int i = 0; i < boardDimension; i++) {
-                Log.d("TAG",p2[i].getColor() + "");
                 if (p2[i].getX() == x && p2[i].getY() == y && (currColor == -1 || currColor == p2[i].getColor())) {
                     pieceSelected = true;
                     temp = p2[i];
-                    Log.d("TAG", "selected");
                     break;
                 }
             }
         }
         else{
-            if(movable(x, y)){
+            if(movable(x, y) && !blocked(x, y)){
                 temp.setLoc(x, y);
                 invalidate();
                 invalidate();
                 pieceSelected = false;
                 counter++;
                 currColor = board.board8Color[x][y];
-                Log.d("TAG", temp.getX() + " " + temp.getY() + " " + currColor + " moved");
             }
         }
     }
@@ -169,6 +161,34 @@ public class GameBoard extends View {
         }
         else if((int)Math.abs(temp.getX() - x) == (int)Math.abs(temp.getY() - y)){
             return true;
+        }
+        return false;
+    }
+
+    private boolean blocked(int x, int y){
+
+        int sx = x < temp.getX() ? x : temp.getX(), ex = x > temp.getX() ? x : temp.getX(), sy = y < temp.getY() ? y : temp.getY(), ey = y > temp.getY() ? y : temp.getY();
+
+        for(int i = sx, j = sy; i <= ex && j <= ey; i++, j++){
+            for(int k = 0; k < boardDimension; k++){
+                if(i != temp.getX() && j != temp.getY())
+                if((p1[k].getX() == i && p1[k].getY() == j) || (p2[k].getX() == i && p2[k].getY() == j)){
+                    Log.d("TAG", sx + " " + sy + " " + ex + " " + ey + " " + i + " " + j);
+                    return true;
+                }
+            }
+        }
+
+        if(sx == ex)
+        for(int i = sy; i <= ey; i++){
+            for(int j = 0; j < boardDimension; j++){
+                if(i != temp.getY())
+                if((p1[j].getY() == i && p1[j].getX() == sx) || (p2[j].getY() == i && p2[j].getX() == sx)) {
+                    Log.d("TAG", " true");
+                    return true;
+                }
+            }
+
         }
         return false;
     }
