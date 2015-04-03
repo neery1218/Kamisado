@@ -16,13 +16,11 @@ public class GameBoard extends View {
 
     private Paint paint;
     private float startX = -1, endX = -1, startY = -1, endY = -1, width = -1, height = -1, borderWidth = 0, unitSize = 0;
-    private int[] colors = {Color.RED, Color.parseColor("#ED872D"), Color.YELLOW,
-            Color.GREEN, Color.BLUE, Color.parseColor("#69359C"), Color.parseColor("#FFB7C5"),
-            Color.parseColor("#964B00")};
-    private int r = colors[0], o = colors[1], ye = colors[2], g = colors[3], b = colors[4], p = colors[5], pk = colors[6], br = colors[7];
     private Board board = new Board(this);
     private boolean firstTime = true, draw = false;
     private float clickX, clickY;
+    private int boardDimension = 8;
+    private Piece[] p1 = new Piece[boardDimension], p2 = new Piece[boardDimension];
 
     public GameBoard(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -37,36 +35,42 @@ public class GameBoard extends View {
             return;
         firstTime = false;
         width = getWidth(); height = getHeight();
-        startX = borderWidth; endX = width - borderWidth; unitSize = (endX - startX) / 8;
+        startX = borderWidth; endX = width - borderWidth; unitSize = (endX - startX) / boardDimension;
         startY = height - (height - width) / 2 - width + borderWidth; endX = height - (height - width) / 2 + borderWidth;
-        board.boardColor = new int[][]{
-                {o,b,p,pk,ye,r,g,br},
-                {r,o,pk,g,b,ye,br,p},
-                {g,pk,o,r,p,br,ye,b},
-                {pk,p,b,o,br,g,r,ye},
-                {ye,r,g,br,o,b,p,pk},
-                {b,ye,br,p,r,o,pk,g},
-                {p,br,ye,b,g,pk,o,r},
-                {br,g,r,ye,pk,p,b,o}};
-        board.boardPiece = new int[8][8];
 
-        int[][] temp = new int[8][8];
-        for(int i = 0; i < 8; i++){
-            for(int j = 0; j < 8; j++){
-                temp[i][j] = board.boardColor[j][i];
+
+        int[][] temp = new int[boardDimension][boardDimension];
+        for(int i = 0; i < boardDimension; i++){
+            for(int j = 0; j < boardDimension; j++){
+                temp[i][j] = board.board8Color[j][i];
             }
         }
 
-        board.boardColor = temp;
+        board.board8Color = temp;
+
+        for(int i = 0; i < boardDimension; i++){
+            p1[i] = new Piece(i, 0, board.board8Color[i][0]);
+            p2[i] = new Piece(i, boardDimension - 1, board.board8Color[i][boardDimension - 1]);
+        }
+
         Log.d("TAG", "called");
     }
 
     public void drawBoard(Canvas c){
-        for(int i = 0; i < 8; i++){
-            for(int j = 0; j < 8; j++){
-                paint.setColor(board.boardColor[i][j]);
+        for(int i = 0; i < boardDimension; i++){
+            for(int j = 0; j < boardDimension; j++){
+                paint.setColor(board.board8Color[i][j]);
                 c.drawRect(startX + i * unitSize, startY + j * unitSize, startX + (i + 1) * unitSize, startY + (j + 1) * unitSize, paint);
             }
+
+            paint.setColor(Color.WHITE);
+            c.drawCircle(startX + p1[i].getX() * unitSize + unitSize / 2, startY + unitSize * p1[i].getY() + unitSize / 2, unitSize / 2, paint);
+            paint.setColor(p1[i].getColor());
+            c.drawCircle(startX + p1[i].getX() * unitSize + unitSize / 2, startY + unitSize * p1[i].getY() + unitSize / 2, unitSize / 3, paint);
+            paint.setColor(Color.BLACK);
+            c.drawCircle(startX + p2[i].getX() * unitSize + unitSize / 2, startY + unitSize * p2[i].getY() + unitSize / 2, unitSize / 2, paint);
+            paint.setColor(p2[i].getColor());
+            c.drawCircle(startX + p2[i].getX() * unitSize + unitSize / 2, startY + unitSize * p2[i].getY() + unitSize / 2, unitSize / 3, paint);
         }
     }
 
