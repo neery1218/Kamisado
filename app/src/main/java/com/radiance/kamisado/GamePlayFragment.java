@@ -22,6 +22,7 @@ public class GamePlayFragment extends Fragment {
 
     public GamePlayFragment() {
         // Required empty public constructor
+
     }
 
     @Override

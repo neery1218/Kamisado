@@ -61,6 +61,7 @@ public class MainActivity extends ActionBarActivity implements IntroFragment.OnI
 
     @Override
     public void onIntroInteraction(int button) {
+
         switch (button){
             case PLAY_PRESSED:
                 gamePlayFragment = new GamePlayFragment();
@@ -70,7 +71,11 @@ public class MainActivity extends ActionBarActivity implements IntroFragment.OnI
                 fragmentTransaction.commit();
                 break;
             case TUTORIAL_PRESSED:
-                //run tutorial fragment
+               /* gamePlayFragment = new GamePlayFragment();
+                fragmentManager = getFragmentManager();
+                fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.fragment_container, gamePlayFragment);
+                fragmentTransaction.commit();*/
                 break;
         }
 
