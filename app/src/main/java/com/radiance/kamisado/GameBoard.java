@@ -19,7 +19,7 @@ public class GameBoard extends View {
     private Board board = new Board(this);
     private boolean firstTime = true, pieceSelected = false;
     private float clickX, clickY;
-    private int boardDimension = 8, counter = 0;
+    private int boardDimension = 8, counter = 0, currColor = -1;
     private Piece[] p1 = new Piece[boardDimension], p2 = new Piece[boardDimension];
     private Piece temp;
 
@@ -96,51 +96,62 @@ public class GameBoard extends View {
             float x = event.getX(), y = event.getY();
             int convertedX = (int)((x - startX) / unitSize), convertedY = (int)((y - startY) / unitSize);
             if(counter % 2 == 0) {
-                if(!pieceSelected) {
-                    for (int i = 0; i < boardDimension; i++) {
-                        if (p1[i].getX() == convertedX && p1[i].getY() == convertedY) {
-                            pieceSelected = true;
-                            temp = p1[i];
-                            Log.d("TAG", "selected");
-                            break;
-                        }
-                    }
-                }
-                else{
-                    if(movable(convertedX, convertedY)){
-                        temp.setLoc(convertedX, convertedY);
-                        invalidate();
-                        invalidate();
-                        pieceSelected = false;
-                        counter++;
-                        Log.d("TAG", temp.getX() + " " + temp.getY() + "moved");
-                    }
-                }
+                p1Turn(convertedX,convertedY);
             }
             else{
-                if(!pieceSelected) {
-                    for (int i = 0; i < boardDimension; i++) {
-                        if (p2[i].getX() == convertedX && p2[i].getY() == convertedY) {
-                            pieceSelected = true;
-                            temp = p2[i];
-                            Log.d("TAG", "selected");
-                            break;
-                        }
-                    }
-                }
-                else{
-                    if(movable(convertedX, convertedY)){
-                        temp.setLoc(convertedX, convertedY);
-                        invalidate();
-                        invalidate();
-                        pieceSelected = false;
-                        counter++;
-                        Log.d("TAG", temp.getX() + " " + temp.getY() + "moved");
-                    }
-                }
+                p2Turn(convertedX,convertedY);
             }
         }
         return true;
+    }
+
+    public void p1Turn(int x, int y){
+        if(!pieceSelected) {
+            for (int i = 0; i < boardDimension; i++) {
+                if (p1[i].getX() == x && p1[i].getY() == y && (currColor == -1 || currColor == p1[i].getColor())) {
+                    pieceSelected = true;
+                    temp = p1[i];
+                    Log.d("TAG", "selected");
+                    break;
+                }
+            }
+        }
+        else{
+            if(movable(x, y)){
+                temp.setLoc(x, y);
+                invalidate();
+                invalidate();
+                pieceSelected = false;
+                counter++;
+                currColor = board.board8Color[x][y];
+                Log.d("TAG", temp.getX() + " " + temp.getY() + " " + currColor + " moved");
+            }
+        }
+    }
+
+    public void p2Turn(int x, int y){
+        if(!pieceSelected) {
+            for (int i = 0; i < boardDimension; i++) {
+                Log.d("TAG",p2[i].getColor() + "");
+                if (p2[i].getX() == x && p2[i].getY() == y && (currColor == -1 || currColor == p2[i].getColor())) {
+                    pieceSelected = true;
+                    temp = p2[i];
+                    Log.d("TAG", "selected");
+                    break;
+                }
+            }
+        }
+        else{
+            if(movable(x, y)){
+                temp.setLoc(x, y);
+                invalidate();
+                invalidate();
+                pieceSelected = false;
+                counter++;
+                currColor = board.board8Color[x][y];
+                Log.d("TAG", temp.getX() + " " + temp.getY() + " " + currColor + " moved");
+            }
+        }
     }
 
     private boolean movable(int x, int y){
