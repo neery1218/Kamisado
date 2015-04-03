@@ -3,11 +3,14 @@ import android.graphics.Color;
 
 public class Piece {
 	
-	private int locX = 0, locY = 0, upgrade = 0;
+    private int locX;
+    private int locY;
+    private int upgrade;
 
 	public Piece(int x, int y){
 		locX = x;
 		locY = y;
+        upgrade = 0;
 	}
 	
 	public int getX(){

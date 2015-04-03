@@ -10,12 +10,13 @@ import android.view.MenuItem;
 import android.view.Window;
 
 
-public class MainActivity extends ActionBarActivity implements IntroFragment.OnIntroInteractionListener, GamePlayFragment.OnGamePlayInteractionListener {
+public class MainActivity extends ActionBarActivity implements IntroFragment.OnIntroInteractionListener, GamePlayFragment.OnGamePlayInteractionListener, TutorialFragment.OnTutorialInteractionListener {
 
     public static final int PLAY_PRESSED = 0;
     public static final int TUTORIAL_PRESSED = 1;
     private IntroFragment introFragment;
     private GamePlayFragment gamePlayFragment;
+    private TutorialFragment tutorialFragment;
     private FragmentManager fragmentManager;
     private FragmentTransaction fragmentTransaction;
 
@@ -34,7 +35,6 @@ public class MainActivity extends ActionBarActivity implements IntroFragment.OnI
         fragmentTransaction.commit();
 
     }
-    //testing on linux asdfasodg
 
 
     @Override
@@ -71,11 +71,11 @@ public class MainActivity extends ActionBarActivity implements IntroFragment.OnI
                 fragmentTransaction.commit();
                 break;
             case TUTORIAL_PRESSED:
-               /* gamePlayFragment = new GamePlayFragment();
+                tutorialFragment = new TutorialFragment();
                 fragmentManager = getFragmentManager();
                 fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.fragment_container, gamePlayFragment);
-                fragmentTransaction.commit();*/
+                fragmentTransaction.replace(R.id.fragment_container, tutorialFragment);
+                fragmentTransaction.commit();
                 break;
         }
 
@@ -83,6 +83,11 @@ public class MainActivity extends ActionBarActivity implements IntroFragment.OnI
 
     @Override
     public void onGamePlayInteraction(Uri uri) {
+
+    }
+
+    @Override
+    public void onTutorialInteraction(Uri uri) {
 
     }
 }

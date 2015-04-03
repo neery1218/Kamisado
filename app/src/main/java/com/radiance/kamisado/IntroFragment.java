@@ -14,8 +14,8 @@ public class IntroFragment extends Fragment {
 
     private OnIntroInteractionListener mListener;
     private Button playButton;
+    private Button tutorialButton;
 
-    // TODO: Rename and change types and number of parameters
     public static IntroFragment newInstance(String param1, String param2) {
         IntroFragment fragment = new IntroFragment();
         return fragment;
@@ -43,6 +43,15 @@ public class IntroFragment extends Fragment {
         playButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 mListener.onIntroInteraction(MainActivity.PLAY_PRESSED);
+            }
+        });
+
+        tutorialButton = (Button)view.findViewById(R.id.tutorialButton);
+        tutorialButton.setText("tutorial!");
+
+        tutorialButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                mListener.onIntroInteraction(MainActivity.TUTORIAL_PRESSED);
             }
         });
 
