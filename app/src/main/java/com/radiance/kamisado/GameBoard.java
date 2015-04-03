@@ -17,10 +17,11 @@ public class GameBoard extends View {
     private Paint paint;
     private float startX = -1, endX = -1, startY = -1, endY = -1, width = -1, height = -1, borderWidth = 0, unitSize = 0;
     private Board board = new Board(this);
-    private boolean firstTime = true, draw = false;
+    private boolean firstTime = true, pieceSelected = false;
     private float clickX, clickY;
-    private int boardDimension = 8;
+    private int boardDimension = 8, counter = 0;
     private Piece[] p1 = new Piece[boardDimension], p2 = new Piece[boardDimension];
+    private Piece temp;
 
     public GameBoard(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -80,12 +81,6 @@ public class GameBoard extends View {
         setup(canvas);
         drawBoard(canvas);
 
-        if(draw){
-            draw = false;
-            canvas.drawRect(clickX * unitSize + startX, clickY * unitSize + startY, (clickX + 1) * unitSize + startX, (clickY + 1) * unitSize + startY, paint);
-            Log.d("TAG", "" + clickX + " " + clickY);
-        }
-
     }
 
 
@@ -94,11 +89,72 @@ public class GameBoard extends View {
     public boolean onTouchEvent(MotionEvent event){
         int e = event.getAction();
         if(e == 1){
-            float x = event.getX(), y = event.getY(), convertedX = (int)((x - startX) / unitSize), convertedY = (int)((y - startY) / unitSize);
-            draw = true;
-            clickX = convertedX; clickY = convertedY;
-            invalidate();
+            float x = event.getX(), y = event.getY();
+            int convertedX = (int)((x - startX) / unitSize), convertedY = (int)((y - startY) / unitSize);
+            if(counter % 2 == 0) {
+                if(!pieceSelected) {
+                    for (int i = 0; i < boardDimension; i++) {
+                        if (p1[i].getX() == convertedX && p1[i].getY() == convertedY) {
+                            pieceSelected = true;
+                            temp = p1[i];
+                            Log.d("TAG", "selected");
+                            break;
+                        }
+                    }
+                }
+                else{
+                    if(movable(convertedX, convertedY)){
+                        temp.setLoc(convertedX, convertedY);
+                        invalidate();
+                        invalidate();
+                        pieceSelected = false;
+                        counter++;
+                        Log.d("TAG", temp.getX() + " " + temp.getY() + "moved");
+                    }
+                }
+            }
+            else{
+                if(!pieceSelected) {
+                    for (int i = 0; i < boardDimension; i++) {
+                        if (p2[i].getX() == convertedX && p2[i].getY() == convertedY) {
+                            pieceSelected = true;
+                            temp = p2[i];
+                            Log.d("TAG", "selected");
+                            break;
+                        }
+                    }
+                }
+                else{
+                    if(movable(convertedX, convertedY)){
+                        temp.setLoc(convertedX, convertedY);
+                        invalidate();
+                        invalidate();
+                        pieceSelected = false;
+                        counter++;
+                        Log.d("TAG", temp.getX() + " " + temp.getY() + "moved");
+                    }
+                }
+            }
         }
         return true;
+    }
+
+    private boolean movable(int x, int y){
+
+        if(counter % 2 == 0 && temp.getY() > y)
+            return false;
+        else if(counter % 2 == 1 && temp.getY() < y)
+            return false;
+
+        if(x == temp.getX() && y == temp.getY())
+            return  false;
+
+        if(temp.getX() == x){
+            return true;
+        }
+        else if((int)Math.abs(temp.getX() - x) == (int)Math.abs(temp.getY() - y)){
+            return true;
+        }
+        return false;
     }
 }
