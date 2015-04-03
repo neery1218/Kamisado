@@ -63,15 +63,19 @@ public class GameBoard extends View {
                 paint.setColor(board.board8Color[i][j]);
                 c.drawRect(startX + i * unitSize, startY + j * unitSize, startX + (i + 1) * unitSize, startY + (j + 1) * unitSize, paint);
             }
+        }
+    }
 
+    public void drawPiece(Canvas canvas){
+        for(int i = 0; i < boardDimension; i++){
             paint.setColor(Color.WHITE);
-            c.drawCircle(startX + p1[i].getX() * unitSize + unitSize / 2, startY + unitSize * p1[i].getY() + unitSize / 2, unitSize / 2, paint);
+            canvas.drawCircle(startX + p1[i].getX() * unitSize + unitSize / 2, startY + unitSize * p1[i].getY() + unitSize / 2, unitSize / 2, paint);
             paint.setColor(p1[i].getColor());
-            c.drawCircle(startX + p1[i].getX() * unitSize + unitSize / 2, startY + unitSize * p1[i].getY() + unitSize / 2, unitSize / 3, paint);
+            canvas.drawCircle(startX + p1[i].getX() * unitSize + unitSize / 2, startY + unitSize * p1[i].getY() + unitSize / 2, unitSize / 3, paint);
             paint.setColor(Color.BLACK);
-            c.drawCircle(startX + p2[i].getX() * unitSize + unitSize / 2, startY + unitSize * p2[i].getY() + unitSize / 2, unitSize / 2, paint);
+            canvas.drawCircle(startX + p2[i].getX() * unitSize + unitSize / 2, startY + unitSize * p2[i].getY() + unitSize / 2, unitSize / 2, paint);
             paint.setColor(p2[i].getColor());
-            c.drawCircle(startX + p2[i].getX() * unitSize + unitSize / 2, startY + unitSize * p2[i].getY() + unitSize / 2, unitSize / 3, paint);
+            canvas.drawCircle(startX + p2[i].getX() * unitSize + unitSize / 2, startY + unitSize * p2[i].getY() + unitSize / 2, unitSize / 3, paint);
         }
     }
 
@@ -80,7 +84,7 @@ public class GameBoard extends View {
         super.onDraw(canvas);
         setup(canvas);
         drawBoard(canvas);
-
+        drawPiece(canvas);
     }
 
 
