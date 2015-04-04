@@ -127,54 +127,71 @@ public class GameBoard extends View {
         else{
             availMoves = searchP2(x,y,availMoves,board);
         }
+        for(int i = 0; i < boardDimension; i++){
+            String s = "";
+            for(int j = 0; j < boardDimension; j++){
+                s += board[i][j];
+            }
+            Log.d("TAG", s);
+        }
+        for(int i = 0; i < availMoves.size(); i++){
+            Log.d("TAG", availMoves.get(i).toString());
+        }
         for(int i = 0; i < availMoves.size(); i++){
             Point p = availMoves.get(i);
             paint.setColor(Color.WHITE);
             canvas.drawRect(startX + p.x * unitSize, startY + p.y * unitSize, startX + (p.x + 1) * unitSize, startY + (p.y + 1) * unitSize, paint);
         }
-        Log.d("TAG", "CALLED");
     }
 
     private ArrayList<Point> searchP1(int x, int y, ArrayList<Point> availMoves, int[][] board){
-        for(int i = y; i < boardDimension; i++){
-            if(board[i][x] == 0)
+        for(int i = y + 1; i < boardDimension; i++){
+            if(board[x][i] == 0)
                 availMoves.add(new Point(x, i));
             else
                 break;
         }
-        for(int i = x, j = y; i < boardDimension && j < boardDimension; i++, j++){
-            if(board[j][i] == 0)
+        for(int i = x + 1, j = y + 1; i < boardDimension && j < boardDimension; i++, j++){
+            if(board[i][j] == 0)
                 availMoves.add(new Point(i, j));
-            else
+            else {
+                Log.d("TAG", i + " " + j + " " + board[j][i] + " break");
                 break;
+            }
         }
-        for(int i = x, j = y; i >= 0 && j < boardDimension; i--, j++){
-            if(board[j][i] == 0)
+        for(int i = x - 1, j = y + 1; i >= 0 && j < boardDimension; i--, j++){
+            if(board[i][j] == 0)
                 availMoves.add(new Point(i, j));
-            else
+            else {
+                Log.d("TAG", i + " " + j + " " + board[i][j] + " break");
                 break;
+            }
     }
         return availMoves;
     }
 
     private ArrayList<Point> searchP2(int x, int y, ArrayList<Point> availMoves, int[][] board){
-        for(int i = y; i >= 0; i--){
-            if(board[i][x] == 0)
+        for(int i = y - 1; i >= 0; i--){
+            if(board[x][i] == 0)
                 availMoves.add(new Point(x, i));
             else
                 break;
         }
-        for(int i = x, j = y; i < boardDimension && j >= 0; i++, j--){
-            if(board[j][i] == 0)
+        for(int i = x + 1, j = y - 1; i < boardDimension && j >= 0; i++, j--){
+            if(board[i][j] == 0)
                 availMoves.add(new Point(i, j));
-            else
+            else {
+                Log.d("TAG", i + " " + j + " " + board[i][j] + " break");
                 break;
+            }
         }
-        for(int i = x, j = y; i >= 0 && j >= 0; i--, j--){
-            if(board[j][i] == 0)
+        for(int i = x - 1, j = y - 1; i >= 0 && j >= 0; i--, j--){
+            if(board[i][j] == 0)
                 availMoves.add(new Point(i, j));
-            else
+            else {
+                Log.d("TAG", i + " " + j + " " + board[i][j] + " break");
                 break;
+            }
         }
         return availMoves;
     }
