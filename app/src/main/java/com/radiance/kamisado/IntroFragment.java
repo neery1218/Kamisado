@@ -52,7 +52,7 @@ public class IntroFragment extends Fragment {
 
         playerTwoButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                mListener.onIntroInteraction(MainActivity.PLAY_PRESSED);
+                mListener.onIntroInteraction(MainActivity.TWO_PLAY_PRESSED);
             }
         });
 
@@ -60,7 +60,7 @@ public class IntroFragment extends Fragment {
 
         onlineButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                mListener.onIntroInteraction(MainActivity.PLAY_PRESSED);
+                mListener.onIntroInteraction(MainActivity.ONLINE_PLAY_PRESSED);
             }
         });
 

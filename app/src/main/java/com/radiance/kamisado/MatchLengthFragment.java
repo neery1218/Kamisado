@@ -19,8 +19,6 @@ public class MatchLengthFragment extends Fragment {
     private Button extendedButton;
     private Button marathonButton;
 
-    private int VERSUS_TYPE;
-
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
