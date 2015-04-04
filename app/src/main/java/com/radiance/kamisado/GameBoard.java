@@ -20,7 +20,7 @@ public class GameBoard extends View {
     private Paint paint;
     private float startX = -1, endX = -1, startY = -1, endY = -1, width = -1, height = -1, borderWidth = 0, unitSize = 0;
     private Board board = new Board(this);
-    private boolean firstTime = true, pieceSelected = false;
+    private boolean firstTime = true, firstMove = true, pieceSelected = false;
     private int boardDimension = 8, counter = 1, currColor = -1;
     private Piece[] p1 = new Piece[boardDimension], p2 = new Piece[boardDimension];
     private Piece selectedPiece;
@@ -118,16 +118,6 @@ public class GameBoard extends View {
         else{
             availMoves = searchP2(x,y,availMoves,board);
         }
-        for(int i = 0; i < boardDimension; i++){
-            String s = "";
-            for(int j = 0; j < boardDimension; j++){
-                s += board[i][j];
-            }
-            Log.d("TAG", s);
-        }
-        for(int i = 0; i < availMoves.size(); i++){
-            Log.d("TAG", availMoves.get(i).toString());
-        }
         for(int i = 0; i < availMoves.size(); i++){
             Point p = availMoves.get(i);
             paint.setColor(Color.WHITE);
@@ -149,7 +139,6 @@ public class GameBoard extends View {
             if(board[i][j] == 0)
                 availMoves.add(new Point(i, j));
             else {
-                Log.d("TAG", i + " " + j + " " + board[j][i] + " break");
                 break;
             }
         }
@@ -157,7 +146,6 @@ public class GameBoard extends View {
             if(board[i][j] == 0)
                 availMoves.add(new Point(i, j));
             else {
-                Log.d("TAG", i + " " + j + " " + board[i][j] + " break");
                 break;
             }
     }
@@ -175,7 +163,6 @@ public class GameBoard extends View {
             if(board[i][j] == 0)
                 availMoves.add(new Point(i, j));
             else {
-                Log.d("TAG", i + " " + j + " " + board[i][j] + " break");
                 break;
             }
         }
@@ -183,7 +170,6 @@ public class GameBoard extends View {
             if(board[i][j] == 0)
                 availMoves.add(new Point(i, j));
             else {
-                Log.d("TAG", i + " " + j + " " + board[i][j] + " break");
                 break;
             }
         }
@@ -229,6 +215,16 @@ public class GameBoard extends View {
             }
         }
         else{
+            if(firstMove){
+                for(int i = 0; i < boardDimension; i++){
+                    if(p2[i].getX() == x && p2[i].getY() == y){
+                        selectedPiece = p2[i];
+                        invalidate();
+                        break;
+                    }
+                }
+
+            }
             if(availMoves.size() == 0){
                 counter++;
                 for(int j = 0; j < boardDimension; j++){
@@ -242,13 +238,13 @@ public class GameBoard extends View {
             for(int i = 0; i < availMoves.size(); i++){
                 Point temp = availMoves.get(i);
                 if(temp.x == x && temp.y == y){
+                    firstMove = false;
                     selectedPiece.setLoc(x, y);
                     counter++;
                     currColor = board.board8Color[x][y];//next piece color
                     for(int j = 0; j < boardDimension; j++){
                         if(p1[j].getColor() == currColor){
                             selectedPiece = p1[j];
-                            Log.d("TAG", p1[j].toString());
                             invalidate();
                         }
                     }
@@ -282,7 +278,6 @@ public class GameBoard extends View {
             }
 
             if (win() != -1){//if a player has won
-
                 Log.v("WIN","WIN");
             }
         }
