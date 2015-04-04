@@ -4,10 +4,13 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Point;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+
+import java.util.ArrayList;
 
 /**
  * Created by neerajen on 31/03/15.
@@ -18,7 +21,7 @@ public class GameBoard extends View {
     private float startX = -1, endX = -1, startY = -1, endY = -1, width = -1, height = -1, borderWidth = 0, unitSize = 0;
     private Board board = new Board(this);
     private boolean firstTime = true, pieceSelected = false;
-    private int boardDimension = 8, counter = 0, currColor = -1;
+    private int boardDimension = 8, counter = 0, currColor = -1, cliclX, clickY;
     private Piece[] p1 = new Piece[boardDimension], p2 = new Piece[boardDimension];
     private Piece selectedPiece;
     private boolean firstMove;
@@ -88,10 +91,7 @@ public class GameBoard extends View {
         setup(canvas);
         drawBoard(canvas);
         drawPiece(canvas);
-        //displayMoves(canvas);
-    }
-    private void displayMoves(Canvas canvas){//displays all possible moves for the user
-
+        displayMoves(canvas, cliclX, clickY);
     }
 
     private int win (){//checks if a player has won
@@ -109,6 +109,76 @@ public class GameBoard extends View {
         //check for player two
         return -1;
     }
+    private void displayMoves(Canvas canvas, int x, int y){//displays all possible moves for the user
+        ArrayList<Point> availMoves = new ArrayList<Point>();
+        int[][] board = new int[boardDimension][boardDimension];
+        for(int i = 0; i < boardDimension; i++){
+            for(int j = 0; j < boardDimension; j++){
+                board[i][j] = 0;
+            }
+        }
+        for(int i = 0; i < boardDimension; i++){
+            board[p1[i].getX()][p1[i].getY()] = 1;
+            board[p2[i].getX()][p2[i].getY()] = 1;
+        }
+        if(counter % 2 == 0){
+            availMoves = searchP1(x,y,availMoves,board);
+        }
+        else{
+            availMoves = searchP2(x,y,availMoves,board);
+        }
+        for(int i = 0; i < availMoves.size(); i++){
+            Point p = availMoves.get(i);
+            paint.setColor(Color.WHITE);
+            canvas.drawRect(startX + p.x * unitSize, startY + p.y * unitSize, startX + (p.x + 1) * unitSize, startY + (p.y + 1) * unitSize, paint);
+        }
+        Log.d("TAG", "CALLED");
+    }
+
+    private ArrayList<Point> searchP1(int x, int y, ArrayList<Point> availMoves, int[][] board){
+        for(int i = y; i < boardDimension; i++){
+            if(board[i][x] == 0)
+                availMoves.add(new Point(x, i));
+            else
+                break;
+        }
+        for(int i = x, j = y; i < boardDimension && j < boardDimension; i++, j++){
+            if(board[j][i] == 0)
+                availMoves.add(new Point(i, j));
+            else
+                break;
+        }
+        for(int i = x, j = y; i >= 0 && j < boardDimension; i--, j++){
+            if(board[j][i] == 0)
+                availMoves.add(new Point(i, j));
+            else
+                break;
+    }
+        return availMoves;
+    }
+
+    private ArrayList<Point> searchP2(int x, int y, ArrayList<Point> availMoves, int[][] board){
+        for(int i = y; i >= 0; i--){
+            if(board[i][x] == 0)
+                availMoves.add(new Point(x, i));
+            else
+                break;
+        }
+        for(int i = x, j = y; i < boardDimension && j >= 0; i++, j--){
+            if(board[j][i] == 0)
+                availMoves.add(new Point(i, j));
+            else
+                break;
+        }
+        for(int i = x, j = y; i >= 0 && j >= 0; i--, j--){
+            if(board[j][i] == 0)
+                availMoves.add(new Point(i, j));
+            else
+                break;
+        }
+        return availMoves;
+    }
+
 
     @Override
     public boolean onTouchEvent(MotionEvent event){
@@ -137,6 +207,9 @@ public class GameBoard extends View {
                 if (p1[i].getX() == x && p1[i].getY() == y && (currColor == -1 || currColor == p1[i].getColor())) {
                     pieceSelected = true;
                     selectedPiece = p1[i];
+                    clickY = p1[i].getY();
+                    cliclX = p1[i].getX();
+                    invalidate();
                     break;
                 }
             }
@@ -158,6 +231,9 @@ public class GameBoard extends View {
                 if (p2[i].getX() == x && p2[i].getY() == y && (currColor == -1 || currColor == p2[i].getColor())) {
                     pieceSelected = true;
                     selectedPiece = p2[i];
+                    clickY = p2[i].getY();
+                    cliclX = p2[i].getX();
+                    invalidate();
                     break;
                 }
             }
@@ -202,24 +278,24 @@ public class GameBoard extends View {
         for(int i = sx, j = sy; i <= ex && j <= ey; i++, j++){
             for(int k = 0; k < boardDimension; k++){
                 if(i != selectedPiece.getX() && j != selectedPiece.getY())
-                if((p1[k].getX() == i && p1[k].getY() == j) || (p2[k].getX() == i && p2[k].getY() == j)){
-                    Log.d("TAG", sx + " " + sy + " " + ex + " " + ey + " " + i + " " + j);
-                    return true;
-                }
+                    if((p1[k].getX() == i && p1[k].getY() == j) || (p2[k].getX() == i && p2[k].getY() == j)){
+                        Log.d("TAG", sx + " " + sy + " " + ex + " " + ey + " " + i + " " + j);
+                        return true;
+                    }
             }
         }
 
         if(sx == ex)
-        for(int i = sy; i <= ey; i++){
-            for(int j = 0; j < boardDimension; j++){
-                if(i != selectedPiece.getY())
-                if((p1[j].getY() == i && p1[j].getX() == sx) || (p2[j].getY() == i && p2[j].getX() == sx)) {
-                    Log.d("TAG", " true");
-                    return true;
+            for(int i = sy; i <= ey; i++){
+                for(int j = 0; j < boardDimension; j++){
+                    if(i != selectedPiece.getY())
+                        if((p1[j].getY() == i && p1[j].getX() == sx) || (p2[j].getY() == i && p2[j].getX() == sx)) {
+                            Log.d("TAG", " true");
+                            return true;
+                        }
                 }
-            }
 
-        }
+            }
         return false;
     }//eventually won't need this method, once displayMoves() is finished
 }
