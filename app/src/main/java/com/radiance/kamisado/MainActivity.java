@@ -13,6 +13,8 @@ public class MainActivity extends ActionBarActivity implements IntroFragment.OnI
 
     public static final int PLAY_PRESSED = 0;
     public static final int TUTORIAL_PRESSED = 1;
+    public static final int TWO_PLAY_PRESSED = 2;
+    public static final int ONLINE_PLAY_PRESSED = 3;
 
     public static final int MATCH_SINGLE = 1;
     public static final int MATCH_STANDARD = 3;
@@ -20,6 +22,7 @@ public class MainActivity extends ActionBarActivity implements IntroFragment.OnI
     public static final int MATCH_MARATHON = 15;
 
     private String MATCH_TYPE = "MATCH_TYPE";
+    private String VERSUS_TYPE = "VERSUS_TYPE";
 
     private IntroFragment introFragment;
     private GamePlayFragment gamePlayFragment;
@@ -70,13 +73,13 @@ public class MainActivity extends ActionBarActivity implements IntroFragment.OnI
     @Override
     public void onIntroInteraction(int button) {
 
+        Bundle bundle = new Bundle();
+        boolean tutorialPressed = false;
+
         switch (button){
             case PLAY_PRESSED:
-                matchLengthFragment = new MatchLengthFragment();
-                fragmentManager = getFragmentManager();
-                fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.fragment_container, matchLengthFragment);
-                fragmentTransaction.commit();
+                bundle = new Bundle();
+                bundle.putInt(VERSUS_TYPE,button);
                 break;
             case TUTORIAL_PRESSED:
                 tutorialFragment = new TutorialFragment();
@@ -84,8 +87,26 @@ public class MainActivity extends ActionBarActivity implements IntroFragment.OnI
                 fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.replace(R.id.fragment_container, tutorialFragment);
                 fragmentTransaction.commit();
+                tutorialPressed = true;
+                break;
+            case TWO_PLAY_PRESSED:
+                bundle = new Bundle();
+                bundle.putInt(VERSUS_TYPE,button);
+                break;
+            case ONLINE_PLAY_PRESSED:
+                bundle = new Bundle();
+                bundle.putInt(VERSUS_TYPE,button);
                 break;
         }
+        if (!tutorialPressed){
+            matchLengthFragment = new MatchLengthFragment();
+            matchLengthFragment.setArguments(bundle);
+            fragmentManager = getFragmentManager();
+            fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.replace(R.id.fragment_container, matchLengthFragment);
+            fragmentTransaction.commit();
+        }
+
 
     }
 
