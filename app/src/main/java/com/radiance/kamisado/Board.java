@@ -20,6 +20,16 @@ public class Board {
                 {b,ye,br,p,r,o,pk,g},
                 {p,br,ye,b,g,pk,o,r},
                 {br,g,r,ye,pk,p,b,o}};
+
+        int[][] temp = new int[board8Color.length][board8Color.length];
+        for(int i = 0; i < board8Color.length; i++){
+            for(int j = 0; j < board8Color.length; j++){
+                temp[i][j] = board8Color[j][i];
+
+            }
+        }
+
+        board8Color = temp;
 	}
 	
 	public void resetLeft(){

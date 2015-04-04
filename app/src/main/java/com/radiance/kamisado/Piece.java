@@ -3,7 +3,7 @@ import android.graphics.Color;
 
 public class Piece {
 	
-	private int locX = 0, locY = 0, upgrade = 0, color = -1;
+	private int locX = 0, locY = 0, rank = 0, color = -1;
 
 	public Piece(int x, int y, int color){
 		locX = x;

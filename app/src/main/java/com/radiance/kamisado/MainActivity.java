@@ -7,16 +7,24 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.Window;
 
 
-public class MainActivity extends ActionBarActivity implements IntroFragment.OnIntroInteractionListener, GamePlayFragment.OnGamePlayInteractionListener, TutorialFragment.OnTutorialInteractionListener {
+public class MainActivity extends ActionBarActivity implements IntroFragment.OnIntroInteractionListener, GamePlayFragment.OnGamePlayInteractionListener, TutorialFragment.OnTutorialInteractionListener, MatchLengthFragment.OnMatchLengthInteraction {
 
     public static final int PLAY_PRESSED = 0;
     public static final int TUTORIAL_PRESSED = 1;
+
+    public static final int MATCH_SINGLE = 1;
+    public static final int MATCH_STANDARD = 3;
+    public static final int MATCH_EXTENDED = 7;
+    public static final int MATCH_MARATHON = 15;
+
+    private String MATCH_TYPE = "MATCH_TYPE";
+
     private IntroFragment introFragment;
     private GamePlayFragment gamePlayFragment;
     private TutorialFragment tutorialFragment;
+    private MatchLengthFragment matchLengthFragment;
     private FragmentManager fragmentManager;
     private FragmentTransaction fragmentTransaction;
 
@@ -64,10 +72,10 @@ public class MainActivity extends ActionBarActivity implements IntroFragment.OnI
 
         switch (button){
             case PLAY_PRESSED:
-                gamePlayFragment = new GamePlayFragment();
+                matchLengthFragment = new MatchLengthFragment();
                 fragmentManager = getFragmentManager();
                 fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.fragment_container, gamePlayFragment);
+                fragmentTransaction.replace(R.id.fragment_container, matchLengthFragment);
                 fragmentTransaction.commit();
                 break;
             case TUTORIAL_PRESSED:
@@ -89,5 +97,20 @@ public class MainActivity extends ActionBarActivity implements IntroFragment.OnI
     @Override
     public void onTutorialInteraction(Uri uri) {
 
+    }
+
+    @Override
+    public void onMatchLengthInteraction(int button) {
+
+        gamePlayFragment = new GamePlayFragment();
+
+        Bundle bundle = new Bundle();
+        bundle.putInt(MATCH_TYPE,button);
+        gamePlayFragment.setArguments(bundle);
+
+        fragmentManager = getFragmentManager();
+        fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.fragment_container, gamePlayFragment);
+        fragmentTransaction.commit();
     }
 }
