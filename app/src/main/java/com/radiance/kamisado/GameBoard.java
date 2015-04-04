@@ -19,6 +19,7 @@ public class GameBoard extends View {
 
     private Paint paint;
     private float startX = -1, endX = -1, startY = -1, endY = -1, width = -1, height = -1, borderWidth = 0, unitSize = 0;
+    private Board board = new Board(this);
     private boolean firstTime = true, firstMove = true, pieceSelected = false, win = false;
     private int boardDimension = 8, counter = 1, currColor = -1;
     private Piece[] p1 = new Piece[boardDimension], p2 = new Piece[boardDimension];
@@ -28,7 +29,6 @@ public class GameBoard extends View {
     private Point score = new Point(0, 0);
     private ArrayList<Point> availMoves;
     private int eventAction = -1, initialClickX = -1, initialClickY = -1, finalClickX = -1, finalClickY = -1;
-    private Board board = new Board(this, boardDimension);
 
     public GameBoard(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -227,12 +227,6 @@ public class GameBoard extends View {
             if(temp.x == x && temp.y == y){
                 selectedPiece.setLoc(x, y);
                 counter++;
-                invalidate();
-                if(win() != -1) {
-                    selectedPiece = null;
-                    invalidate();
-                    return;
-                }
                 currColor = board.board8Color[x][y];//next piece color
                 for(int j = 0; j < boardDimension; j++){
                     if(p2[j].getColor() == currColor){
@@ -288,11 +282,6 @@ public class GameBoard extends View {
                     firstMove = false;
                     selectedPiece.setLoc(x, y);
                     counter++;
-                    if(win() != -1) {
-                        selectedPiece = null;
-                        invalidate();
-                        return;
-                    }
                     currColor = board.board8Color[x][y];//next piece color
                     for(int j = 0; j < boardDimension; j++){
                         if(p1[j].getColor() == currColor){
@@ -305,10 +294,6 @@ public class GameBoard extends View {
             }
         }
     }//Conducting player2's turn
-
-    public void setPieces(Piece[] p1, Piece[] p2){
-        this.p1 = p1; this.p2 = p2;
-    }
 
     @Override
     public void onDraw (Canvas canvas){
@@ -327,7 +312,7 @@ public class GameBoard extends View {
         int e = event.getAction();
 
         //If player has won then swiping left or right will reset the board in that direction
-        if(win() == 1){
+        if(win() == 2){
             if(event.getAction() == 0){
                 initialClickX = (int)event.getX();
                 initialClickY = (int)event.getY();
@@ -340,19 +325,15 @@ public class GameBoard extends View {
                 if(finalClickX - initialClickX > 200 && Math.abs(finalClickY - initialClickY) < 100){
                     initialClickX = -1; finalClickX = -1; initialClickY = -1; finalClickY = -1;
                     //TODO add the reset methods
-                    Piece[][] temp = board.fillLeft(p1, p2);
-                    p1 = temp[0]; p2 = temp[1];
-                    invalidate();
                 }
                 if(initialClickX - finalClickX > 200 && Math.abs(finalClickY - initialClickY) < 100){
                     //TODO add the reset methods
-                    Piece[][] temp = board.fillRight(p1, p2);
-                    p1 = temp[0]; p2 = temp[1];
-                    invalidate();
                 }
             }
+
         }
-        else if(win() == 0){
+        else if(win() == 1){
+            Log.d("TAG", event.getAction() + "");
             if(event.getAction() == 0){
                 initialClickX = (int)event.getX();
                 initialClickY = (int)event.getY();
@@ -365,15 +346,9 @@ public class GameBoard extends View {
                 if(finalClickX - initialClickX > 200 && Math.abs(finalClickY - initialClickY) < 100){
                     initialClickX = -1; finalClickX = -1; initialClickY = -1; finalClickY = -1;
                     //TODO add the reset methods
-                    Piece[][] temp = board.fillRight(p1, p2);
-                    p1 = temp[0]; p2 = temp[1];
-                    invalidate();
                 }
                 if(initialClickX - finalClickX > 200 && Math.abs(finalClickY - initialClickY) < 100){
                     //TODO add the reset methods
-                    Piece[][] temp = board.fillLeft(p1, p2);
-                    p1 = temp[0]; p2 = temp[1];
-                    invalidate();
                 }
             }
         }
