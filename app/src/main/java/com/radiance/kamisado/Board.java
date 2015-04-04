@@ -31,19 +31,5 @@ public class Board {
 
         board8Color = temp;
 	}
-	
-	public void resetLeft(){
-		for(int i = 0; i < 8; i++){
-			p1[i].setLoc(i, 0);
-			p2[i].setLoc(i, 7);
-		}
-	}
-	
-	public void resetRight(){
-		for(int i = 0; i < 8; i++){
-			p1[7 - i].setLoc(i, 0);
-			p2[7 - i].setLoc(i, 7);
-		}
-	}
 
 }
