@@ -20,7 +20,7 @@ public class GameBoard extends View {
     private Paint paint;
     private float startX = -1, endX = -1, startY = -1, endY = -1, width = -1, height = -1, borderWidth = 0, unitSize = 0;
     private Board board = new Board(this);
-    private boolean firstTime = true, firstMove = true, pieceSelected = false;
+    private boolean firstTime = true, firstMove = true, pieceSelected = false, win = false;
     private int boardDimension = 8, counter = 1, currColor = -1;
     private Piece[] p1 = new Piece[boardDimension], p2 = new Piece[boardDimension];
     private Piece selectedPiece;
@@ -28,6 +28,7 @@ public class GameBoard extends View {
     private int PLAYER_TWO = 1;
     private int[] score;
     private ArrayList<Point> availMoves;
+    private int eventAction = -1, initialClickX = -1, initialClickY = -1, finalClickX = -1, finalClickY = -1;
 
     public GameBoard(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -84,7 +85,8 @@ public class GameBoard extends View {
         }
     }
 
-    private int win (){//checks if a player has won
+    private int win (){
+    //checks if a player has won
         //check if pieces have reached opposite side
         for (int i = 0; i < boardDimension; i++) {
             if (p1[i].getY() == boardDimension - 1) {
@@ -267,18 +269,53 @@ public class GameBoard extends View {
     @Override
     public boolean onTouchEvent(MotionEvent event){
         int e = event.getAction();
-        if(e == 1){
-            float x = event.getX(), y = event.getY();
-            int convertedX = (int)((x - startX) / unitSize), convertedY = (int)((y - startY) / unitSize);//converts the passed coordinates into a location on the board
-            if(counter % 2 == PLAYER_ONE) {//determines turn
-                p1Turn(convertedX,convertedY);
+        if(win() == 2){
+            if(event.getAction() == 0){
+                initialClickX = (int)event.getX();
+                initialClickY = (int)event.getY();
             }
-            else{
-                p2Turn(convertedX,convertedY);
+            else if(event.getAction() == 2){
+                finalClickX = (int)event.getX();
+                finalClickY = (int)event.getY();
+            }
+            else if(event.getAction() == 1){
+                if(finalClickX - initialClickX > 200 && Math.abs(finalClickY - initialClickY) < 100){
+                    initialClickX = -1; finalClickX = -1; initialClickY = -1; finalClickY = -1;
+                    //TODO add the reset methods
+                }
+                if(initialClickX - finalClickX > 200 && Math.abs(finalClickY - initialClickY) < 100){
+                    //TODO add the reset methods
+                }
             }
 
-            if (win() != -1){//if a player has won
-                Log.v("WIN","WIN");
+        }
+        else if(win() == 1){
+            Log.d("TAG", event.getAction() + "");
+            if(event.getAction() == 0){
+                initialClickX = (int)event.getX();
+                initialClickY = (int)event.getY();
+            }
+            else if(event.getAction() == 2){
+                finalClickX = (int)event.getX();
+                finalClickY = (int)event.getY();
+            }
+            else if(event.getAction() == 1){;
+                if(finalClickX - initialClickX > 200 && Math.abs(finalClickY - initialClickY) < 100){
+                    initialClickX = -1; finalClickX = -1; initialClickY = -1; finalClickY = -1;
+                    //TODO add the reset methods
+                }
+                if(initialClickX - finalClickX > 200 && Math.abs(finalClickY - initialClickY) < 100){
+                    //TODO add the reset methods
+                }
+            }
+        }
+        if(e == 1){
+            float x = event.getX(), y = event.getY();
+            int convertedX = (int) ((x - startX) / unitSize), convertedY = (int) ((y - startY) / unitSize);//converts the passed coordinates into a location on the board
+            if (counter % 2 == PLAYER_ONE) {//determines turn
+                p1Turn(convertedX, convertedY);
+            } else {
+                p2Turn(convertedX, convertedY);
             }
         }
         return true;
