@@ -78,16 +78,21 @@ public class GameBoard extends View {
     }//Draws the board
 
     public void drawPiece(Canvas canvas){
+        paint.setTextSize(30);
         for(int i = 0; i < boardDimension; i++){
             paint.setColor(Color.BLACK);
             canvas.drawCircle(startX + p1[i].getX() * unitSize + unitSize / 2, startY + unitSize * p1[i].getY() + unitSize / 2, unitSize / 2, paint);
             paint.setColor(p1[i].getColor());
             canvas.drawCircle(startX + p1[i].getX() * unitSize + unitSize / 2, startY + unitSize * p1[i].getY() + unitSize / 2, unitSize / 3, paint);
+            paint.setColor(Color.BLACK);
+            canvas.drawText("" + p1[i].getRank(), startX + p1[i].getX() * unitSize + unitSize / 2, startY + unitSize * p1[i].getY() + unitSize / 2, paint);
 
             paint.setColor(Color.WHITE);
             canvas.drawCircle(startX + p2[i].getX() * unitSize + unitSize / 2, startY + unitSize * p2[i].getY() + unitSize / 2, unitSize / 2, paint);
             paint.setColor(p2[i].getColor());
             canvas.drawCircle(startX + p2[i].getX() * unitSize + unitSize / 2, startY + unitSize * p2[i].getY() + unitSize / 2, unitSize / 3, paint);
+            paint.setColor(Color.WHITE);
+            canvas.drawText("" + p2[i].getRank(), startX + p2[i].getX() * unitSize + unitSize / 2, startY + unitSize * p2[i].getY() + unitSize / 2, paint);
         }
     }//Draws the pieces. Player 1 is on bottom with a black circle around them. Player 2 is on top with white.
 
@@ -113,7 +118,7 @@ public class GameBoard extends View {
     private void displayMoves(Canvas canvas, int x, int y){
 
         //Array List to store the possible moves
-        ArrayList<Point> availMoves = new ArrayList<Point>();
+        ArrayList<Point> availMoves = new ArrayList<>();
 
         //Board array to store position of pieces
         int[][] board = new int[boardDimension][boardDimension];
@@ -451,6 +456,7 @@ public class GameBoard extends View {
         }
         return true;
     }//Handles the touch events
+
     public class AI {
 
         public AI(){
