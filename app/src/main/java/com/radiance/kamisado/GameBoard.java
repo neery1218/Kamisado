@@ -329,7 +329,6 @@ public class GameBoard extends View {
                 if(initialClickX - finalClickX > 200 && Math.abs(finalClickY - initialClickY) < 100){
                     //TODO add the reset methods
                 }
-                return true;
             }
 
         }
@@ -351,12 +350,11 @@ public class GameBoard extends View {
                 if(initialClickX - finalClickX > 200 && Math.abs(finalClickY - initialClickY) < 100){
                     //TODO add the reset methods
                 }
-                return true;
             }
         }
 
         //If game was not won and player released screen
-        if(e == 1){
+        if(e == 1 && win() == -1){
 
             //Finds the x and y location in terms of the board
             float x = event.getX(), y = event.getY();
