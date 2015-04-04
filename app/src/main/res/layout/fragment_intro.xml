@@ -14,14 +14,26 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="New Button"
+            android:text="Play an AI"
             android:layout_gravity="center"
             android:id="@+id/playButton" />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Two Player"
+            android:layout_gravity="center"
+            android:id="@+id/playerTwoButton" />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Online"
+            android:layout_gravity="center"
+            android:id="@+id/onlineButton" />
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="New Button"
+            android:text="Tutorial"
             android:layout_gravity="center"
             android:id="@+id/tutorialButton" />
     </LinearLayout>

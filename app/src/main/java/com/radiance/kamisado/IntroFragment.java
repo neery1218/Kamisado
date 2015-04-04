@@ -15,6 +15,8 @@ public class IntroFragment extends Fragment {
     private OnIntroInteractionListener mListener;
     private Button playButton;
     private Button tutorialButton;
+    private Button playerTwoButton;
+    private Button onlineButton;
 
     public static IntroFragment newInstance(String param1, String param2) {
         IntroFragment fragment = new IntroFragment();
@@ -38,11 +40,27 @@ public class IntroFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_intro, container, false);
         playButton = (Button)view.findViewById(R.id.playButton);
-        playButton.setText("Play!");
+        playButton.setText("Play an AI!");
 
         playButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 mListener.onIntroInteraction(MainActivity.PLAY_PRESSED);
+            }
+        });
+
+        playerTwoButton = (Button)view.findViewById(R.id.playerTwoButton);
+
+        playerTwoButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                mListener.onIntroInteraction(MainActivity.TWO_PLAY_PRESSED);
+            }
+        });
+
+        onlineButton = (Button)view.findViewById(R.id.onlineButton);
+
+        onlineButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                mListener.onIntroInteraction(MainActivity.ONLINE_PLAY_PRESSED);
             }
         });
 

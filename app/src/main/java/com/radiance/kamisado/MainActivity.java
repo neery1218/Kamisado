@@ -5,6 +5,7 @@ import android.app.FragmentTransaction;
 import android.net.Uri;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -13,13 +14,18 @@ public class MainActivity extends ActionBarActivity implements IntroFragment.OnI
 
     public static final int PLAY_PRESSED = 0;
     public static final int TUTORIAL_PRESSED = 1;
+    public static final int TWO_PLAY_PRESSED = 2;
+    public static final int ONLINE_PLAY_PRESSED = 3;
 
     public static final int MATCH_SINGLE = 1;
     public static final int MATCH_STANDARD = 3;
     public static final int MATCH_EXTENDED = 7;
     public static final int MATCH_MARATHON = 15;
 
-    private String MATCH_TYPE = "MATCH_TYPE";
+    public static final String ARG_MATCH_TYPE = "ARG_MATCH_TYPE";
+    public static final String ARG_VERSUS_TYPE = "ARG_VERSUS_TYPE";
+
+    private int VERSUS_TYPE = 0;
 
     private IntroFragment introFragment;
     private GamePlayFragment gamePlayFragment;
@@ -70,13 +76,12 @@ public class MainActivity extends ActionBarActivity implements IntroFragment.OnI
     @Override
     public void onIntroInteraction(int button) {
 
+        Bundle bundle = new Bundle();
+        boolean tutorialPressed = false;
+
         switch (button){
             case PLAY_PRESSED:
-                matchLengthFragment = new MatchLengthFragment();
-                fragmentManager = getFragmentManager();
-                fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.fragment_container, matchLengthFragment);
-                fragmentTransaction.commit();
+                VERSUS_TYPE = button;
                 break;
             case TUTORIAL_PRESSED:
                 tutorialFragment = new TutorialFragment();
@@ -84,8 +89,23 @@ public class MainActivity extends ActionBarActivity implements IntroFragment.OnI
                 fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.replace(R.id.fragment_container, tutorialFragment);
                 fragmentTransaction.commit();
+                tutorialPressed = true;
+                break;
+            case TWO_PLAY_PRESSED:
+                VERSUS_TYPE = button;
+                break;
+            case ONLINE_PLAY_PRESSED:
+                VERSUS_TYPE = button;
                 break;
         }
+        if (!tutorialPressed){
+            matchLengthFragment = new MatchLengthFragment();
+            fragmentManager = getFragmentManager();
+            fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.replace(R.id.fragment_container, matchLengthFragment);
+            fragmentTransaction.commit();
+        }
+
 
     }
 
@@ -105,7 +125,9 @@ public class MainActivity extends ActionBarActivity implements IntroFragment.OnI
         gamePlayFragment = new GamePlayFragment();
 
         Bundle bundle = new Bundle();
-        bundle.putInt(MATCH_TYPE,button);
+        bundle.putInt(ARG_MATCH_TYPE,button);
+        bundle.putInt(ARG_VERSUS_TYPE,VERSUS_TYPE);
+
         gamePlayFragment.setArguments(bundle);
 
         fragmentManager = getFragmentManager();
