@@ -38,6 +38,31 @@ public class Board {
 			p2[i].setLoc(i, 7);
 		}
 	}
+
+    public void fillRight(){
+        Piece [] temp1 = new Piece [board8Color.length];
+        Piece [] temp2 = new Piece [board8Color.length];
+        int counter1 = 0;
+        int counter2 = 0;
+        for (int i = 0; i < board8Color.length; i++)//finds all the pieces starting from the top left to the bottom right
+            for (int j = 0; j < board8Color.length; j++){
+                for (int k = 0; k < p1.length; k++){
+                    if (p1[k].getX() == j && p1[k].getY() == i){
+                        temp1[counter1] = p1[k];
+                        counter1++;
+                    }
+                    if (p2[k].getX() == j && p2[k].getY() == i){
+                        temp2[counter2] = p1[k];
+                        counter2++;
+                    }
+                }
+            }
+        //reverse temp1 onto p1
+        p1 = new Piece[board8Color.length];
+        for (int i = 0; i < p1.length; i++)
+            p1[i] = temp1[p1.length - 1 - i];
+    }
+
     public void fillLeft(){
         Piece [] temp1 = new Piece [board8Color.length];
         Piece [] temp2 = new Piece [board8Color.length];
