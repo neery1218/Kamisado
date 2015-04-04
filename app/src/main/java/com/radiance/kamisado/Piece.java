@@ -1,5 +1,6 @@
 package com.radiance.kamisado;
-import android.graphics.Color;
+
+import android.util.Log;
 
 public class Piece {
 	
@@ -15,35 +16,42 @@ public class Piece {
 	public int getX(){
 		return locX;
 	}
-	
-	public int getY(){
-		return locY;
+
+    public void setX(int x) {
+        locX = x;
+    }
+
+    public int getY() {
+        return locY;
+    }
+
+    public void setY(int y) {
+        locY = y;
 	}
 
-    public int getRank(){return rank;}
-	
-	public void setLoc(int x, int y){
-		locX = x;
-		locY = y;
-	}
-	
-	public void setX(int x){
-		locX = x;
-	}
-	
-	public void setY(int y){
-		locY = y;
+    public int getRank() {
+        return rank;
+    }
+
+    public void setLoc(int x, int y) {
+        locX = x;
+        locY = y;
 	}
 
-    public void setColor(int color){this.color = color;}
+    public int getColor() {
+        return color;
+    }
 
-    public int getColor(){return color;}
+    public void setColor(int color) {
+        this.color = color;
+    }
 
     public int getDistance(){return distance;}
 
     public void rankUp (){
         rank++;
         distance-=2;
+        Log.v("GAT", "Rankup");
     }
     public String toString(){return "Piece X=" + locX + " Y=" + locY + " Rank=" + rank + " Color=" + color;}
 

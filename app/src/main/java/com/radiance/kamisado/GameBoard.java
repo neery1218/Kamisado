@@ -22,13 +22,13 @@ public class GameBoard extends View {
     private boolean firstTime = true, firstMove = true, pieceSelected = false, win = false;
     private int boardDimension = 8, counter = 1, currColor = -1;
     private Piece[] p1 = new Piece[boardDimension], p2 = new Piece[boardDimension];
+    private Board board = new Board(this, boardDimension);
     private Piece selectedPiece;
     private int PLAYER_ONE = 0;
     private int PLAYER_TWO = 1;
     private Point score = new Point(0, 0);
     private ArrayList<Point> availMoves;
     private int eventAction = -1, initialClickX = -1, initialClickY = -1, finalClickX = -1, finalClickY = -1;
-    private Board board = new Board(this, boardDimension);
 
     public GameBoard(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -97,10 +97,12 @@ public class GameBoard extends View {
         for (int i = 0; i < boardDimension; i++) {
             if (p1[i].getY() == boardDimension - 1) {
                 score.set(score.x + p1[i].getRank(), score.y);
+                p1[i].rankUp();
                 return PLAYER_ONE;
             }
             if (p2[i].getY() == 0) {
                 score.set(score.x, score.y + p2[i].getRank());
+                p2[i].rankUp();
                 return PLAYER_TWO;
             }
         }
@@ -198,6 +200,7 @@ public class GameBoard extends View {
             if (p2[i].getX() == x && p2[i].getY() == y)
                 current = p2[i];
         }
+        Log.v("GAT", "Current Distance:" + current.getDistance());
 
         //Find moves directly in front
         for(int i = y - 1; i >= 7 -  current.getDistance() - (y-1); i--){
