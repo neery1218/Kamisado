@@ -19,6 +19,8 @@ public class Piece {
 	public int getY(){
 		return locY;
 	}
+
+    public int getRank(){return rank;}
 	
 	public void setLoc(int x, int y){
 		locX = x;
@@ -41,5 +43,6 @@ public class Piece {
         rank++;
         distance-=2;
     }
+    public String toString(){return "Piece X=" + locX + " Y=" + locY + " Rank=" + rank + " Color=" + color;}
 
 }
