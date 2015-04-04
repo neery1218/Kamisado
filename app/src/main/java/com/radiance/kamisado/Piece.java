@@ -39,6 +39,8 @@ public class Piece {
 
     public int getColor(){return color;}
 
+    public int getDistance(){return distance;}
+
     public void rankUp (){
         rank++;
         distance-=2;

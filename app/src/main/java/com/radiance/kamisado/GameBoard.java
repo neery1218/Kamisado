@@ -175,20 +175,32 @@ public class GameBoard extends View {
         }
         this.availMoves = availMoves;
     }//Finds available moves of each player
-
+    private boolean valid (int a){
+        if (a >= 0 && a < boardDimension)
+            return true;
+        else
+            return false;
+    }
     private ArrayList<Point> searchP1(int x, int y, ArrayList<Point> availMoves, int[][] board){
+        Piece current = new Piece(0,0,0);
+
+        //find piece that is making the move
+        for (int i = 0; i < p1.length; i++){
+            if (p1[i].getX() == x && p2[i].getY() == y)
+                current = p1[i];
+        }
 
         //Finds available moves directly forward
-        for(int i = y + 1   ; i < boardDimension; i++){
-            if(board[x][i] == 0)
+        for(int i = y + 1  ; i < y + 1 + current.getDistance(); i++){
+            if(valid(i) && board[x][i] == 0)
                 availMoves.add(new Point(x, i));
             else
                 break;
         }
 
         //Find moves on right diagonal
-        for(int i = x + 1, j = y + 1; i < boardDimension && j < boardDimension; i++, j++){
-            if(board[i][j] == 0)
+        for(int i = x + 1, j = y + 1; i < x + 1 + current.getDistance() && j < y + 1  + current.getDistance(); i++, j++){
+            if(valid(i) && valid(j) && board[i][j] == 0)
                 availMoves.add(new Point(i, j));
             else {
                 break;
@@ -196,8 +208,8 @@ public class GameBoard extends View {
         }
 
         //Find moves on left diagonal
-        for(int i = x - 1, j = y + 1; i >= 0 && j < boardDimension; i--, j++){
-            if(board[i][j] == 0)
+        for(int i = x - 1, j = y + 1; i >=  7 - current.getDistance() - (x - 1) && j < y + 1 + current.getDistance(); i--, j++){
+            if(valid(i) && valid(j) && board[i][j] == 0)
                 availMoves.add(new Point(i, j));
             else {
                 break;
@@ -208,17 +220,25 @@ public class GameBoard extends View {
 
     private ArrayList<Point> searchP2(int x, int y, ArrayList<Point> availMoves, int[][] board){
 
+        Piece current = new Piece(0,0,0);
+
+        //find piece that is making the move
+        for (int i = 0; i < p2.length; i++){
+            if (p2[i].getX() == x && p2[i].getY() == y)
+                current = p2[i];
+        }
+
         //Find moves directly in front
-        for(int i = y - 1; i >= 0; i--){
-            if(board[x][i] == 0)
+        for(int i = y - 1; i >= 7 -  current.getDistance() - (y-1); i--){
+            if(valid(i) && board[x][i] == 0)
                 availMoves.add(new Point(x, i));
             else
                 break;
         }
 
         //Find moves on right diagonal
-        for(int i = x + 1, j = y - 1; i < boardDimension && j >= 0; i++, j--){
-            if(board[i][j] == 0)
+        for(int i = x + 1, j = y - 1; i < current.getDistance() + (x+1)&& j >= 7 - current.getDistance() - (y-1); i++, j--){
+            if(valid(i) && valid(j) && board[i][j] == 0)
                 availMoves.add(new Point(i, j));
             else {
                 break;
@@ -226,8 +246,8 @@ public class GameBoard extends View {
         }
 
         //Find moves on left diagonal
-        for(int i = x - 1, j = y - 1; i >= 0 && j >= 0; i--, j--){
-            if(board[i][j] == 0)
+        for(int i = x - 1, j = y - 1; i >= 7 - current.getDistance() - (x-1) && j >= 7 - current.getDistance() - (y-1); i--, j--){
+            if(valid(i) && valid(j) && board[i][j] == 0)
                 availMoves.add(new Point(i, j));
             else {
                 break;
