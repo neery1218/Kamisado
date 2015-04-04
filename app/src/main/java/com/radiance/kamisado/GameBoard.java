@@ -140,12 +140,14 @@ public class GameBoard extends View {
         for(int i = 0; i < availMoves.size(); i++){
             Point p = availMoves.get(i);
             paint.setColor(Color.WHITE);
+            paint.setStyle(Paint.Style.FILL);
+            paint.setAlpha(150);
             canvas.drawRect(startX + p.x * unitSize, startY + p.y * unitSize, startX + (p.x + 1) * unitSize, startY + (p.y + 1) * unitSize, paint);
         }
     }
 
     private ArrayList<Point> searchP1(int x, int y, ArrayList<Point> availMoves, int[][] board){
-        for(int i = y + 1; i < boardDimension; i++){
+        for(int i = y + 1   ; i < boardDimension; i++){
             if(board[x][i] == 0)
                 availMoves.add(new Point(x, i));
             else
