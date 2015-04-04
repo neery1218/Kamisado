@@ -126,7 +126,7 @@ public class GameBoard extends View {
         //Sets the board to 1 if piece is there
         for(int i = 0; i < boardDimension; i++){
             board[p1[i].getX()][p1[i].getY()] = 1;
-            board[p2[i].getX()][p2[i].getY()] = 1;
+            board[p2[i].getX()][p2[i].getY()] = 2;
         }
 
         //Finds available moves for each player
@@ -156,44 +156,49 @@ public class GameBoard extends View {
     }
     private ArrayList<Point> searchP1(int x, int y, ArrayList<Point> availMoves, int[][] board){
         Piece current = new Piece(0,0,0,0);
+        boolean leftDiagonalBlocked = false;
+        boolean rightDiagonalBlocked = false;
+        boolean forwardBlocked = false;
 
         //find piece that is making the move
         for (int i = 0; i < p1.length; i++){
             if (p1[i].getX() == x && p2[i].getY() == y)
                 current = p1[i];
         }
-
-        //Finds available moves directly forward
-        for(int i = y + 1  ; i < y + 1 + current.getDistance(); i++){
-            if(valid(i) && board[x][i] == 0)
-                availMoves.add(new Point(x, i));
-            else
-                break;
-        }
-
-        //Find moves on right diagonal
-        for(int i = x + 1, j = y + 1; i < x + 1 + current.getDistance() && j < y + 1  + current.getDistance(); i++, j++){
-            if(valid(i) && valid(j) && board[i][j] == 0)
-                availMoves.add(new Point(i, j));
-            else {
-                break;
+        for (int i = 1; i <= current.getDistance(); i++) {
+            if (!forwardBlocked && valid(i + y)) {//finds moves directly forward
+                if (board[x][i + y] == 0)
+                    availMoves.add(new Point(x, y + i));
+                else
+                    forwardBlocked = true;
             }
+
+            if (!rightDiagonalBlocked && valid(i + y) && valid(i + x)) {
+                if (board[x + i][y + i] == 0)
+                    availMoves.add(new Point(x + i, y + i));
+                else
+                    rightDiagonalBlocked = true;
+            }
+
+
+            if (!leftDiagonalBlocked && valid(i + y) && valid(x - i)) {//left diagonal
+                if (board[x - i][y + i] == 0)
+                    availMoves.add(new Point(x - i, y + i));
+                else
+                    leftDiagonalBlocked = true;
+            }
+
         }
 
-        //Find moves on left diagonal
-        for(int i = x - 1, j = y + 1; i >=  7 - current.getDistance() - (x - 1) && j < y + 1 + current.getDistance(); i--, j++){
-            if(valid(i) && valid(j) && board[i][j] == 0)
-                availMoves.add(new Point(i, j));
-            else {
-                break;
-            }
-        }
         return availMoves;
     }//Search for available moves for player 1
 
     private ArrayList<Point> searchP2(int x, int y, ArrayList<Point> availMoves, int[][] board){
 
         Piece current = new Piece(0,0,0,0);
+        boolean leftDiagonalBlocked = false;
+        boolean rightDiagonalBlocked = false;
+        boolean forwardBlocked = false;
 
         //find piece that is making the move
         for (int i = 0; i < p2.length; i++){
@@ -201,32 +206,32 @@ public class GameBoard extends View {
                 current = p2[i];
         }
         Log.v("GAT", "Current Distance:" + current.getDistance() + " Rank:" + current.getRank());
+        for (int i = 1; i <= current.getDistance(); i++) {
 
-        //Find moves directly in front
-        for(int i = y - 1; i >= 7 -  current.getDistance() - (y-1); i--){
-            if(valid(i) && board[x][i] == 0)
-                availMoves.add(new Point(x, i));
-            else
-                break;
-        }
-
-        //Find moves on right diagonal
-        for(int i = x + 1, j = y - 1; i < current.getDistance() + (x+1)&& j >= 7 - current.getDistance() - (y-1); i++, j--){
-            if(valid(i) && valid(j) && board[i][j] == 0)
-                availMoves.add(new Point(i, j));
-            else {
-                break;
+            if (!forwardBlocked && valid(y - i)) { //finds moves directly forward
+                if (board[x][y - i] == 0)
+                    availMoves.add(new Point(x, y - i));
+                else
+                    forwardBlocked = true;
             }
+
+
+            if (!leftDiagonalBlocked && valid(y - i) && valid(x - i)) {//left diagonal
+                if (board[x - i][y - i] == 0)
+                    availMoves.add(new Point(x - i, y - i));
+                else
+                    leftDiagonalBlocked = true;
+            }
+
+            if (!rightDiagonalBlocked && valid(i + x) && valid(y - i)) {//right diagonal
+                if (board[x + i][y - i] == 0)
+                    availMoves.add(new Point(x + i, y - i));
+                else
+                    rightDiagonalBlocked = true;
+            }
+
         }
 
-        //Find moves on left diagonal
-        for(int i = x - 1, j = y - 1; i >= 7 - current.getDistance() - (x-1) && j >= 7 - current.getDistance() - (y-1); i--, j--){
-            if(valid(i) && valid(j) && board[i][j] == 0)
-                availMoves.add(new Point(i, j));
-            else {
-                break;
-            }
-        }
         return availMoves;
     }//Search for moves for player 2
 
