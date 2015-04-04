@@ -79,12 +79,12 @@ public class GameBoard extends View {
 
     public void drawPiece(Canvas canvas){
         for(int i = 0; i < boardDimension; i++){
-            paint.setColor(Color.WHITE);
+            paint.setColor(Color.BLACK);
             canvas.drawCircle(startX + p1[i].getX() * unitSize + unitSize / 2, startY + unitSize * p1[i].getY() + unitSize / 2, unitSize / 2, paint);
             paint.setColor(p1[i].getColor());
             canvas.drawCircle(startX + p1[i].getX() * unitSize + unitSize / 2, startY + unitSize * p1[i].getY() + unitSize / 2, unitSize / 3, paint);
 
-            paint.setColor(Color.BLACK);
+            paint.setColor(Color.WHITE);
             canvas.drawCircle(startX + p2[i].getX() * unitSize + unitSize / 2, startY + unitSize * p2[i].getY() + unitSize / 2, unitSize / 2, paint);
             paint.setColor(p2[i].getColor());
             canvas.drawCircle(startX + p2[i].getX() * unitSize + unitSize / 2, startY + unitSize * p2[i].getY() + unitSize / 2, unitSize / 3, paint);
@@ -142,6 +142,7 @@ public class GameBoard extends View {
             paint.setStyle(Paint.Style.FILL);
             paint.setAlpha(150);
             canvas.drawRect(startX + p.x * unitSize, startY + p.y * unitSize, startX + (p.x + 1) * unitSize, startY + (p.y + 1) * unitSize, paint);
+            //switch to circles eventually?
         }
         this.availMoves = availMoves;
     }//Finds available moves of each player
