@@ -18,17 +18,42 @@ import java.util.ArrayList;
 public class GameBoard extends View {
 
     private Paint paint;
-    private float startX = -1, endX = -1, startY = -1, endY = -1, width = -1, height = -1, borderWidth = 0, unitSize = 0;
+
+    private float startX = -1;
+    private float endX = -1;
+    private float startY = -1;
+    private float endY = -1;
+    private float width = -1;
+    private float height = -1;
+    private float borderWidth = 0;
+    private float unitSize = 0;
+
     private Board board = new Board(this);
-    private boolean firstTime = true, firstMove = true, pieceSelected = false, win = false;
+
+    private boolean firstTime = true;
+    private boolean firstMove = true;
+    private boolean pieceSelected = false;
+    private boolean win = false;
+
     private int boardDimension = 8, counter = 1, currColor = -1;
-    private Piece[] p1 = new Piece[boardDimension], p2 = new Piece[boardDimension];
+
+    private Piece[] p1 = new Piece[boardDimension];
+    private Piece[] p2 = new Piece[boardDimension];
+
     private Piece selectedPiece;
+
     private int PLAYER_ONE = 0;
     private int PLAYER_TWO = 1;
+
     private Point score = new Point(0, 0);
+
     private ArrayList<Point> availMoves;
-    private int eventAction = -1, initialClickX = -1, initialClickY = -1, finalClickX = -1, finalClickY = -1;
+
+    private int eventAction = -1;
+    private int initialClickX = -1;
+    private int initialClickY = -1;
+    private int finalClickX = -1;
+    private int finalClickY = -1;
 
     public GameBoard(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -97,10 +122,14 @@ public class GameBoard extends View {
         for (int i = 0; i < boardDimension; i++) {
             if (p1[i].getY() == boardDimension - 1) {
                 score.set(score.x + p1[i].getRank(), score.y);
+                p1[i].rankUp();
+                Log.v("TAG","WIN: 1");
                 return PLAYER_ONE;
             }
             if (p2[i].getY() == 0) {
                 score.set(score.x, score.y + p2[i].getRank());
+                p2[i].rankUp();
+                Log.v("TAG","WIN: 2");
                 return PLAYER_TWO;
             }
         }
@@ -216,6 +245,7 @@ public class GameBoard extends View {
                 if(p2[j].getColor() == currColor){
                     selectedPiece = p2[j];
                     invalidate();
+                    win();
                 }
             }
             return;
@@ -232,6 +262,7 @@ public class GameBoard extends View {
                     if(p2[j].getColor() == currColor){
                         selectedPiece = p2[j];
                         invalidate();
+                        win();
                     }
                 }
                 break;
