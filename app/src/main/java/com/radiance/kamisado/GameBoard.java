@@ -21,10 +21,9 @@ public class GameBoard extends View {
     private float startX = -1, endX = -1, startY = -1, endY = -1, width = -1, height = -1, borderWidth = 0, unitSize = 0;
     private Board board = new Board(this);
     private boolean firstTime = true, pieceSelected = false;
-    private int boardDimension = 8, counter = 1, currColor = -1, cliclX, clickY;
+    private int boardDimension = 8, counter = 1, currColor = -1;
     private Piece[] p1 = new Piece[boardDimension], p2 = new Piece[boardDimension];
     private Piece selectedPiece;
-    private boolean firstMove;
     private int PLAYER_ONE = 0;
     private int PLAYER_TWO = 1;
     private int[] score;
@@ -34,7 +33,6 @@ public class GameBoard extends View {
         super(context, attrs);
         paint = new Paint();
         paint.setColor(Color.BLUE);
-        firstMove = true;
         score = new int[2];
 
         invalidate();
@@ -193,7 +191,15 @@ public class GameBoard extends View {
     }
 
     public void p1Turn(int x, int y){
-
+        if(availMoves.size() == 0){
+            counter++;
+            for(int j = 0; j < boardDimension; j++){
+                if(p2[j].getColor() == currColor){
+                    selectedPiece = p2[j];
+                    invalidate();
+                }
+            }
+        }
         for(int i = 0; i < availMoves.size(); i++){
             Point temp = availMoves.get(i);
             if(temp.x == x && temp.y == y){
@@ -214,17 +220,25 @@ public class GameBoard extends View {
     public void p2Turn(int x, int y){
         if(!pieceSelected) {
             for (int i = 0; i < boardDimension; i++) {
-                if (p2[i].getX() == x && p2[i].getY() == y && (currColor == -1 || currColor == p2[i].getColor())) {
+                if (p2[i].getX() == x && p2[i].getY() == y) {
                     pieceSelected = true;
                     selectedPiece = p2[i];
-                    clickY = p2[i].getY();
-                    cliclX = p2[i].getX();
                     invalidate();
                     break;
                 }
             }
         }
         else{
+            if(availMoves.size() == 0){
+                counter++;
+                for(int j = 0; j < boardDimension; j++){
+                    if(p1[j].getColor() == currColor){
+                        selectedPiece = p1[j];
+                        Log.d("TAG", p1[j].toString());
+                        invalidate();
+                    }
+                }
+            }
             for(int i = 0; i < availMoves.size(); i++){
                 Point temp = availMoves.get(i);
                 if(temp.x == x && temp.y == y){
