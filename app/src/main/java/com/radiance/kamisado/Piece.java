@@ -3,12 +3,13 @@ import android.graphics.Color;
 
 public class Piece {
 	
-	private int locX = 0, locY = 0, rank = 0, color = -1;
+	private int locX = 0, locY = 0, rank = 0, color = -1, distance;
 
 	public Piece(int x, int y, int color){
 		locX = x;
 		locY = y;
         this.color = color;
+        distance = 7;
 	}
 	
 	public int getX(){
@@ -35,5 +36,10 @@ public class Piece {
     public void setColor(int color){this.color = color;}
 
     public int getColor(){return color;}
+
+    public void rankUp (){
+        rank++;
+        distance-=2;
+    }
 
 }
