@@ -19,7 +19,7 @@ public class GameBoard extends View {
 
     private Paint paint;
     private float startX = -1, endX = -1, startY = -1, endY = -1, width = -1, height = -1, borderWidth = 0, unitSize = 0;
-    private boolean firstTime = true, firstMove = true, pieceSelected = false, win = false;
+    private boolean firstTime = true, firstMove = true, pieceSelected = false;
     private int boardDimension = 8, counter = 1, currColor = -1;
     private Piece[] p1 = new Piece[boardDimension], p2 = new Piece[boardDimension];
     private Board board = new Board(this, boardDimension);
@@ -28,7 +28,7 @@ public class GameBoard extends View {
     private int PLAYER_TWO = 1;
     private Point score = new Point(0, 0);
     private ArrayList<Point> availMoves;
-    private int eventAction = -1, initialClickX = -1, initialClickY = -1, finalClickX = -1, finalClickY = -1;
+    private int eventAction = -1, initialClickX = -1, initialClickY = -1, finalClickX = -1, finalClickY = -1, win = -1;
 
     public GameBoard(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -62,8 +62,8 @@ public class GameBoard extends View {
 
         //Creates the piece objects
         for(int i = 0; i < boardDimension; i++){
-            p1[i] = new Piece(i, 0, board.board8Color[i][0]);
-            p2[i] = new Piece(i, boardDimension - 1, board.board8Color[i][boardDimension - 1]);
+            p1[i] = new Piece(i, 0, board.board8Color[i][0], 0);
+            p2[i] = new Piece(i, boardDimension - 1, board.board8Color[i][boardDimension - 1], 0);
         }
     }//initialisation of the gameboard
 
@@ -91,23 +91,23 @@ public class GameBoard extends View {
         }
     }//Draws the pieces. Player 1 is on bottom with a black circle around them. Player 2 is on top with white.
 
-    private int win (){
+    private void win (){
 
+        win = -1;
         //check if pieces have reached opposite side
         for (int i = 0; i < boardDimension; i++) {
             if (p1[i].getY() == boardDimension - 1) {
                 score.set(score.x + p1[i].getRank(), score.y);
                 p1[i].rankUp();
-                return PLAYER_ONE;
+                win = PLAYER_ONE;
             }
             if (p2[i].getY() == 0) {
                 score.set(score.x, score.y + p2[i].getRank());
                 p2[i].rankUp();
-                return PLAYER_TWO;
+                win =  PLAYER_TWO;
             }
         }
 
-        return -1;
     }//Check for win. Return 1 if player 1 won, 0 if player 2 won, -1 if no one won yet
 
     private void displayMoves(Canvas canvas, int x, int y){
@@ -155,7 +155,7 @@ public class GameBoard extends View {
             return false;
     }
     private ArrayList<Point> searchP1(int x, int y, ArrayList<Point> availMoves, int[][] board){
-        Piece current = new Piece(0,0,0);
+        Piece current = new Piece(0,0,0,0);
 
         //find piece that is making the move
         for (int i = 0; i < p1.length; i++){
@@ -193,14 +193,14 @@ public class GameBoard extends View {
 
     private ArrayList<Point> searchP2(int x, int y, ArrayList<Point> availMoves, int[][] board){
 
-        Piece current = new Piece(0,0,0);
+        Piece current = new Piece(0,0,0,0);
 
         //find piece that is making the move
         for (int i = 0; i < p2.length; i++){
             if (p2[i].getX() == x && p2[i].getY() == y)
                 current = p2[i];
         }
-        Log.v("GAT", "Current Distance:" + current.getDistance());
+        Log.v("GAT", "Current Distance:" + current.getDistance() + " Rank:" + current.getRank());
 
         //Find moves directly in front
         for(int i = y - 1; i >= 7 -  current.getDistance() - (y-1); i--){
@@ -272,8 +272,9 @@ public class GameBoard extends View {
                 if (temp.x == x && temp.y == y) {
                     selectedPiece.setLoc(x, y);
                     counter++;
+                    win();
                     invalidate();
-                    if (win() != -1) {
+                    if (win!= -1) {
                         selectedPiece = null;
                         pieceSelected = false;
                         firstMove = true;
@@ -338,7 +339,8 @@ public class GameBoard extends View {
                     firstMove = false;
                     selectedPiece.setLoc(x, y);
                     counter++;
-                    if(win() != -1) {
+                    win();
+                    if(win!= -1) {
                         selectedPiece = null;
                         firstMove = true;
                         pieceSelected = false;
@@ -376,7 +378,7 @@ public class GameBoard extends View {
         int e = event.getAction();
 
         //If player has won then swiping left or right will reset the board in that direction
-        if(win() == 1){
+        if(win == 1){
             if(event.getAction() == 0){
                 initialClickX = (int)event.getX();
                 initialClickY = (int)event.getY();
@@ -392,16 +394,18 @@ public class GameBoard extends View {
                     Piece[][] temp = board.fillLeft(p1, p2);
                     p1 = temp[0]; p2 = temp[1];
                     invalidate();
+                    win = -1;
                 }
                 if(initialClickX - finalClickX > 200 && Math.abs(finalClickY - initialClickY) < 100){
                     //TODO add the reset methods
                     Piece[][] temp = board.fillRight(p1, p2);
                     p1 = temp[0]; p2 = temp[1];
                     invalidate();
+                    win = -1;
                 }
             }
         }
-        else if(win() == 0){
+        else if(win == 0){
             if(event.getAction() == 0){
                 initialClickX = (int)event.getX();
                 initialClickY = (int)event.getY();
@@ -417,18 +421,20 @@ public class GameBoard extends View {
                     Piece[][] temp = board.fillRight(p1, p2);
                     p1 = temp[0]; p2 = temp[1];
                     invalidate();
+                    win = -1;
                 }
                 if(initialClickX - finalClickX > 200 && Math.abs(finalClickY - initialClickY) < 100){
                     //TODO add the reset methods
                     Piece[][] temp = board.fillLeft(p1, p2);
                     p1 = temp[0]; p2 = temp[1];
                     invalidate();
+                    win = -1;
                 }
             }
         }
 
         //If game was not won and player released screen
-        if(e == 1 && win() == -1){
+        if(e == 1 && win == -1){
             //Finds the x and y location in terms of the board
             float x = event.getX(), y = event.getY();
             int convertedX = (int) ((x - startX) / unitSize), convertedY = (int) ((y - startY) / unitSize);//converts the passed coordinates into a location on the board

@@ -67,8 +67,8 @@ public class Board {
         p1 = new Piece[boardDimension];
         p2 = new Piece[boardDimension];
         for (int i = 0; i < boardDimension; i++) {
-            p1[i] = new Piece(i, 0, temp1[boardDimension - 1 - i].getColor());
-            p2[i] = new Piece(i, boardDimension - 1, temp2[boardDimension - 1 - i].getColor());
+            p1[i] = new Piece(i, 0, temp1[boardDimension - 1 - i].getColor(), temp1[boardDimension - 1 - i].getRank());
+            p2[i] = new Piece(i, boardDimension - 1, temp2[boardDimension - 1 - i].getColor(), temp2[boardDimension - 1 - i].getRank());
         }
         for(int i = 0; i < 8; i++){
             Log.d("TAG", p1[i].getX() + " " + p1[i].getY() + " " +  p2[i].getX() + " " + p2[i].getY());
@@ -86,8 +86,8 @@ public class Board {
         p1 = new Piece[boardDimension];
         p2 = new Piece[boardDimension];
         for (int i = 0; i < boardDimension; i++) {
-            p1[i] = new Piece(i, 0, temp1[i].getColor());
-            p2[i] = new Piece(i, boardDimension - 1, temp2[i].getColor());
+            p1[i] = new Piece(i, 0, temp1[i].getColor(), temp1[i].getRank());
+            p2[i] = new Piece(i, boardDimension - 1, temp2[i].getColor(), temp2[i].getRank());
         }
         for(int i = 0; i < 8; i++){
             Log.d("TAG", p1[i].getX() + " " + p1[i].getY() + " " +  p2[i].getX() + " " + p2[i].getY());

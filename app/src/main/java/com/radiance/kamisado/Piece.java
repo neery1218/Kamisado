@@ -6,11 +6,12 @@ public class Piece {
 	
 	private int locX = 0, locY = 0, rank = 0, color = -1, distance;
 
-	public Piece(int x, int y, int color){
+	public Piece(int x, int y, int color, int rank){
+        this.rank = rank;
 		locX = x;
 		locY = y;
         this.color = color;
-        distance = 7;
+        distance = 7 - 2 * rank;
 	}
 	
 	public int getX(){
