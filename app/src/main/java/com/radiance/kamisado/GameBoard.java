@@ -193,28 +193,20 @@ public class GameBoard extends View {
     }
 
     public void p1Turn(int x, int y){
-        if(!pieceSelected) {//if a piece hasn't been selected yet, determine if the selected piece is the right one
-            for (int i = 0; i < boardDimension; i++) {
-                if (p1[i].getX() == x && p1[i].getY() == y && (currColor == -1 || currColor == p1[i].getColor())) {
-                    pieceSelected = true;
-                    selectedPiece = p1[i];
-                    clickY = p1[i].getY();
-                    cliclX = p1[i].getX();
-                    invalidate();
-                    break;
+
+        for(int i = 0; i < availMoves.size(); i++){
+            Point temp = availMoves.get(i);
+            if(temp.x == x && temp.y == y){
+                selectedPiece.setLoc(x, y);
+                counter++;
+                currColor = board.board8Color[x][y];//next piece color
+                for(int j = 0; j < boardDimension; j++){
+                    if(p2[j].getColor() == currColor){
+                        selectedPiece = p2[j];
+                        invalidate();
+                    }
                 }
-            }
-        }
-        else{//if it has, check if the move is valid
-            for(int i = 0; i < availMoves.size(); i++){
-                Point temp = availMoves.get(i);
-                if(temp.x == x && temp.y == y){
-                    selectedPiece.setLoc(x, y);
-                    invalidate();
-                    pieceSelected = false;
-                    counter++;
-                    currColor = board.board8Color[x][y];//next piece color
-                }
+                break;
             }
         }
     }
@@ -237,10 +229,16 @@ public class GameBoard extends View {
                 Point temp = availMoves.get(i);
                 if(temp.x == x && temp.y == y){
                     selectedPiece.setLoc(x, y);
-                    invalidate();
-                    pieceSelected = false;
                     counter++;
-                    currColor = board.board8Color[x][y];
+                    currColor = board.board8Color[x][y];//next piece color
+                    for(int j = 0; j < boardDimension; j++){
+                        if(p1[j].getColor() == currColor){
+                            selectedPiece = p1[j];
+                            Log.d("TAG", p1[j].toString());
+                            invalidate();
+                        }
+                    }
+                    break;
                 }
             }
         }
@@ -252,7 +250,8 @@ public class GameBoard extends View {
         setup(canvas);
         drawBoard(canvas);
         drawPiece(canvas);
-        displayMoves(canvas, cliclX, clickY);
+        if(selectedPiece != null)
+            displayMoves(canvas, selectedPiece.getX(), selectedPiece.getY());
     }
 
     @Override

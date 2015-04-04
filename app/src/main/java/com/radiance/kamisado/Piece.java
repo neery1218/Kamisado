@@ -36,4 +36,8 @@ public class Piece {
 
     public int getColor(){return color;}
 
+    public String toString(){
+        return "Piece X=" + locX + " Y=" + locY + " Rank=" + rank + " Color=" + color;
+    }
+
 }
