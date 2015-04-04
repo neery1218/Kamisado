@@ -366,4 +366,15 @@ public class GameBoard extends View {
         }
         return true;
     }//Handles the touch events
+    public class AI {
+
+        public AI(){
+
+        }
+
+        public Point move(){
+            return availMoves.get((int)(Math.random()) * availMoves.size());
+        }
+
+    }
 }
