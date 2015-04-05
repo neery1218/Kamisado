@@ -282,6 +282,35 @@ public class GameBoard extends View {
         return availMoves;
     }//Search for moves for player 2
 
+    public void resolveSumoPushP1(int x){
+        //find pieces that are gonna get sumo pushed
+        //make points
+        //Pushing from the other end so it doesn't get overwritten
+        for (int j = sumoChain; j >= 1; j--) {
+
+            // findPieceAt (x,y+j);
+            //Push
+            for (int k = 0; k < p2.length; k++) {
+                if (p2[k].getX() == x && p2[k].getY() == selectedPiece.getY() + j) {
+                    p2[k].setLoc(x, p2[k].getY() + 1);
+                }
+            }
+            counter++;
+        }
+
+        //Set location of piece to 1 square in front of it
+        selectedPiece.setLoc(selectedPiece.getX(), selectedPiece.getY() + 1);
+        currColor = board.board8Color[x][sumoPushOption.y];
+
+        //Find the next piece of other player
+        for (int j = 0; j < boardDimension; j++) {
+            if (p1[j].getColor() == currColor) {
+                selectedPiece = p1[j];
+                invalidate();
+            }
+        }
+    }
+
     private void p1Turn(int x, int y){
 
         //First move of the game
@@ -331,34 +360,7 @@ public class GameBoard extends View {
 
                     //Sumo push
                     if (selectedPiece.getRank() > 0 && sumoPushOption != null && temp.x == sumoPushOption.x && temp.y == sumoPushOption.y) {
-
-                        //find pieces that are gonna get sumo pushed
-                        //make points
-                        //Pushing from the other end so it doesn't get overwritten
-                        for (int j = sumoChain; j >= 1; j--) {
-
-                            // findPieceAt (x,y+j);
-                            //Push
-                            for (int k = 0; k < p2.length; k++) {
-                                if (p2[k].getX() == x && p2[k].getY() == selectedPiece.getY() + j) {
-                                    p2[k].setLoc(x, p2[k].getY() + 1);
-                                }
-                            }
-                            counter++;
-                        }
-
-                        //Set location of piece to 1 square in front of it
-                        selectedPiece.setLoc(selectedPiece.getX(), selectedPiece.getY() + 1);
-                        currColor = board.board8Color[x][sumoPushOption.y];
-
-                        //Find the next piece of other player
-                        for (int j = 0; j < boardDimension; j++) {
-                            if (p1[j].getColor() == currColor) {
-                                selectedPiece = p1[j];
-                                invalidate();
-                            }
-                        }
-
+                        resolveSumoPushP1(x);
                     }
                     //If sumo push is not committed
                     else {
