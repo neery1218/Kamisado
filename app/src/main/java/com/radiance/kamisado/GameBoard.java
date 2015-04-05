@@ -422,8 +422,44 @@ public class GameBoard extends View {
             for(int i = 0; i < availMoves.size(); i++){
                 Point temp = availMoves.get(i);
                 if(temp.x == x && temp.y == y){
+                    if (selectedPiece.getRank() > 0 && sumoPushOption != null && temp.x == sumoPushOption.x && temp.y == sumoPushOption.y) {
+
+                        //find pieces that are gonna get sumo pushed
+                        //make points
+                        for (int j = sumoChain; j >= 1; j--) {
+                            // findPieceAt (x,y+j);
+                            for (int k = 0; k < p1.length; k++) {
+                                if (p1[k].getX() == x && p1[k].getY() == selectedPiece.getY() - j) {
+                                    p1[k].setLoc(x, p1[k].getY() - 1);
+                                }
+
+
+                            }
+                            counter++;
+
+                        }
+                        selectedPiece.setLoc(selectedPiece.getX(), selectedPiece.getY() - 1);
+                        currColor = board.board8Color[x][sumoPushOption.y];
+
+                        for (int j = 0; j < boardDimension; j++) {
+                            if (p2[j].getColor() == currColor) {
+                                selectedPiece = p2[j];
+                                invalidate();
+                            }
+                        }
+
+                    } else {
+                        selectedPiece.setLoc(x, y);
+                        currColor = board.board8Color[x][y];//next piece color
+                        for (int j = 0; j < boardDimension; j++) {
+                            if (p1[j].getColor() == currColor) {
+                                selectedPiece = p1[j];
+                                invalidate();
+                            }
+                        }
+                    }
                     firstMove = false;
-                    selectedPiece.setLoc(x, y);
+
                     counter++;
                     win();
                     if(win!= -1) {
@@ -434,13 +470,7 @@ public class GameBoard extends View {
                         counter--;
                         return;
                     }
-                    currColor = board.board8Color[x][y];//next piece color
-                    for(int j = 0; j < boardDimension; j++){
-                        if(p1[j].getColor() == currColor){
-                            selectedPiece = p1[j];
-                            invalidate();
-                        }
-                    }
+
                     break;
                 }
             }
