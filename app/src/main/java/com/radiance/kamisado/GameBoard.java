@@ -170,9 +170,10 @@ public class GameBoard extends View {
 
         //find piece that is making the move
         for (int i = 0; i < p1.length; i++){
-            if (p1[i].getX() == x && p2[i].getY() == y)
+            if (p1[i].getX() == x && p1[i].getY() == y)
                 current = p1[i];
         }
+        Log.v("GAT", "Current Distance:" + current.getDistance() + " Rank:" + current.getRank());
         for (int i = 1; i <= current.getDistance(); i++) {//checking for available moves
 
             //have to look for sumo pushed though
