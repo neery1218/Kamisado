@@ -33,10 +33,14 @@ public class GameBoard extends View {
     private int sumoChain = 0;
     private int EASY = 0;
     private int eventAction = -1, initialClickX = -1, initialClickY = -1, finalClickX = -1, finalClickY = -1, win = -1;
+    private int MATCH_TYPE;
+    private int VERSUS_TYPE;
+    //TODO: Eventually all these constant integers should be switched to enums for typesafety/readability
 
     public GameBoard(Context context, AttributeSet attrs) {
         super(context, attrs);
         paint = new Paint();
+
     }//Calls the super constructor and creates a new paint object
 
     public void setup(Canvas canvas){

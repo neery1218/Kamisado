@@ -1,22 +1,24 @@
 package com.radiance.kamisado;
 
 import android.app.Activity;
-import android.graphics.Canvas;
+import android.app.Fragment;
 import android.net.Uri;
 import android.os.Bundle;
-import android.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 
 public class GamePlayFragment extends Fragment {
 
+    private static int VERSUS_TYPE;
+    private static int MATCH_TYPE;
     private OnGamePlayInteractionListener mListener;
 
-    private int VERSUS_TYPE;
-    private int MATCH_TYPE;
+    public GamePlayFragment() {
+        // Required empty public constructor
+
+    }
 
     public static GamePlayFragment newInstance(String param1, String param2) {
         GamePlayFragment fragment = new GamePlayFragment();
@@ -24,10 +26,16 @@ public class GamePlayFragment extends Fragment {
         return fragment;
     }
 
-    public GamePlayFragment() {
-        // Required empty public constructor
-
+    public static int getVERSUS_TYPE() {
+        return VERSUS_TYPE;
     }
+
+    public static int getMATCH_TYPE() {
+        return MATCH_TYPE;
+    }
+
+
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
