@@ -29,6 +29,8 @@ public class GameBoard extends View {
     private int EMPTY = -1;
     private Point score = new Point(0, 0);
     private ArrayList<Point> availMoves;
+    private Point sumoPushOption = new Point(0, 0);
+    private int sumoChain = 0;
     private int eventAction = -1, initialClickX = -1, initialClickY = -1, finalClickX = -1, finalClickY = -1, win = -1;
 
     public GameBoard(Context context, AttributeSet attrs) {
@@ -167,7 +169,7 @@ public class GameBoard extends View {
         boolean leftDiagonalBlocked = false;
         boolean rightDiagonalBlocked = false;
         boolean forwardBlocked = false;
-
+        Log.v("GAT", "Current Distance:" + current.getDistance() + " Rank:" + current.getRank());
         //find piece that is making the move
         for (int i = 0; i < p1.length; i++){
             if (p1[i].getX() == x && p1[i].getY() == y)
@@ -188,8 +190,12 @@ public class GameBoard extends View {
                         counter++;
                     Log.v("GAT", "counter:" + counter);
                     //if the number of opponent pieces are less than the current piece's rank, and the square behind the chain is empty
-                    if (valid(i + y + counter) && counter > 0 && counter <= current.getRank() && board[x][y + i + counter] == EMPTY)
+                    if (valid(i + y + counter) && counter > 0 && counter <= current.getRank() && board[x][y + i + counter] == EMPTY) {
                         availMoves.add(new Point(x, y + i + counter));//adds it as a valid move
+                        sumoPushOption = new Point(x, y + i + counter);
+                        sumoChain = counter;
+                    }
+
 
                     forwardBlocked = true;
                 }
@@ -243,8 +249,12 @@ public class GameBoard extends View {
                         counter++;
                     Log.v("GAT", "counter:" + counter);
                     //if the number of opponent pieces are less than the current piece's rank, and the square behind the chain is empty
-                    if (valid(y - i - counter) && counter > 0 && counter <= current.getRank() && board[x][y - i - counter] == EMPTY)
+                    if (valid(y - i - counter) && counter > 0 && counter <= current.getRank() && board[x][y - i - counter] == EMPTY) {
+                        sumoPushOption = new Point(x, y - i - counter);
                         availMoves.add(new Point(x, y - i - counter));//adds it as a valid move
+                        sumoChain = counter;
+                    }
+
 
                     forwardBlocked = true;
                 }
@@ -312,29 +322,53 @@ public class GameBoard extends View {
             for (int i = 0; i < availMoves.size(); i++) {
                 Point temp = availMoves.get(i);
                 if (temp.x == x && temp.y == y) {
-                    selectedPiece.setLoc(x, y);
+                    if (selectedPiece.getRank() > 0 && sumoPushOption != null && temp.x == sumoPushOption.x && temp.y == sumoPushOption.y) {
+
+                        //find pieces that are gonna get sumo pushed
+                        //make points
+                        for (int j = sumoChain; j >= 1; j--) {
+                            // findPieceAt (x,y+j);
+                            for (int k = 0; k < p2.length; k++) {
+                                if (p2[k].getX() == x && p2[k].getY() == y + j)
+                                    p2[k].setLoc(x, p2[k].getY() + 1);
+
+                            }
+                            counter++;
+
+                        }
+                        selectedPiece.setLoc(selectedPiece.getX(), selectedPiece.getY() + 1);
+                        currColor = board.board8Color[x][sumoPushOption.y + 1 + sumoChain];
+
+                    } else {
+                        selectedPiece.setLoc(x, y);
+                        currColor = board.board8Color[x][y];//next piece color
+
+                    }
+
                     counter++;
                     win();
                     invalidate();
-                    if (win!= -1) {
+                    if (win != -1) {//if someone has won
                         selectedPiece = null;
                         pieceSelected = false;
                         firstMove = true;
                         invalidate();
                         counter--;
+                        sumoPushOption = null;
                         return;
                     }
-                    currColor = board.board8Color[x][y];//next piece color
                     for (int j = 0; j < boardDimension; j++) {
                         if (p2[j].getColor() == currColor) {
                             selectedPiece = p2[j];
                             invalidate();
                         }
                     }
+
                     break;
                 }
             }
         }
+
     }//Conducting player1's turn
 
     private void p2Turn(int x, int y){
