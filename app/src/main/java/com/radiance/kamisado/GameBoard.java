@@ -45,6 +45,7 @@ public class GameBoard extends View {
 
         firstTime = false;
 
+
         //Sets up the width and height of the board on the screen
         //The board is centered in the screen with a possible border around them
         width = getWidth();
