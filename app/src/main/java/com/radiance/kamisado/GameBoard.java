@@ -341,9 +341,22 @@ public class GameBoard extends View {
                         selectedPiece.setLoc(selectedPiece.getX(), selectedPiece.getY() + 1);
                         currColor = board.board8Color[x][sumoPushOption.y];
 
+                        for (int j = 0; j < boardDimension; j++) {
+                            if (p1[j].getColor() == currColor) {
+                                selectedPiece = p1[j];
+                                invalidate();
+                            }
+                        }
+
                     } else {
                         selectedPiece.setLoc(x, y);
                         currColor = board.board8Color[x][y];//next piece color
+                        for (int j = 0; j < boardDimension; j++) {
+                            if (p2[j].getColor() == currColor) {
+                                selectedPiece = p2[j];
+                                invalidate();
+                            }
+                        }
 
                     }
 
@@ -359,12 +372,7 @@ public class GameBoard extends View {
                         sumoPushOption = null;
                         return;
                     }
-                    for (int j = 0; j < boardDimension; j++) {
-                        if (p2[j].getColor() == currColor) {
-                            selectedPiece = p2[j];
-                            invalidate();
-                        }
-                    }
+
 
                     break;
                 }
