@@ -89,8 +89,7 @@ public class GameBoard extends View {
     }
 
     private void updateScore() {
-        scoreView.setText(score[0] + " " + score[1]);
-        Log.v("GAT", "Score:" + score[0] + " " + score[1]);
+        scoreView.setText(score[PLAYER_ONE] + " " + score[PLAYER_TWO]);
     }
     public void setup(Canvas canvas){
         //Only ran once when the view is first created
