@@ -9,6 +9,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -18,6 +19,8 @@ import java.util.ArrayList;
 public class GameBoard extends View {
 
     private Paint paint;//make these variables easier to read
+
+    private TextView scoreView;
 
     private float startX = -1;
     private float endX = -1;
@@ -80,6 +83,15 @@ public class GameBoard extends View {
         VERSUS_TYPE = GamePlayFragment.getVERSUS_TYPE();
     }//Calls the super constructor and creates a new paint object
 
+    public void setScoreView(TextView textView) {
+        scoreView = textView;
+        updateScore();
+    }
+
+    private void updateScore() {
+        scoreView.setText(score[0] + " " + score[1]);
+        Log.v("GAT", "Score:" + score[0] + " " + score[1]);
+    }
     public void setup(Canvas canvas){
         //Only ran once when the view is first created
         if(!firstTime)
@@ -147,14 +159,16 @@ public class GameBoard extends View {
         //check if pieces have reached opposite side
         for (int i = 0; i < boardDimension; i++) {
             if (pieces[PLAYER_TWO][i].getY() == boardDimension - 1) {
-                score[PLAYER_TWO] += pieces[PLAYER_TWO][i].getRank();
+                score[PLAYER_TWO] += Math.max(pieces[PLAYER_TWO][i].getRank(), 1);
                 pieces[PLAYER_TWO][i].rankUp();
                 win = PLAYER_TWO;
+                updateScore();
             }
             if (pieces[PLAYER_ONE][i].getY() == 0) {
-                score[PLAYER_ONE] += pieces[PLAYER_ONE][i].getRank();
+                score[PLAYER_ONE] += Math.max(pieces[PLAYER_ONE][i].getRank(), 1);
                 pieces[PLAYER_ONE][i].rankUp();
                 win = PLAYER_ONE;
+                updateScore();
             }
         }
 
