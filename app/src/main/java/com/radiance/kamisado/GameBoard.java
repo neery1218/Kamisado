@@ -21,7 +21,7 @@ public class GameBoard extends View {
     private float startX = -1, endX = -1, startY = -1, endY = -1, width = -1, height = -1, borderWidth = 0, unitSize = 0;
     private boolean firstTime = true, firstMove = true, pieceSelected = false;
     private int boardDimension = 8, counter = 1, currColor = -1;
-    private Piece[] p2 = new Piece[boardDimension], p1 = new Piece[boardDimension];
+    private Piece[][] pieces = new Piece[2][boardDimension];
     private Board board = new Board(this, boardDimension);
     private Piece selectedPiece;
     private int PLAYER_TWO = 0;
@@ -65,8 +65,8 @@ public class GameBoard extends View {
 
         //Creates the piece objects
         for(int i = 0; i < boardDimension; i++){
-            p2[i] = new Piece(i, 0, board.board8Color[i][0], 0);
-            p1[i] = new Piece(i, boardDimension - 1, board.board8Color[i][boardDimension - 1], 0);
+            pieces[PLAYER_TWO][i] = new Piece(i, 0, board.board8Color[i][0], 0);
+            pieces[PLAYER_ONE][i] = new Piece(i, boardDimension - 1, board.board8Color[i][boardDimension - 1], 0);
         }
     }//initialisation of the gameboard
 
@@ -84,18 +84,18 @@ public class GameBoard extends View {
         paint.setTextSize(30);
         for(int i = 0; i < boardDimension; i++){
             paint.setColor(Color.BLACK);
-            canvas.drawCircle(startX + p2[i].getX() * unitSize + unitSize / 2, startY + unitSize * p2[i].getY() + unitSize / 2, unitSize / 2, paint);
-            paint.setColor(p2[i].getColor());
-            canvas.drawCircle(startX + p2[i].getX() * unitSize + unitSize / 2, startY + unitSize * p2[i].getY() + unitSize / 2, unitSize / 3, paint);
+            canvas.drawCircle(startX + pieces[PLAYER_TWO][i].getX() * unitSize + unitSize / 2, startY + unitSize * pieces[PLAYER_TWO][i].getY() + unitSize / 2, unitSize / 2, paint);
+            paint.setColor(pieces[PLAYER_TWO][i].getColor());
+            canvas.drawCircle(startX + pieces[PLAYER_TWO][i].getX() * unitSize + unitSize / 2, startY + unitSize * pieces[PLAYER_TWO][i].getY() + unitSize / 2, unitSize / 3, paint);
             paint.setColor(Color.BLACK);
-            canvas.drawText("" + p2[i].getRank(), startX + p2[i].getX() * unitSize + unitSize / 2, startY + unitSize * p2[i].getY() + unitSize / 2, paint);
+            canvas.drawText("" + pieces[PLAYER_TWO][i].getRank(), startX + pieces[PLAYER_TWO][i].getX() * unitSize + unitSize / 2, startY + unitSize * pieces[PLAYER_TWO][i].getY() + unitSize / 2, paint);
 
             paint.setColor(Color.WHITE);
-            canvas.drawCircle(startX + p1[i].getX() * unitSize + unitSize / 2, startY + unitSize * p1[i].getY() + unitSize / 2, unitSize / 2, paint);
-            paint.setColor(p1[i].getColor());
-            canvas.drawCircle(startX + p1[i].getX() * unitSize + unitSize / 2, startY + unitSize * p1[i].getY() + unitSize / 2, unitSize / 3, paint);
+            canvas.drawCircle(startX + pieces[PLAYER_ONE][i].getX() * unitSize + unitSize / 2, startY + unitSize * pieces[PLAYER_ONE][i].getY() + unitSize / 2, unitSize / 2, paint);
+            paint.setColor(pieces[PLAYER_ONE][i].getColor());
+            canvas.drawCircle(startX + pieces[PLAYER_ONE][i].getX() * unitSize + unitSize / 2, startY + unitSize * pieces[PLAYER_ONE][i].getY() + unitSize / 2, unitSize / 3, paint);
             paint.setColor(Color.WHITE);
-            canvas.drawText("" + p1[i].getRank(), startX + p1[i].getX() * unitSize + unitSize / 2, startY + unitSize * p1[i].getY() + unitSize / 2, paint);
+            canvas.drawText("" + pieces[PLAYER_ONE][i].getRank(), startX + pieces[PLAYER_ONE][i].getX() * unitSize + unitSize / 2, startY + unitSize * pieces[PLAYER_ONE][i].getY() + unitSize / 2, paint);
         }
     }//Draws the pieces. Player 1 is on bottom with a black circle around them. Player 2 is on top with white.
 
@@ -104,14 +104,14 @@ public class GameBoard extends View {
         win = -1;
         //check if pieces have reached opposite side
         for (int i = 0; i < boardDimension; i++) {
-            if (p2[i].getY() == boardDimension - 1) {
-                score.set(score.x + p2[i].getRank(), score.y);
-                p2[i].rankUp();
+            if (pieces[PLAYER_TWO][i].getY() == boardDimension - 1) {
+                score.set(score.x + pieces[PLAYER_TWO][i].getRank(), score.y);
+                pieces[PLAYER_TWO][i].rankUp();
                 win = PLAYER_TWO;
             }
-            if (p1[i].getY() == 0) {
-                score.set(score.x, score.y + p1[i].getRank());
-                p1[i].rankUp();
+            if (pieces[PLAYER_ONE][i].getY() == 0) {
+                score.set(score.x, score.y + pieces[PLAYER_ONE][i].getRank());
+                pieces[PLAYER_ONE][i].rankUp();
                 win = PLAYER_ONE;
             }
         }
@@ -133,8 +133,8 @@ public class GameBoard extends View {
 
         //Sets the board to 1 if piece is there
         for(int i = 0; i < boardDimension; i++){
-            board[p2[i].getX()][p2[i].getY()] = PLAYER_TWO;
-            board[p1[i].getX()][p1[i].getY()] = PLAYER_ONE;
+            board[pieces[PLAYER_TWO][i].getX()][pieces[PLAYER_TWO][i].getY()] = PLAYER_TWO;
+            board[pieces[PLAYER_ONE][i].getX()][pieces[PLAYER_ONE][i].getY()] = PLAYER_ONE;
         }
 
         //Finds available moves for each player
@@ -159,10 +159,10 @@ public class GameBoard extends View {
 
     private Piece find(int x, int y){
         for(int i = 0; i < boardDimension; i++){
-            if(p2[i].getX() == x && p2[i].getY() == y)
-                return p2[i];
-            else if(p1[i].getX() == x && p1[i].getY() == y)
-                return p1[i];
+            if(pieces[PLAYER_TWO][i].getX() == x && pieces[PLAYER_TWO][i].getY() == y)
+                return pieces[PLAYER_TWO][i];
+            else if(pieces[PLAYER_ONE][i].getX() == x && pieces[PLAYER_ONE][i].getY() == y)
+                return pieces[PLAYER_ONE][i];
         }
         return null;
     }
@@ -182,9 +182,9 @@ public class GameBoard extends View {
         boolean forwardBlocked = false;
 
         //find piece that is making the move
-        for (int i = 0; i < p1.length; i++){
-            if (p1[i].getX() == x && p1[i].getY() == y)
-                current = p1[i];
+        for (int i = 0; i < pieces[PLAYER_ONE].length; i++){
+            if (pieces[PLAYER_ONE][i].getX() == x && pieces[PLAYER_ONE][i].getY() == y)
+                current = pieces[PLAYER_ONE][i];
         }
         Log.v("GAT", "Current Distance:" + current.getDistance() + " Rank:" + current.getRank());
         for (int i = 1; i <= current.getDistance(); i++) {
@@ -245,9 +245,9 @@ public class GameBoard extends View {
         boolean forwardBlocked = false;
         Log.v("GAT", "Current Distance:" + current.getDistance() + " Rank:" + current.getRank());
         //find piece that is making the move
-        for (int i = 0; i < p2.length; i++){
-            if (p2[i].getX() == x && p2[i].getY() == y)
-                current = p2[i];
+        for (int i = 0; i < pieces[PLAYER_TWO].length; i++){
+            if (pieces[PLAYER_TWO][i].getX() == x && pieces[PLAYER_TWO][i].getY() == y)
+                current = pieces[PLAYER_TWO][i];
         }
         Log.v("GAT", "Current Distance:" + current.getDistance() + " Rank:" + current.getRank());
         for (int i = 1; i <= current.getDistance(); i++) {//checking for available moves
@@ -307,9 +307,9 @@ public class GameBoard extends View {
         //make points
         for (int j = sumoChain; j >= 1; j--) {
             // findPieceAt (x,y+j);
-            for (int k = 0; k < p2.length; k++) {
-                if (p2[k].getX() == x && p2[k].getY() == selectedPiece.getY() - j) {
-                    p2[k].setLoc(x, p2[k].getY() - 1);
+            for (int k = 0; k < pieces[PLAYER_TWO].length; k++) {
+                if (pieces[PLAYER_TWO][k].getX() == x && pieces[PLAYER_TWO][k].getY() == selectedPiece.getY() - j) {
+                    pieces[PLAYER_TWO][k].setLoc(x, pieces[PLAYER_TWO][k].getY() - 1);
                 }
 
 
@@ -321,8 +321,8 @@ public class GameBoard extends View {
         currColor = board.board8Color[x][sumoPushOption.y];
 
         for (int j = 0; j < boardDimension; j++) {
-            if (p1[j].getColor() == currColor) {
-                selectedPiece = p1[j];
+            if (pieces[PLAYER_ONE][j].getColor() == currColor) {
+                selectedPiece = pieces[PLAYER_ONE][j];
                 invalidate();
             }
         }
@@ -336,9 +336,9 @@ public class GameBoard extends View {
 
             // findPieceAt (x,y+j);
             //Push
-            for (int k = 0; k < p1.length; k++) {
-                if (p1[k].getX() == x && p1[k].getY() == selectedPiece.getY() + j) {
-                    p1[k].setLoc(x, p1[k].getY() + 1);
+            for (int k = 0; k < pieces[PLAYER_ONE].length; k++) {
+                if (pieces[PLAYER_ONE][k].getX() == x && pieces[PLAYER_ONE][k].getY() == selectedPiece.getY() + j) {
+                    pieces[PLAYER_ONE][k].setLoc(x, pieces[PLAYER_ONE][k].getY() + 1);
                 }
             }
             counter++;
@@ -350,8 +350,8 @@ public class GameBoard extends View {
 
         //Find the next piece of other player
         for (int j = 0; j < boardDimension; j++) {
-            if (p2[j].getColor() == currColor) {
-                selectedPiece = p2[j];
+            if (pieces[PLAYER_TWO][j].getColor() == currColor) {
+                selectedPiece = pieces[PLAYER_TWO][j];
                 invalidate();
             }
         }
@@ -362,9 +362,9 @@ public class GameBoard extends View {
         //Initiating first move of the game
         if(!pieceSelected) {
             for (int i = 0; i < boardDimension; i++) {
-                if (p1[i].getX() == x && p1[i].getY() == y) {
+                if (pieces[PLAYER_ONE][i].getX() == x && pieces[PLAYER_ONE][i].getY() == y) {
                     pieceSelected = true;
-                    selectedPiece = p1[i];
+                    selectedPiece = pieces[PLAYER_ONE][i];
                     invalidate();
                     break;
                 }
@@ -374,8 +374,8 @@ public class GameBoard extends View {
             //Deselecting on first move\
             if(firstMove){
                 for(int i = 0; i < boardDimension; i++){
-                    if(p1[i].getX() == x && p1[i].getY() == y){
-                        selectedPiece = p1[i];
+                    if(pieces[PLAYER_ONE][i].getX() == x && pieces[PLAYER_ONE][i].getY() == y){
+                        selectedPiece = pieces[PLAYER_ONE][i];
                         firstMove = true;
                         invalidate();
                         break;
@@ -387,9 +387,9 @@ public class GameBoard extends View {
             if(availMoves.size() == 0){
                 counter++;
                 for(int j = 0; j < boardDimension; j++){
-                    if(p2[j].getColor() == currColor){
-                        selectedPiece = p2[j];
-                        Log.d("TAG", p2[j].toString());
+                    if(pieces[PLAYER_TWO][j].getColor() == currColor){
+                        selectedPiece = pieces[PLAYER_TWO][j];
+                        Log.d("TAG", pieces[PLAYER_TWO][j].toString());
                         invalidate();
                     }
                 }
@@ -405,8 +405,8 @@ public class GameBoard extends View {
                         selectedPiece.setLoc(x, y);
                         currColor = board.board8Color[x][y];//next piece color
                         for (int j = 0; j < boardDimension; j++) {
-                            if (p2[j].getColor() == currColor) {
-                                selectedPiece = p2[j];
+                            if (pieces[PLAYER_TWO][j].getColor() == currColor) {
+                                selectedPiece = pieces[PLAYER_TWO][j];
                                 invalidate();
                             }
                         }
@@ -435,9 +435,9 @@ public class GameBoard extends View {
         //First move of the game
         if(!pieceSelected) {
             for (int i = 0; i < boardDimension; i++) {
-                if (p2[i].getX() == x && p2[i].getY() == y) {
+                if (pieces[PLAYER_TWO][i].getX() == x && pieces[PLAYER_TWO][i].getY() == y) {
                     pieceSelected = true;
-                    selectedPiece = p2[i];
+                    selectedPiece = pieces[PLAYER_TWO][i];
                     invalidate();
                     break;
                 }
@@ -449,8 +449,8 @@ public class GameBoard extends View {
             //For deselecting a piece
             if(firstMove){
                 for(int i = 0; i < boardDimension; i++){
-                    if(p2[i].getX() == x && p2[i].getY() == y){
-                        selectedPiece = p2[i];
+                    if(pieces[PLAYER_TWO][i].getX() == x && pieces[PLAYER_TWO][i].getY() == y){
+                        selectedPiece = pieces[PLAYER_TWO][i];
                         firstMove = true;
                         invalidate();
                         break;
@@ -463,8 +463,8 @@ public class GameBoard extends View {
             if (availMoves.size() == 0) {
                 counter++;
                 for (int j = 0; j < boardDimension; j++) {
-                    if (p1[j].getColor() == currColor) {
-                        selectedPiece = p1[j];
+                    if (pieces[PLAYER_ONE][j].getColor() == currColor) {
+                        selectedPiece = pieces[PLAYER_ONE][j];
                         invalidate();
                     }
                 }
@@ -488,8 +488,8 @@ public class GameBoard extends View {
                         selectedPiece.setLoc(x, y);
                         currColor = board.board8Color[x][y];//next piece color
                         for (int j = 0; j < boardDimension; j++) {
-                            if (p1[j].getColor() == currColor) {
-                                selectedPiece = p1[j];
+                            if (pieces[PLAYER_ONE][j].getColor() == currColor) {
+                                selectedPiece = pieces[PLAYER_ONE][j];
                                 invalidate();
                             }
                         }
@@ -530,15 +530,15 @@ public class GameBoard extends View {
             if(finalClickX - initialClickX > 200 && Math.abs(finalClickY - initialClickY) < 100){
                 initialClickX = -1; finalClickX = -1; initialClickY = -1; finalClickY = -1;
                 //TODO add the reset methods
-                Piece[][] temp = board.fillLeft(p2, p1);
-                p2 = temp[0]; p1 = temp[1];
+                Piece[][] temp = board.fillLeft(pieces[PLAYER_TWO], pieces[PLAYER_ONE]);
+                pieces[PLAYER_TWO] = temp[0]; pieces[PLAYER_ONE] = temp[1];
                 invalidate();
                 win = -1;
             }
             if(initialClickX - finalClickX > 200 && Math.abs(finalClickY - initialClickY) < 100){
                 //TODO add the reset methods
-                Piece[][] temp = board.fillRight(p2, p1);
-                p2 = temp[0]; p1 = temp[1];
+                Piece[][] temp = board.fillRight(pieces[PLAYER_TWO], pieces[PLAYER_ONE]);
+                pieces[PLAYER_TWO] = temp[0]; pieces[PLAYER_ONE] = temp[1];
                 invalidate();
                 win = -1;
             }
