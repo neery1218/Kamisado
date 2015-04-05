@@ -21,11 +21,11 @@ public class GameBoard extends View {
     private float startX = -1, endX = -1, startY = -1, endY = -1, width = -1, height = -1, borderWidth = 0, unitSize = 0;
     private boolean firstTime = true, firstMove = true, pieceSelected = false;
     private int boardDimension = 8, counter = 1, currColor = -1;
-    private Piece[] p1 = new Piece[boardDimension], p2 = new Piece[boardDimension];
+    private Piece[] p2 = new Piece[boardDimension], p1 = new Piece[boardDimension];
     private Board board = new Board(this, boardDimension);
     private Piece selectedPiece;
-    private int PLAYER_ONE = 0;
-    private int PLAYER_TWO = 1;
+    private int PLAYER_TWO = 0;
+    private int PLAYER_ONE = 1;
     private int EMPTY = -1;
     private Point score = new Point(0, 0);
     private ArrayList<Point> availMoves;
@@ -65,8 +65,8 @@ public class GameBoard extends View {
 
         //Creates the piece objects
         for(int i = 0; i < boardDimension; i++){
-            p1[i] = new Piece(i, 0, board.board8Color[i][0], 0);
-            p2[i] = new Piece(i, boardDimension - 1, board.board8Color[i][boardDimension - 1], 0);
+            p2[i] = new Piece(i, 0, board.board8Color[i][0], 0);
+            p1[i] = new Piece(i, boardDimension - 1, board.board8Color[i][boardDimension - 1], 0);
         }
     }//initialisation of the gameboard
 
@@ -84,18 +84,18 @@ public class GameBoard extends View {
         paint.setTextSize(30);
         for(int i = 0; i < boardDimension; i++){
             paint.setColor(Color.BLACK);
-            canvas.drawCircle(startX + p1[i].getX() * unitSize + unitSize / 2, startY + unitSize * p1[i].getY() + unitSize / 2, unitSize / 2, paint);
-            paint.setColor(p1[i].getColor());
-            canvas.drawCircle(startX + p1[i].getX() * unitSize + unitSize / 2, startY + unitSize * p1[i].getY() + unitSize / 2, unitSize / 3, paint);
-            paint.setColor(Color.BLACK);
-            canvas.drawText("" + p1[i].getRank(), startX + p1[i].getX() * unitSize + unitSize / 2, startY + unitSize * p1[i].getY() + unitSize / 2, paint);
-
-            paint.setColor(Color.WHITE);
             canvas.drawCircle(startX + p2[i].getX() * unitSize + unitSize / 2, startY + unitSize * p2[i].getY() + unitSize / 2, unitSize / 2, paint);
             paint.setColor(p2[i].getColor());
             canvas.drawCircle(startX + p2[i].getX() * unitSize + unitSize / 2, startY + unitSize * p2[i].getY() + unitSize / 2, unitSize / 3, paint);
-            paint.setColor(Color.WHITE);
+            paint.setColor(Color.BLACK);
             canvas.drawText("" + p2[i].getRank(), startX + p2[i].getX() * unitSize + unitSize / 2, startY + unitSize * p2[i].getY() + unitSize / 2, paint);
+
+            paint.setColor(Color.WHITE);
+            canvas.drawCircle(startX + p1[i].getX() * unitSize + unitSize / 2, startY + unitSize * p1[i].getY() + unitSize / 2, unitSize / 2, paint);
+            paint.setColor(p1[i].getColor());
+            canvas.drawCircle(startX + p1[i].getX() * unitSize + unitSize / 2, startY + unitSize * p1[i].getY() + unitSize / 2, unitSize / 3, paint);
+            paint.setColor(Color.WHITE);
+            canvas.drawText("" + p1[i].getRank(), startX + p1[i].getX() * unitSize + unitSize / 2, startY + unitSize * p1[i].getY() + unitSize / 2, paint);
         }
     }//Draws the pieces. Player 1 is on bottom with a black circle around them. Player 2 is on top with white.
 
@@ -104,15 +104,15 @@ public class GameBoard extends View {
         win = -1;
         //check if pieces have reached opposite side
         for (int i = 0; i < boardDimension; i++) {
-            if (p1[i].getY() == boardDimension - 1) {
-                score.set(score.x + p1[i].getRank(), score.y);
+            if (p2[i].getY() == boardDimension - 1) {
+                score.set(score.x + p2[i].getRank(), score.y);
+                p2[i].rankUp();
+                win = PLAYER_TWO;
+            }
+            if (p1[i].getY() == 0) {
+                score.set(score.x, score.y + p1[i].getRank());
                 p1[i].rankUp();
                 win = PLAYER_ONE;
-            }
-            if (p2[i].getY() == 0) {
-                score.set(score.x, score.y + p2[i].getRank());
-                p2[i].rankUp();
-                win =  PLAYER_TWO;
             }
         }
 
@@ -133,16 +133,16 @@ public class GameBoard extends View {
 
         //Sets the board to 1 if piece is there
         for(int i = 0; i < boardDimension; i++){
-            board[p1[i].getX()][p1[i].getY()] = PLAYER_ONE;
             board[p2[i].getX()][p2[i].getY()] = PLAYER_TWO;
+            board[p1[i].getX()][p1[i].getY()] = PLAYER_ONE;
         }
 
         //Finds available moves for each player
-        if (counter % 2 == PLAYER_ONE) {
-            availMoves = searchP1(x,y,availMoves,board);
+        if (counter % 2 == PLAYER_TWO) {
+            availMoves = searchP2(x, y, availMoves, board);
         }
         else{
-            availMoves = searchP2(x,y,availMoves,board);
+            availMoves = searchP1(x, y, availMoves, board);
         }
 
         //Draws the squares highlighting the available moves
@@ -159,10 +159,10 @@ public class GameBoard extends View {
 
     private Piece find(int x, int y){
         for(int i = 0; i < boardDimension; i++){
-            if(p1[i].getX() == x && p1[i].getY() == y)
-                return p1[i];
-            else if(p2[i].getX() == x && p2[i].getY() == y)
+            if(p2[i].getX() == x && p2[i].getY() == y)
                 return p2[i];
+            else if(p1[i].getX() == x && p1[i].getY() == y)
+                return p1[i];
         }
         return null;
     }
@@ -175,80 +175,16 @@ public class GameBoard extends View {
     }//Finds available moves of each player
 
     private ArrayList<Point> searchP1(int x, int y, ArrayList<Point> availMoves, int[][] board){
+
         Piece current = new Piece(0,0,0,0);
         boolean leftDiagonalBlocked = false;
         boolean rightDiagonalBlocked = false;
         boolean forwardBlocked = false;
-        Log.v("GAT", "Current Distance:" + current.getDistance() + " Rank:" + current.getRank());
+
         //find piece that is making the move
         for (int i = 0; i < p1.length; i++){
             if (p1[i].getX() == x && p1[i].getY() == y)
                 current = p1[i];
-        }
-        Log.v("GAT", "Current Distance:" + current.getDistance() + " Rank:" + current.getRank());
-        for (int i = 1; i <= current.getDistance(); i++) {//checking for available moves
-
-            //have to look for sumo pushed though
-            if (!forwardBlocked && valid(i + y)) {//finds moves directly forward
-                if (board[x][i + y] == EMPTY)
-                    availMoves.add(new Point(x, y + i));
-                else if (current.getRank() > 0) {//check for sumoPushes
-
-                    int counter = 0;
-
-                    while (valid(i + y + counter) && board[x][i + y + counter] == PLAYER_TWO) {//checks for a chain of opponent pieces
-                        if(find(x, i + y + counter).getRank() >= current.getRank()){
-                            counter = 0;
-                            break;
-                        }
-                        counter++;
-                    }
-                    Log.v("GAT", "counter:" + counter);
-                    //if the number of opponent pieces are less than the current piece's rank, and the square behind the chain is empty
-                    if (valid(i + y + counter) && counter > 0 && counter <= current.getRank() && board[x][y + i + counter] == EMPTY) {
-                        availMoves.add(new Point(x, y + i + counter));//adds it as a valid move
-                        sumoPushOption = new Point(x, y + i + counter);
-                        sumoChain = counter;
-                    }
-
-
-                    forwardBlocked = true;
-                }
-                else
-                    forwardBlocked = true;
-            }
-
-            if (!rightDiagonalBlocked && valid(i + y) && valid(i + x)) {
-                if (board[x + i][y + i] == EMPTY)
-                    availMoves.add(new Point(x + i, y + i));
-                else
-                    rightDiagonalBlocked = true;
-            }
-
-
-            if (!leftDiagonalBlocked && valid(i + y) && valid(x - i)) {//left diagonal
-                if (board[x - i][y + i] == EMPTY)
-                    availMoves.add(new Point(x - i, y + i));
-                else
-                    leftDiagonalBlocked = true;
-            }
-
-        }
-
-        return availMoves;
-    }//Search for available moves for player 1
-
-    private ArrayList<Point> searchP2(int x, int y, ArrayList<Point> availMoves, int[][] board){
-
-        Piece current = new Piece(0,0,0,0);
-        boolean leftDiagonalBlocked = false;
-        boolean rightDiagonalBlocked = false;
-        boolean forwardBlocked = false;
-
-        //find piece that is making the move
-        for (int i = 0; i < p2.length; i++){
-            if (p2[i].getX() == x && p2[i].getY() == y)
-                current = p2[i];
         }
         Log.v("GAT", "Current Distance:" + current.getDistance() + " Rank:" + current.getRank());
         for (int i = 1; i <= current.getDistance(); i++) {
@@ -260,7 +196,7 @@ public class GameBoard extends View {
 
                     int counter = 0;
 
-                    while (valid(y - i - counter) && board[x][y - i - counter] == PLAYER_ONE) {//checks for a chain of opponent pieces
+                    while (valid(y - i - counter) && board[x][y - i - counter] == PLAYER_TWO) {//checks for a chain of opponent pieces
                         if(find(x, y - i - counter).getRank() >= current.getRank()){
                             counter = 0;
                             break;
@@ -302,43 +238,78 @@ public class GameBoard extends View {
         return availMoves;
     }//Search for moves for player 2
 
+    private ArrayList<Point> searchP2(int x, int y, ArrayList<Point> availMoves, int[][] board){
+        Piece current = new Piece(0,0,0,0);
+        boolean leftDiagonalBlocked = false;
+        boolean rightDiagonalBlocked = false;
+        boolean forwardBlocked = false;
+        Log.v("GAT", "Current Distance:" + current.getDistance() + " Rank:" + current.getRank());
+        //find piece that is making the move
+        for (int i = 0; i < p2.length; i++){
+            if (p2[i].getX() == x && p2[i].getY() == y)
+                current = p2[i];
+        }
+        Log.v("GAT", "Current Distance:" + current.getDistance() + " Rank:" + current.getRank());
+        for (int i = 1; i <= current.getDistance(); i++) {//checking for available moves
+
+            //have to look for sumo pushed though
+            if (!forwardBlocked && valid(i + y)) {//finds moves directly forward
+                if (board[x][i + y] == EMPTY)
+                    availMoves.add(new Point(x, y + i));
+                else if (current.getRank() > 0) {//check for sumoPushes
+
+                    int counter = 0;
+
+                    while (valid(i + y + counter) && board[x][i + y + counter] == PLAYER_ONE) {//checks for a chain of opponent pieces
+                        if(find(x, i + y + counter).getRank() >= current.getRank()){
+                            counter = 0;
+                            break;
+                        }
+                        counter++;
+                    }
+                    Log.v("GAT", "counter:" + counter);
+                    //if the number of opponent pieces are less than the current piece's rank, and the square behind the chain is empty
+                    if (valid(i + y + counter) && counter > 0 && counter <= current.getRank() && board[x][y + i + counter] == EMPTY) {
+                        availMoves.add(new Point(x, y + i + counter));//adds it as a valid move
+                        sumoPushOption = new Point(x, y + i + counter);
+                        sumoChain = counter;
+                    }
+
+
+                    forwardBlocked = true;
+                }
+                else
+                    forwardBlocked = true;
+            }
+
+            if (!rightDiagonalBlocked && valid(i + y) && valid(i + x)) {
+                if (board[x + i][y + i] == EMPTY)
+                    availMoves.add(new Point(x + i, y + i));
+                else
+                    rightDiagonalBlocked = true;
+            }
+
+
+            if (!leftDiagonalBlocked && valid(i + y) && valid(x - i)) {//left diagonal
+                if (board[x - i][y + i] == EMPTY)
+                    availMoves.add(new Point(x - i, y + i));
+                else
+                    leftDiagonalBlocked = true;
+            }
+
+        }
+
+        return availMoves;
+    }//Search for available moves for player 1
+
     public void resolveSumoPushP1(int x){
         //find pieces that are gonna get sumo pushed
         //make points
-        //Pushing from the other end so it doesn't get overwritten
         for (int j = sumoChain; j >= 1; j--) {
-
             // findPieceAt (x,y+j);
-            //Push
             for (int k = 0; k < p2.length; k++) {
-                if (p2[k].getX() == x && p2[k].getY() == selectedPiece.getY() + j) {
-                    p2[k].setLoc(x, p2[k].getY() + 1);
-                }
-            }
-            counter++;
-        }
-
-        //Set location of piece to 1 square in front of it
-        selectedPiece.setLoc(selectedPiece.getX(), selectedPiece.getY() + 1);
-        currColor = board.board8Color[x][sumoPushOption.y];
-
-        //Find the next piece of other player
-        for (int j = 0; j < boardDimension; j++) {
-            if (p1[j].getColor() == currColor) {
-                selectedPiece = p1[j];
-                invalidate();
-            }
-        }
-    }
-
-    public void resolveSumoPushP2(int x){
-        //find pieces that are gonna get sumo pushed
-        //make points
-        for (int j = sumoChain; j >= 1; j--) {
-            // findPieceAt (x,y+j);
-            for (int k = 0; k < p1.length; k++) {
-                if (p1[k].getX() == x && p1[k].getY() == selectedPiece.getY() - j) {
-                    p1[k].setLoc(x, p1[k].getY() - 1);
+                if (p2[k].getX() == x && p2[k].getY() == selectedPiece.getY() - j) {
+                    p2[k].setLoc(x, p2[k].getY() - 1);
                 }
 
 
@@ -350,6 +321,35 @@ public class GameBoard extends View {
         currColor = board.board8Color[x][sumoPushOption.y];
 
         for (int j = 0; j < boardDimension; j++) {
+            if (p1[j].getColor() == currColor) {
+                selectedPiece = p1[j];
+                invalidate();
+            }
+        }
+    }
+
+    public void resolveSumoPushP2(int x){
+        //find pieces that are gonna get sumo pushed
+        //make points
+        //Pushing from the other end so it doesn't get overwritten
+        for (int j = sumoChain; j >= 1; j--) {
+
+            // findPieceAt (x,y+j);
+            //Push
+            for (int k = 0; k < p1.length; k++) {
+                if (p1[k].getX() == x && p1[k].getY() == selectedPiece.getY() + j) {
+                    p1[k].setLoc(x, p1[k].getY() + 1);
+                }
+            }
+            counter++;
+        }
+
+        //Set location of piece to 1 square in front of it
+        selectedPiece.setLoc(selectedPiece.getX(), selectedPiece.getY() + 1);
+        currColor = board.board8Color[x][sumoPushOption.y];
+
+        //Find the next piece of other player
+        for (int j = 0; j < boardDimension; j++) {
             if (p2[j].getColor() == currColor) {
                 selectedPiece = p2[j];
                 invalidate();
@@ -359,12 +359,85 @@ public class GameBoard extends View {
 
     private void p1Turn(int x, int y){
 
-        //First move of the game
+        //Initiating first move of the game
         if(!pieceSelected) {
             for (int i = 0; i < boardDimension; i++) {
                 if (p1[i].getX() == x && p1[i].getY() == y) {
                     pieceSelected = true;
                     selectedPiece = p1[i];
+                    invalidate();
+                    break;
+                }
+            }
+        }
+        else{
+            //Deselecting on first move\
+            if(firstMove){
+                for(int i = 0; i < boardDimension; i++){
+                    if(p1[i].getX() == x && p1[i].getY() == y){
+                        selectedPiece = p1[i];
+                        firstMove = true;
+                        invalidate();
+                        break;
+                    }
+                }
+
+            }
+            //If no moves available then goes to player 1
+            if(availMoves.size() == 0){
+                counter++;
+                for(int j = 0; j < boardDimension; j++){
+                    if(p2[j].getColor() == currColor){
+                        selectedPiece = p2[j];
+                        Log.d("TAG", p2[j].toString());
+                        invalidate();
+                    }
+                }
+            }
+            //Finds if the clicked square is an available move
+            for(int i = 0; i < availMoves.size(); i++){
+                Point temp = availMoves.get(i);
+                if(temp.x == x && temp.y == y){
+                    if (selectedPiece.getRank() > 0 && sumoPushOption != null && temp.x == sumoPushOption.x && temp.y == sumoPushOption.y) {
+                        resolveSumoPushP1(x);
+
+                    } else {
+                        selectedPiece.setLoc(x, y);
+                        currColor = board.board8Color[x][y];//next piece color
+                        for (int j = 0; j < boardDimension; j++) {
+                            if (p2[j].getColor() == currColor) {
+                                selectedPiece = p2[j];
+                                invalidate();
+                            }
+                        }
+                    }
+                    firstMove = false;
+
+                    counter++;
+                    win();
+                    if(win!= -1) {
+                        selectedPiece = null;
+                        firstMove = true;
+                        pieceSelected = false;
+                        invalidate();
+                        counter--;
+                        return;
+                    }
+
+                    break;
+                }
+            }
+        }
+    }//Conducting player2's turn
+
+    private void p2Turn(int x, int y){
+
+        //First move of the game
+        if(!pieceSelected) {
+            for (int i = 0; i < boardDimension; i++) {
+                if (p2[i].getX() == x && p2[i].getY() == y) {
+                    pieceSelected = true;
+                    selectedPiece = p2[i];
                     invalidate();
                     break;
                 }
@@ -376,8 +449,8 @@ public class GameBoard extends View {
             //For deselecting a piece
             if(firstMove){
                 for(int i = 0; i < boardDimension; i++){
-                    if(p1[i].getX() == x && p1[i].getY() == y){
-                        selectedPiece = p1[i];
+                    if(p2[i].getX() == x && p2[i].getY() == y){
+                        selectedPiece = p2[i];
                         firstMove = true;
                         invalidate();
                         break;
@@ -390,8 +463,8 @@ public class GameBoard extends View {
             if (availMoves.size() == 0) {
                 counter++;
                 for (int j = 0; j < boardDimension; j++) {
-                    if (p2[j].getColor() == currColor) {
-                        selectedPiece = p2[j];
+                    if (p1[j].getColor() == currColor) {
+                        selectedPiece = p1[j];
                         invalidate();
                     }
                 }
@@ -406,7 +479,7 @@ public class GameBoard extends View {
 
                     //Sumo push
                     if (selectedPiece.getRank() > 0 && sumoPushOption != null && temp.x == sumoPushOption.x && temp.y == sumoPushOption.y) {
-                        resolveSumoPushP1(x);
+                        resolveSumoPushP2(x);
                     }
                     //If sumo push is not committed
                     else {
@@ -415,8 +488,8 @@ public class GameBoard extends View {
                         selectedPiece.setLoc(x, y);
                         currColor = board.board8Color[x][y];//next piece color
                         for (int j = 0; j < boardDimension; j++) {
-                            if (p2[j].getColor() == currColor) {
-                                selectedPiece = p2[j];
+                            if (p1[j].getColor() == currColor) {
+                                selectedPiece = p1[j];
                                 invalidate();
                             }
                         }
@@ -444,79 +517,6 @@ public class GameBoard extends View {
 
     }//Conducting player1's turn
 
-    private void p2Turn(int x, int y){
-
-        //Initiating first move of the game
-        if(!pieceSelected) {
-            for (int i = 0; i < boardDimension; i++) {
-                if (p2[i].getX() == x && p2[i].getY() == y) {
-                    pieceSelected = true;
-                    selectedPiece = p2[i];
-                    invalidate();
-                    break;
-                }
-            }
-        }
-        else{
-            //Deselecting on first move\
-            if(firstMove){
-                for(int i = 0; i < boardDimension; i++){
-                    if(p2[i].getX() == x && p2[i].getY() == y){
-                        selectedPiece = p2[i];
-                        firstMove = true;
-                        invalidate();
-                        break;
-                    }
-                }
-
-            }
-            //If no moves available then goes to player 1
-            if(availMoves.size() == 0){
-                counter++;
-                for(int j = 0; j < boardDimension; j++){
-                    if(p1[j].getColor() == currColor){
-                        selectedPiece = p1[j];
-                        Log.d("TAG", p1[j].toString());
-                        invalidate();
-                    }
-                }
-            }
-            //Finds if the clicked square is an available move
-            for(int i = 0; i < availMoves.size(); i++){
-                Point temp = availMoves.get(i);
-                if(temp.x == x && temp.y == y){
-                    if (selectedPiece.getRank() > 0 && sumoPushOption != null && temp.x == sumoPushOption.x && temp.y == sumoPushOption.y) {
-                        resolveSumoPushP2(x);
-
-                    } else {
-                        selectedPiece.setLoc(x, y);
-                        currColor = board.board8Color[x][y];//next piece color
-                        for (int j = 0; j < boardDimension; j++) {
-                            if (p1[j].getColor() == currColor) {
-                                selectedPiece = p1[j];
-                                invalidate();
-                            }
-                        }
-                    }
-                    firstMove = false;
-
-                    counter++;
-                    win();
-                    if(win!= -1) {
-                        selectedPiece = null;
-                        firstMove = true;
-                        pieceSelected = false;
-                        invalidate();
-                        counter--;
-                        return;
-                    }
-
-                    break;
-                }
-            }
-        }
-    }//Conducting player2's turn
-
     public void resolveSwipe(MotionEvent event){
         if(event.getAction() == 0){
             initialClickX = (int)event.getX();
@@ -530,15 +530,15 @@ public class GameBoard extends View {
             if(finalClickX - initialClickX > 200 && Math.abs(finalClickY - initialClickY) < 100){
                 initialClickX = -1; finalClickX = -1; initialClickY = -1; finalClickY = -1;
                 //TODO add the reset methods
-                Piece[][] temp = board.fillLeft(p1, p2);
-                p1 = temp[0]; p2 = temp[1];
+                Piece[][] temp = board.fillLeft(p2, p1);
+                p2 = temp[0]; p1 = temp[1];
                 invalidate();
                 win = -1;
             }
             if(initialClickX - finalClickX > 200 && Math.abs(finalClickY - initialClickY) < 100){
                 //TODO add the reset methods
-                Piece[][] temp = board.fillRight(p1, p2);
-                p1 = temp[0]; p2 = temp[1];
+                Piece[][] temp = board.fillRight(p2, p1);
+                p2 = temp[0]; p1 = temp[1];
                 invalidate();
                 win = -1;
             }
@@ -571,10 +571,10 @@ public class GameBoard extends View {
             //Finds the x and y location in terms of the board
             float x = event.getX(), y = event.getY();
             int convertedX = (int) ((x - startX) / unitSize), convertedY = (int) ((y - startY) / unitSize);//converts the passed coordinates into a location on the board
-            if (counter % 2 == PLAYER_ONE) {//determines turn
-                p1Turn(convertedX, convertedY);
-            } else {
+            if (counter % 2 == PLAYER_TWO) {//determines turn
                 p2Turn(convertedX, convertedY);
+            } else {
+                p1Turn(convertedX, convertedY);
             }
         }
         return true;
