@@ -26,6 +26,7 @@ public class GameBoard extends View {
     private Piece selectedPiece;
     private int PLAYER_ONE = 0;
     private int PLAYER_TWO = 1;
+    private int EMPTY = -1;
     private Point score = new Point(0, 0);
     private ArrayList<Point> availMoves;
     private int eventAction = -1, initialClickX = -1, initialClickY = -1, finalClickX = -1, finalClickY = -1, win = -1;
@@ -124,18 +125,18 @@ public class GameBoard extends View {
         int[][] board = new int[boardDimension][boardDimension];
         for(int i = 0; i < boardDimension; i++){
             for(int j = 0; j < boardDimension; j++){
-                board[i][j] = 0;
+                board[i][j] = -1;
             }
         }
 
         //Sets the board to 1 if piece is there
         for(int i = 0; i < boardDimension; i++){
-            board[p1[i].getX()][p1[i].getY()] = 1;
-            board[p2[i].getX()][p2[i].getY()] = 2;
+            board[p1[i].getX()][p1[i].getY()] = PLAYER_ONE;
+            board[p2[i].getX()][p2[i].getY()] = PLAYER_TWO;
         }
 
         //Finds available moves for each player
-        if(counter % 2 == 0){
+        if (counter % 2 == PLAYER_ONE) {
             availMoves = searchP1(x,y,availMoves,board);
         }
         else{
@@ -172,15 +173,29 @@ public class GameBoard extends View {
         }
         for (int i = 1; i <= current.getDistance(); i++) {
 
+            //have to look for sumo pushed though
             if (!forwardBlocked && valid(i + y)) {//finds moves directly forward
-                if (board[x][i + y] == 0)
+                if (board[x][i + y] == EMPTY)
                     availMoves.add(new Point(x, y + i));
+                else if (current.getRank() > 0) {//check for sumoPushes
+
+                    int counter = 0;
+
+                    while (board[x][i + y + counter] == PLAYER_TWO)//checks for a chain of opponent pieces
+                        counter++;
+
+                    //if the number of opponent pieces are less than the current piece's rank, and the square behind the chain is empty
+                    if (counter > 0 && counter <= current.getRank() && board[x][y + i + counter] == EMPTY)
+                        availMoves.add(new Point(x, y + i + counter));//adds it as a valid move
+                    else
+                        forwardBlocked = true;
+                }
                 else
                     forwardBlocked = true;
             }
 
             if (!rightDiagonalBlocked && valid(i + y) && valid(i + x)) {
-                if (board[x + i][y + i] == 0)
+                if (board[x + i][y + i] == EMPTY)
                     availMoves.add(new Point(x + i, y + i));
                 else
                     rightDiagonalBlocked = true;
@@ -188,7 +203,7 @@ public class GameBoard extends View {
 
 
             if (!leftDiagonalBlocked && valid(i + y) && valid(x - i)) {//left diagonal
-                if (board[x - i][y + i] == 0)
+                if (board[x - i][y + i] == EMPTY)
                     availMoves.add(new Point(x - i, y + i));
                 else
                     leftDiagonalBlocked = true;
@@ -215,7 +230,7 @@ public class GameBoard extends View {
         for (int i = 1; i <= current.getDistance(); i++) {
 
             if (!forwardBlocked && valid(y - i)) { //finds moves directly forward
-                if (board[x][y - i] == 0)
+                if (board[x][y - i] == EMPTY)
                     availMoves.add(new Point(x, y - i));
                 else
                     forwardBlocked = true;
@@ -223,14 +238,14 @@ public class GameBoard extends View {
 
 
             if (!leftDiagonalBlocked && valid(y - i) && valid(x - i)) {//left diagonal
-                if (board[x - i][y - i] == 0)
+                if (board[x - i][y - i] == EMPTY)
                     availMoves.add(new Point(x - i, y - i));
                 else
                     leftDiagonalBlocked = true;
             }
 
             if (!rightDiagonalBlocked && valid(i + x) && valid(y - i)) {//right diagonal
-                if (board[x + i][y - i] == 0)
+                if (board[x + i][y - i] == EMPTY)
                     availMoves.add(new Point(x + i, y - i));
                 else
                     rightDiagonalBlocked = true;
