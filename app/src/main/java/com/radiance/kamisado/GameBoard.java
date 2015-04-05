@@ -172,7 +172,7 @@ public class GameBoard extends View {
             if (p1[i].getX() == x && p2[i].getY() == y)
                 current = p1[i];
         }
-        for (int i = 1; i <= current.getDistance(); i++) {
+        for (int i = 1; i <= current.getDistance(); i++) {//checking for available moves
 
             //have to look for sumo pushed though
             if (!forwardBlocked && valid(i + y)) {//finds moves directly forward
@@ -233,6 +233,19 @@ public class GameBoard extends View {
             if (!forwardBlocked && valid(y - i)) { //finds moves directly forward
                 if (board[x][y - i] == EMPTY)
                     availMoves.add(new Point(x, y - i));
+                else if (current.getRank() > 0) {//check for sumoPushes
+
+                    int counter = 0;
+
+                    while (board[x][y - i - counter] == PLAYER_TWO)//checks for a chain of opponent pieces
+                        counter--;
+
+                    //if the number of opponent pieces are less than the current piece's rank, and the square behind the chain is empty
+                    if (counter > 0 && counter <= current.getRank() && board[x][y - i - counter] == EMPTY)
+                        availMoves.add(new Point(x, y - i - counter));//adds it as a valid move
+                    else
+                        forwardBlocked = true;
+                }
                 else
                     forwardBlocked = true;
             }
