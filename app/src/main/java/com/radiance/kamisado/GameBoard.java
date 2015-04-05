@@ -329,15 +329,17 @@ public class GameBoard extends View {
                         for (int j = sumoChain; j >= 1; j--) {
                             // findPieceAt (x,y+j);
                             for (int k = 0; k < p2.length; k++) {
-                                if (p2[k].getX() == x && p2[k].getY() == y + j)
+                                if (p2[k].getX() == x && p2[k].getY() == selectedPiece.getY() + j) {
                                     p2[k].setLoc(x, p2[k].getY() + 1);
+                                }
+
 
                             }
                             counter++;
 
                         }
                         selectedPiece.setLoc(selectedPiece.getX(), selectedPiece.getY() + 1);
-                        currColor = board.board8Color[x][sumoPushOption.y + 1 + sumoChain];
+                        currColor = board.board8Color[x][sumoPushOption.y];
 
                     } else {
                         selectedPiece.setLoc(x, y);
