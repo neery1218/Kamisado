@@ -154,6 +154,7 @@ public class GameBoard extends View {
         }
         this.availMoves = availMoves;
     }
+
     private boolean valid (int a){
         if (a >= 0 && a < boardDimension)
             return true;
@@ -182,14 +183,14 @@ public class GameBoard extends View {
 
                     int counter = 0;
 
-                    while (board[x][i + y + counter] == PLAYER_TWO)//checks for a chain of opponent pieces
+                    while (valid(i + y + counter) && board[x][i + y + counter] == PLAYER_TWO)//checks for a chain of opponent pieces
                         counter++;
-
+                    Log.v("GAT", "counter:" + counter);
                     //if the number of opponent pieces are less than the current piece's rank, and the square behind the chain is empty
-                    if (counter > 0 && counter <= current.getRank() && board[x][y + i + counter] == EMPTY)
+                    if (valid(i + y + counter) && counter > 0 && counter <= current.getRank() && board[x][y + i + counter] == EMPTY)
                         availMoves.add(new Point(x, y + i + counter));//adds it as a valid move
-                    else
-                        forwardBlocked = true;
+
+                    forwardBlocked = true;
                 }
                 else
                     forwardBlocked = true;
@@ -237,14 +238,14 @@ public class GameBoard extends View {
 
                     int counter = 0;
 
-                    while (board[x][y - i - counter] == PLAYER_TWO)//checks for a chain of opponent pieces
-                        counter--;
-
+                    while (valid(y - i - counter) && board[x][y - i - counter] == PLAYER_ONE)//checks for a chain of opponent pieces
+                        counter++;
+                    Log.v("GAT", "counter:" + counter);
                     //if the number of opponent pieces are less than the current piece's rank, and the square behind the chain is empty
-                    if (counter > 0 && counter <= current.getRank() && board[x][y - i - counter] == EMPTY)
+                    if (valid(y - i - counter) && counter > 0 && counter <= current.getRank() && board[x][y - i - counter] == EMPTY)
                         availMoves.add(new Point(x, y - i - counter));//adds it as a valid move
-                    else
-                        forwardBlocked = true;
+
+                    forwardBlocked = true;
                 }
                 else
                     forwardBlocked = true;
