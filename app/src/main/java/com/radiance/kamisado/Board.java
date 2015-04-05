@@ -57,7 +57,6 @@ public class Board {
                 }
             }
         //reverse temp1 onto p1
-        Log.d("TAG", counter1 + " " + counter2);
     }
 
     public Piece[][] fillRight(Piece[] t1, Piece[] t2){
@@ -69,9 +68,6 @@ public class Board {
         for (int i = 0; i < boardDimension; i++) {
             p1[i] = new Piece(i, 0, temp1[boardDimension - 1 - i].getColor(), temp1[boardDimension - 1 - i].getRank());
             p2[i] = new Piece(i, boardDimension - 1, temp2[boardDimension - 1 - i].getColor(), temp2[boardDimension - 1 - i].getRank());
-        }
-        for(int i = 0; i < 8; i++){
-            Log.d("TAG", p1[i].getX() + " " + p1[i].getY() + " " +  p2[i].getX() + " " + p2[i].getY());
         }
         Piece[][] a = new Piece[2][1];
         a[0] = p1;
@@ -88,9 +84,6 @@ public class Board {
         for (int i = 0; i < boardDimension; i++) {
             p1[i] = new Piece(i, 0, temp1[i].getColor(), temp1[i].getRank());
             p2[i] = new Piece(i, boardDimension - 1, temp2[i].getColor(), temp2[i].getRank());
-        }
-        for(int i = 0; i < 8; i++){
-            Log.d("TAG", p1[i].getX() + " " + p1[i].getY() + " " +  p2[i].getX() + " " + p2[i].getY());
         }
         Piece[][] a = new Piece[2][1];
         a[0] = p1;
