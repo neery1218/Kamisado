@@ -8,12 +8,17 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 public class GamePlayFragment extends Fragment {
 
     private static int VERSUS_TYPE;
     private static int MATCH_TYPE;
+
     private OnGamePlayInteractionListener mListener;
+
+    private TextView scoreTextView;
+
 
     public GamePlayFragment() {
         // Required empty public constructor
@@ -54,8 +59,11 @@ public class GamePlayFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         // Inflate the layout for this fragment
+        View view = inflater.inflate(R.layout.fragment_game_play, container, false);
 
-        return inflater.inflate(R.layout.fragment_game_play, container, false);
+        scoreTextView = (TextView) view.findViewById(R.id.scoreTextView);
+
+        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event

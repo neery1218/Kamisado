@@ -18,29 +18,60 @@ import java.util.ArrayList;
 public class GameBoard extends View {
 
     private Paint paint;//make these variables easier to read
-    private float startX = -1, endX = -1, startY = -1, endY = -1, width = -1, height = -1, borderWidth = 0, unitSize = 0;
-    private boolean firstTime = true, firstMove = true, pieceSelected = false;
-    private int boardDimension = 8, counter = 1, currColor = -1;
+
+    private float startX = -1;
+    private float endX = -1;
+    private float startY = -1;
+    private float endY = -1;
+    private float width = -1;
+    private float height = -1;
+    private float borderWidth = 0;
+    private float unitSize = 0;
+
+    private boolean firstTime = true;
+    private boolean firstMove = true;
+    private boolean pieceSelected = false;
+
+    private int boardDimension = 8;
     private Piece[][] pieces = new Piece[2][boardDimension];
     private Board board = new Board(this, boardDimension);
+    private int counter = 1;
+    private int currColor = -1;
     private Piece selectedPiece;
+
     private int PLAYER_TWO = 0;
     private int PLAYER_ONE = 1;
     private int EMPTY = -1;
-    private Point score = new Point(0, 0);
+
     private ArrayList<Point> availMoves;
     private Point sumoPushOption = new Point(0, 0);
+
     private int sumoChain = 0;
-    private int EASY = 0;
-    private int eventAction = -1, initialClickX = -1, initialClickY = -1, finalClickX = -1, finalClickY = -1, win = -1;
+
     private int MATCH_TYPE;
     private int VERSUS_TYPE;
+
+    //Strength Variables for AI
+    private int EASY = 0;
+    private int MEDIUM = 1;
+    private int HARD = 2;
+
+    //score array
+    private int[] score;
+
+    private int eventAction = -1;
+    private int initialClickX = -1;
+    private int initialClickY = -1;
+    private int finalClickX = -1;
+    private int finalClickY = -1;
+    private int win = -1;
+
     //TODO: Eventually all these constant integers should be switched to enums for typesafety/readability
 
     public GameBoard(Context context, AttributeSet attrs) {
         super(context, attrs);
         paint = new Paint();
-
+        score = new int[2];
     }//Calls the super constructor and creates a new paint object
 
     public void setup(Canvas canvas){
@@ -110,12 +141,12 @@ public class GameBoard extends View {
         //check if pieces have reached opposite side
         for (int i = 0; i < boardDimension; i++) {
             if (pieces[PLAYER_TWO][i].getY() == boardDimension - 1) {
-                score.set(score.x + pieces[PLAYER_TWO][i].getRank(), score.y);
+                score[PLAYER_TWO] += pieces[PLAYER_TWO][i].getRank();
                 pieces[PLAYER_TWO][i].rankUp();
                 win = PLAYER_TWO;
             }
             if (pieces[PLAYER_ONE][i].getY() == 0) {
-                score.set(score.x, score.y + pieces[PLAYER_ONE][i].getRank());
+                score[PLAYER_ONE] += pieces[PLAYER_ONE][i].getRank();
                 pieces[PLAYER_ONE][i].rankUp();
                 win = PLAYER_ONE;
             }
