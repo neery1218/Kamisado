@@ -373,7 +373,6 @@ public class GameBoard extends View {
                         return;
                     }
 
-
                     break;
                 }
             }
