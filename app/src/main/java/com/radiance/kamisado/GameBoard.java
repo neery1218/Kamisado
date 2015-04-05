@@ -166,6 +166,7 @@ public class GameBoard extends View {
                 current = p1[i];
         }
         for (int i = 1; i <= current.getDistance(); i++) {
+
             if (!forwardBlocked && valid(i + y)) {//finds moves directly forward
                 if (board[x][i + y] == 0)
                     availMoves.add(new Point(x, y + i));
