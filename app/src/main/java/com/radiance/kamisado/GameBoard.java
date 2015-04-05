@@ -311,6 +311,32 @@ public class GameBoard extends View {
         }
     }
 
+    public void resolveSumoPushP2(int x){
+        //find pieces that are gonna get sumo pushed
+        //make points
+        for (int j = sumoChain; j >= 1; j--) {
+            // findPieceAt (x,y+j);
+            for (int k = 0; k < p1.length; k++) {
+                if (p1[k].getX() == x && p1[k].getY() == selectedPiece.getY() - j) {
+                    p1[k].setLoc(x, p1[k].getY() - 1);
+                }
+
+
+            }
+            counter++;
+
+        }
+        selectedPiece.setLoc(selectedPiece.getX(), selectedPiece.getY() - 1);
+        currColor = board.board8Color[x][sumoPushOption.y];
+
+        for (int j = 0; j < boardDimension; j++) {
+            if (p2[j].getColor() == currColor) {
+                selectedPiece = p2[j];
+                invalidate();
+            }
+        }
+    }
+
     private void p1Turn(int x, int y){
 
         //First move of the game
@@ -440,30 +466,7 @@ public class GameBoard extends View {
                 Point temp = availMoves.get(i);
                 if(temp.x == x && temp.y == y){
                     if (selectedPiece.getRank() > 0 && sumoPushOption != null && temp.x == sumoPushOption.x && temp.y == sumoPushOption.y) {
-
-                        //find pieces that are gonna get sumo pushed
-                        //make points
-                        for (int j = sumoChain; j >= 1; j--) {
-                            // findPieceAt (x,y+j);
-                            for (int k = 0; k < p1.length; k++) {
-                                if (p1[k].getX() == x && p1[k].getY() == selectedPiece.getY() - j) {
-                                    p1[k].setLoc(x, p1[k].getY() - 1);
-                                }
-
-
-                            }
-                            counter++;
-
-                        }
-                        selectedPiece.setLoc(selectedPiece.getX(), selectedPiece.getY() - 1);
-                        currColor = board.board8Color[x][sumoPushOption.y];
-
-                        for (int j = 0; j < boardDimension; j++) {
-                            if (p2[j].getColor() == currColor) {
-                                selectedPiece = p2[j];
-                                invalidate();
-                            }
-                        }
+                        resolveSumoPushP2(x);
 
                     } else {
                         selectedPiece.setLoc(x, y);
