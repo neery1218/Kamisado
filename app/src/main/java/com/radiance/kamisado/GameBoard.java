@@ -153,13 +153,14 @@ public class GameBoard extends View {
             //switch to circles eventually?
         }
         this.availMoves = availMoves;
-    }//Finds available moves of each player
+    }
     private boolean valid (int a){
         if (a >= 0 && a < boardDimension)
             return true;
         else
             return false;
-    }
+    }//Finds available moves of each player
+
     private ArrayList<Point> searchP1(int x, int y, ArrayList<Point> availMoves, int[][] board){
         Piece current = new Piece(0,0,0,0);
         boolean leftDiagonalBlocked = false;
