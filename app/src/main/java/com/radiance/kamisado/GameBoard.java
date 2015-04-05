@@ -406,6 +406,34 @@ public class GameBoard extends View {
         }
     }//Conducting player2's turn
 
+    public void resolveSwipe(MotionEvent event){
+        if(event.getAction() == 0){
+            initialClickX = (int)event.getX();
+            initialClickY = (int)event.getY();
+        }
+        else if(event.getAction() == 2){
+            finalClickX = (int)event.getX();
+            finalClickY = (int)event.getY();
+        }
+        else if(event.getAction() == 1){
+            if(finalClickX - initialClickX > 200 && Math.abs(finalClickY - initialClickY) < 100){
+                initialClickX = -1; finalClickX = -1; initialClickY = -1; finalClickY = -1;
+                //TODO add the reset methods
+                Piece[][] temp = board.fillLeft(p1, p2);
+                p1 = temp[0]; p2 = temp[1];
+                invalidate();
+                win = -1;
+            }
+            if(initialClickX - finalClickX > 200 && Math.abs(finalClickY - initialClickY) < 100){
+                //TODO add the reset methods
+                Piece[][] temp = board.fillRight(p1, p2);
+                p1 = temp[0]; p2 = temp[1];
+                invalidate();
+                win = -1;
+            }
+        }
+    }
+
     @Override
     public void onDraw (Canvas canvas){
         super.onDraw(canvas);
@@ -424,31 +452,7 @@ public class GameBoard extends View {
 
         //If player has won then swiping left or right will reset the board in that direction
         if(win == 1 || win == 0){
-            if(event.getAction() == 0){
-                initialClickX = (int)event.getX();
-                initialClickY = (int)event.getY();
-            }
-            else if(event.getAction() == 2){
-                finalClickX = (int)event.getX();
-                finalClickY = (int)event.getY();
-            }
-            else if(event.getAction() == 1){
-                if(finalClickX - initialClickX > 200 && Math.abs(finalClickY - initialClickY) < 100){
-                    initialClickX = -1; finalClickX = -1; initialClickY = -1; finalClickY = -1;
-                    //TODO add the reset methods
-                    Piece[][] temp = board.fillLeft(p1, p2);
-                    p1 = temp[0]; p2 = temp[1];
-                    invalidate();
-                    win = -1;
-                }
-                if(initialClickX - finalClickX > 200 && Math.abs(finalClickY - initialClickY) < 100){
-                    //TODO add the reset methods
-                    Piece[][] temp = board.fillRight(p1, p2);
-                    p1 = temp[0]; p2 = temp[1];
-                    invalidate();
-                    win = -1;
-                }
-            }
+            resolveSwipe(event);
         }
 
         //If game was not won and player released screen
