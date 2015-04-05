@@ -17,7 +17,7 @@ import java.util.ArrayList;
  */
 public class GameBoard extends View {
 
-    private Paint paint;
+    private Paint paint;//make these variables easier to read
     private float startX = -1, endX = -1, startY = -1, endY = -1, width = -1, height = -1, borderWidth = 0, unitSize = 0;
     private boolean firstTime = true, firstMove = true, pieceSelected = false;
     private int boardDimension = 8, counter = 1, currColor = -1;
@@ -31,6 +31,7 @@ public class GameBoard extends View {
     private ArrayList<Point> availMoves;
     private Point sumoPushOption = new Point(0, 0);
     private int sumoChain = 0;
+    private int EASY = 0;
     private int eventAction = -1, initialClickX = -1, initialClickY = -1, finalClickX = -1, finalClickY = -1, win = -1;
 
     public GameBoard(Context context, AttributeSet attrs) {
@@ -580,15 +581,33 @@ public class GameBoard extends View {
         return true;
     }//Handles the touch events
 
-    public class AI {
+    public class AI {//private or public?
 
-        public AI(){
+        private int strength;
 
+        public AI(int strength) {
+            this.strength = strength;
+        }
+
+        public AI() {
+
+        }
+
+        public int getStrength() {
+            return strength;
+        }
+
+        public void setStrength(int strength) {
+            this.strength = strength;
         }
 
         public Point move(){
-            return availMoves.get((int)(Math.random()) * availMoves.size());
+            if (strength == EASY)
+                return availMoves.get((int) (Math.random()) * availMoves.size());
+
+            return availMoves.get(0);
         }
+
 
     }
 }
