@@ -70,8 +70,14 @@ public class GameBoard extends View {
 
     public GameBoard(Context context, AttributeSet attrs) {
         super(context, attrs);
+
         paint = new Paint();
         score = new int[2];
+        score[0] = 0;
+        score[1] = 0;
+
+        MATCH_TYPE = GamePlayFragment.getMATCH_TYPE();
+        VERSUS_TYPE = GamePlayFragment.getVERSUS_TYPE();
     }//Calls the super constructor and creates a new paint object
 
     public void setup(Canvas canvas){

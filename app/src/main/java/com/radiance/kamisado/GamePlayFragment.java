@@ -35,6 +35,7 @@ public class GamePlayFragment extends Fragment {
         return VERSUS_TYPE;
     }
 
+
     public static int getMATCH_TYPE() {
         return MATCH_TYPE;
     }
@@ -62,6 +63,7 @@ public class GamePlayFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_game_play, container, false);
 
         scoreTextView = (TextView) view.findViewById(R.id.scoreTextView);
+        scoreTextView.setText("yo");
 
         return view;
     }
