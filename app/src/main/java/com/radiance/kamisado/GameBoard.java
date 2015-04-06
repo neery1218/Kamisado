@@ -6,7 +6,6 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
@@ -40,20 +39,15 @@ public class GameBoard extends View {
 
     private boolean firstTime = true;
     //score array
-    private int[] score;
     private int boardDimension = 8;
     private Piece[][] pieces = new Piece[2][boardDimension];
-
+    private Board board = new Board(this, boardDimension);
+    private GameBoard.OnBoardEvent onBoardEvent = (GameBoard.OnBoardEvent) board;
     private int PLAYER_TWO = 0;
     private int PLAYER_ONE = 1;
     private int EMPTY = -1;
-
     private int MATCH_TYPE;
     private int VERSUS_TYPE;
-
-    private Board board = new Board(this, boardDimension);
-    private GameBoard.OnBoardEvent onBoardEvent = (GameBoard.OnBoardEvent) board;
-
     private ArrayList<Point> availMoves = new ArrayList<>();
     private Piece selectedPiece;
 
@@ -63,9 +57,7 @@ public class GameBoard extends View {
         super(context, attrs);
 
         paint = new Paint();
-        score = new int[2];
-        score[0] = 0;
-        score[1] = 0;
+
         //board = new Board(this,BoardDimension);
 
         MATCH_TYPE = GamePlayFragment.getMATCH_TYPE();
@@ -75,10 +67,10 @@ public class GameBoard extends View {
 
     public void setScoreView(TextView textView) {
         scoreView = textView;
-        updateScore();
+        updateScore(new int[]{0, 0});
     }
 
-    public void updateScore() {
+    public void updateScore(int[] score) {
         scoreView.setText(score[PLAYER_ONE] + " " + score[PLAYER_TWO]);
     }
 

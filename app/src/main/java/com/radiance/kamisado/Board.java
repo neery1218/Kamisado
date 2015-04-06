@@ -1,8 +1,6 @@
 package com.radiance.kamisado;
 
-import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.Point;
 import android.util.Log;
 
@@ -10,7 +8,8 @@ import java.util.ArrayList;
 
 public class Board implements GameBoard.OnBoardEvent{
 	int[][] board8Color;
-    private Piece[] temp1, temp2;
+    //Tile [] [] board;
+    private Piece[][] collected;
     private int[] colors = {Color.RED, Color.parseColor("#ED872D"), Color.YELLOW,
             Color.GREEN, Color.BLUE, Color.parseColor("#69359C"), Color.parseColor("#FFB7C5"),
             Color.parseColor("#964B00")};
@@ -62,6 +61,8 @@ public class Board implements GameBoard.OnBoardEvent{
                 {p,br,ye,b,g,pk,o,r},
                 {br,g,r,ye,pk,p,b,o}};
 
+        collected = new Piece[2][boardDimension];
+
         int[][] temp = new int[boardDimension][boardDimension];
         for(int i = 0; i < boardDimension; i++){
             for(int j = 0; j < boardDimension; j++){
@@ -80,47 +81,48 @@ public class Board implements GameBoard.OnBoardEvent{
 
 	}
 
-    public void search(){
-        temp1 = new Piece [boardDimension];
-        temp2 = new Piece [boardDimension];
+    public void search() {//computes for fill left and right
+
         int counter1 = 0;
         int counter2 = 0;
+
         for (int i = 0; i < boardDimension; i++)//finds all the pieces starting from the top left to the bottom right
             for (int j = 0; j < boardDimension; j++){
                 for (int k = 0; k < pieces[PLAYER_ONE].length; k++){
                     if (pieces[PLAYER_ONE][k].getX() == j && pieces[PLAYER_ONE][k].getY() == i){
-                        temp1[boardDimension - 1 - counter1] = pieces[PLAYER_ONE][k];
+                        collected[PLAYER_ONE][counter1] = pieces[PLAYER_ONE][k];
                         counter1++;
                     }
                     if (pieces[PLAYER_TWO][k].getX() == j && pieces[PLAYER_TWO][k].getY() == i){
-                        temp2[boardDimension - 1 - counter2] = pieces[PLAYER_TWO][k];
+                        collected[PLAYER_TWO][counter2] = pieces[PLAYER_TWO][k];
                         counter2++;
                     }
                 }
             }
-        //reverse temp1 onto p1
+
     }
 
     public void fillRight(){
 
-        search();
         pieces[PLAYER_ONE] = new Piece[boardDimension];
         pieces[PLAYER_TWO] = new Piece[boardDimension];
         for (int i = 0; i < boardDimension; i++) {
-            pieces[PLAYER_ONE][i] = new Piece(i, boardDimension - 1, temp1[boardDimension - 1 - i].getColor(), temp1[boardDimension - 1 - i].getRank());
-            pieces[PLAYER_TWO][i] = new Piece(i, 0, temp2[boardDimension - 1 - i].getColor(), temp2[boardDimension - 1 - i].getRank());
+            pieces[PLAYER_ONE][i] = new Piece(i, boardDimension - 1, collected[PLAYER_ONE][boardDimension - 1 - i].getColor(), collected[PLAYER_ONE][boardDimension - 1 - i].getRank());
+            pieces[PLAYER_TWO][i] = new Piece(i, 0, collected[PLAYER_TWO][boardDimension - 1 - i].getColor(), collected[PLAYER_TWO][boardDimension - 1 - i].getRank());
         }
+        Log.v("fill", "Right");
     }
 
     public void fillLeft(){
 
-        search();
         pieces[PLAYER_ONE] = new Piece[boardDimension];
         pieces[PLAYER_TWO] = new Piece[boardDimension];
         for (int i = 0; i < boardDimension; i++) {
-            pieces[PLAYER_ONE][i] = new Piece(i, boardDimension - 1, temp1[i].getColor(), temp1[i].getRank());
-            pieces[PLAYER_TWO][i] = new Piece(i, 0, temp2[i].getColor(), temp2[i].getRank());
+            pieces[PLAYER_ONE][i] = new Piece(i, boardDimension - 1, collected[PLAYER_ONE][i].getColor(), collected[PLAYER_ONE][i].getRank());
+            pieces[PLAYER_TWO][i] = new Piece(i, 0, collected[PLAYER_TWO][i].getColor(), collected[PLAYER_TWO][i].getRank());
         }
+
+        Log.v("fill", "Left");
     }
 
     private void win (){
@@ -132,13 +134,13 @@ public class Board implements GameBoard.OnBoardEvent{
                 score[PLAYER_TWO] += Math.max(pieces[PLAYER_TWO][i].getRank(), 1);
                 pieces[PLAYER_TWO][i].rankUp();
                 win = PLAYER_TWO;
-                gameBoard.updateScore();
+                gameBoard.updateScore(score);
             }
             if (pieces[PLAYER_ONE][i].getY() == 0) {
                 score[PLAYER_ONE] += Math.max(pieces[PLAYER_ONE][i].getRank(), 1);
                 pieces[PLAYER_ONE][i].rankUp();
                 win = PLAYER_ONE;
-                gameBoard.updateScore();
+                gameBoard.updateScore(score);
             }
         }
 
@@ -452,6 +454,7 @@ public class Board implements GameBoard.OnBoardEvent{
                         gameBoard.setPiece(pieces);
                         gameBoard.invalidate();
                         counter--;
+                        search();
                         return;
                     }
 
@@ -549,6 +552,7 @@ public class Board implements GameBoard.OnBoardEvent{
                         gameBoard.setPiece(pieces);
                         gameBoard.invalidate();
                         counter--;
+                        search();
                         sumoPushOption = null;
                         return;
                     }
@@ -582,9 +586,7 @@ public class Board implements GameBoard.OnBoardEvent{
         gameBoard.setSelectedPiece(null);
         gameBoard.setPiece(pieces);
         gameBoard.invalidate();
-        for(int i = 0; i < pieces[1].length; i++){
-            Log.d("TAG", pieces[1][i] + "");
-        }
+
     }
 
     @Override
