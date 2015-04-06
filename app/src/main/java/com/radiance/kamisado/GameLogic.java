@@ -580,23 +580,23 @@ public class GameLogic implements GameBoard.OnBoardEvent {
         }
     }
 
-    @Override
-    public void onSwipeLeft(){
-        fillLeft();
+    public void reset(){
         win = -1;
         gameBoard.setSelectedPiece(null);
         gameBoard.setPiece(pieces);
         gameBoard.invalidate();
+    }
 
+    @Override
+    public void onSwipeLeft(){
+        fillLeft();
+        reset();
     }
 
     @Override
     public void onSwipeRight(){
         fillRight();
-        win = -1;
-        gameBoard.setSelectedPiece(null);
-        gameBoard.setPiece(pieces);
-        gameBoard.invalidate();
+        reset();
     }
 
     public class AI {//private or public?
