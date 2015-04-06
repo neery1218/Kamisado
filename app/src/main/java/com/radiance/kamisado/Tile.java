@@ -39,4 +39,8 @@ public class Tile {
     public void pop() {
         piece = null;
     }
+
+    public void rankUp (){
+        piece.rankUp();
+    }
 }
