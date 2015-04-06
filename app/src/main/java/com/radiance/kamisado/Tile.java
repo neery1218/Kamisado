@@ -35,4 +35,8 @@ public class Tile {
         else
             return false;
     }
+
+    public void pop() {
+        piece = null;
+    }
 }

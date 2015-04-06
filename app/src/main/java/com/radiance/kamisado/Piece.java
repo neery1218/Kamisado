@@ -5,16 +5,28 @@ import android.util.Log;
 public class Piece {
 	
 	private int locX = 0, locY = 0, rank = 0, color = -1, distance;
+    private int owner = 0;
 
-	public Piece(int x, int y, int color, int rank){
+    public Piece(int x, int y, int color, int rank){
         this.rank = rank;
 		locX = x;
 		locY = y;
         this.color = color;
         distance = 7 - 2 * rank;
 	}
-	
-	public int getX(){
+
+    public Piece(int color, int owner) {
+        this.color = color;
+        this.owner = owner;
+    }
+
+    public Piece(int color, int owner, int rank) {
+        this.color = color;
+        this.owner = owner;
+        this.rank = rank;
+    }
+
+    public int getX(){
 		return locX;
 	}
 

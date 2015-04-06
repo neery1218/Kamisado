@@ -41,7 +41,7 @@ public class GameBoard extends View {
     //score array
     private int boardDimension = 8;
     private Piece[][] pieces = new Piece[2][boardDimension];
-    private Board board = new Board(this, boardDimension);
+    private GameLogic board = new GameLogic(this, boardDimension);
     private GameBoard.OnBoardEvent onBoardEvent = (GameBoard.OnBoardEvent) board;
     private int PLAYER_TWO = 0;
     private int PLAYER_ONE = 1;
@@ -58,7 +58,7 @@ public class GameBoard extends View {
 
         paint = new Paint();
 
-        //board = new Board(this,BoardDimension);
+        //board = new GameLogic(this,BoardDimension);
 
         MATCH_TYPE = GamePlayFragment.getMATCH_TYPE();
         VERSUS_TYPE = GamePlayFragment.getVERSUS_TYPE();
