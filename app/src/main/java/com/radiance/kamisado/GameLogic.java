@@ -583,6 +583,7 @@ public class GameLogic implements GameBoard.OnBoardEvent {
     @Override
     public void onSwipeLeft(){
         fillLeft();
+        win = -1;
         gameBoard.setSelectedPiece(null);
         gameBoard.setPiece(pieces);
         gameBoard.invalidate();
@@ -592,6 +593,7 @@ public class GameLogic implements GameBoard.OnBoardEvent {
     @Override
     public void onSwipeRight(){
         fillRight();
+        win = -1;
         gameBoard.setSelectedPiece(null);
         gameBoard.setPiece(pieces);
         gameBoard.invalidate();

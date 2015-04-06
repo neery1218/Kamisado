@@ -49,6 +49,6 @@ public class Board {
     }
 
     public void rankUp (int r, int c){
-	board[r][c].rankUp(); 
+	    board[r][c].rankUp();
     }
 }
