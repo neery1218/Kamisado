@@ -46,6 +46,10 @@ public class Piece {
         return rank;
     }
 
+    public int getOwner() {
+        return owner;
+    }
+
     public void setLoc(int x, int y) {
         locX = x;
         locY = y;

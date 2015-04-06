@@ -41,6 +41,13 @@ public class Board {
         }
     }
 
+    public int getWidth() {
+        return board[0].length;
+    }
+
+    public int getHeight() {
+        return board.length;
+    }
     public void move(Point a, Point b) {
         board[b.x][b.y].setPiece(board[a.x][a.y].getPiece());
         board[a.x][a.y].pop();
@@ -49,5 +56,13 @@ public class Board {
 
     public void rankUp (int r, int c){
 	    board[r][c].rankUp();
+    }
+
+    public int getColor(int r, int c) {
+        return board[r][c].getColor();
+    }
+
+    public Tile getTile(int r, int c) {
+        return board[r][c];
     }
 }

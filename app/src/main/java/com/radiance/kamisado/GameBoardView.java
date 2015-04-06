@@ -18,7 +18,7 @@ import java.util.ArrayList;
 public class GameBoardView extends View {
     //gameBoardVariables
     private Paint paint;//make these variables easier to read
-
+    private Board board;
     private TextView scoreView;
     //testing commit on alternate branch
     //forgot to make a good commit message,
@@ -31,6 +31,8 @@ public class GameBoardView extends View {
     private float borderWidth = 0;
     private float unitSize = 0;
 
+    private int[] playerColor = {Color.BLACK, Color.WHITE};
+
     private int eventAction = -1;
     private int initialClickX = -1;
     private int initialClickY = -1;
@@ -40,9 +42,9 @@ public class GameBoardView extends View {
     private boolean firstTime = true;
     //score array
     private int boardDimension = 8;
-    private Piece[][] pieces = new Piece[2][boardDimension];
-    private GameLogic board = new GameLogic(this, boardDimension);
-    private GameBoardView.OnBoardEvent onBoardEvent = (GameBoardView.OnBoardEvent) board;
+    /* private Piece[][] pieces = new Piece[2][boardDimension];*/
+    private GameLogic gameLogic = new GameLogic(this, boardDimension);
+    private GameBoardView.OnBoardEvent onBoardEvent = (GameBoardView.OnBoardEvent) gameLogic;
     private int PLAYER_TWO = 0;
     private int PLAYER_ONE = 1;
     private int EMPTY = -1;
@@ -81,21 +83,21 @@ public class GameBoardView extends View {
 
         firstTime = false;
 
-        //Sets up the width and height of the board on the screen
-        //The board is centered in the screen with a possible border around them
+        //Sets up the width and height of the gameLogic on the screen
+        //The gameLogic is centered in the screen with a possible border around them
         width = getWidth();
         height = getHeight();
 
-        //Finding the start and end point of the board with border included
+        //Finding the start and end point of the gameLogic with border included
         startX = borderWidth;
         endX = width - borderWidth;
 
-        //The size of each individual square on the board
+        //The size of each individual square on the gameLogic
         unitSize = (endX - startX) / boardDimension;
 
         //Finding the start and end point along the vertical axis
-        //Calculated by subtracting half the remainder of height with the board accounted for and then subtracting the board height for start point
-        //End point is same thing except without subtracting the board width
+        //Calculated by subtracting half the remainder of height with the gameLogic accounted for and then subtracting the gameLogic height for start point
+        //End point is same thing except without subtracting the gameLogic width
         startY = height - (height - width) / 2 - width + borderWidth;
         endX = height - (height - width) / 2 + borderWidth;
 
@@ -103,34 +105,10 @@ public class GameBoardView extends View {
 
     }//initialisation of the gameboard
 
-    public void drawBoard(Canvas c){
-        //Draws the board according to color
-        for(int i = 0; i < boardDimension; i++){
-            for(int j = 0; j < boardDimension; j++){
-                paint.setColor(board.board8Color[i][j]);
-                c.drawRect(startX + i * unitSize, startY + j * unitSize, startX + (i + 1) * unitSize, startY + (j + 1) * unitSize, paint);
-            }
-        }
+    public void drawBoard(Board board) {
+        this.board = board;
+        invalidate();
     }//Draws the board
-
-    public void drawPiece(Canvas canvas){
-        paint.setTextSize(30);
-        for(int i = 0; i < boardDimension; i++){
-            paint.setColor(Color.BLACK);
-            canvas.drawCircle(startX + pieces[PLAYER_TWO][i].getX() * unitSize + unitSize / 2, startY + unitSize * pieces[PLAYER_TWO][i].getY() + unitSize / 2, unitSize / 2, paint);
-            paint.setColor(pieces[PLAYER_TWO][i].getColor());
-            canvas.drawCircle(startX + pieces[PLAYER_TWO][i].getX() * unitSize + unitSize / 2, startY + unitSize * pieces[PLAYER_TWO][i].getY() + unitSize / 2, unitSize / 3, paint);
-            paint.setColor(Color.BLACK);
-            canvas.drawText("" + pieces[PLAYER_TWO][i].getRank(), startX + pieces[PLAYER_TWO][i].getX() * unitSize + unitSize / 2, startY + unitSize * pieces[PLAYER_TWO][i].getY() + unitSize / 2, paint);
-
-            paint.setColor(Color.WHITE);
-            canvas.drawCircle(startX + pieces[PLAYER_ONE][i].getX() * unitSize + unitSize / 2, startY + unitSize * pieces[PLAYER_ONE][i].getY() + unitSize / 2, unitSize / 2, paint);
-            paint.setColor(pieces[PLAYER_ONE][i].getColor());
-            canvas.drawCircle(startX + pieces[PLAYER_ONE][i].getX() * unitSize + unitSize / 2, startY + unitSize * pieces[PLAYER_ONE][i].getY() + unitSize / 2, unitSize / 3, paint);
-            paint.setColor(Color.WHITE);
-            canvas.drawText("" + pieces[PLAYER_ONE][i].getRank(), startX + pieces[PLAYER_ONE][i].getX() * unitSize + unitSize / 2, startY + unitSize * pieces[PLAYER_ONE][i].getY() + unitSize / 2, paint);
-        }
-    }//Draws the pieces. Player 1 is on bottom with a black circle around them. Player 2 is on top with white.
 
 
 
@@ -142,9 +120,6 @@ public class GameBoardView extends View {
         this.availMoves = list;
     }
 
-    public void setPiece(Piece[][] p){
-        this.pieces = p;
-    }
 
     private void drawPossibleMoves(Canvas canvas){
 
@@ -180,8 +155,25 @@ public class GameBoardView extends View {
     public void onDraw (Canvas canvas){
         super.onDraw(canvas);
         setup();
-        drawBoard(canvas);
-        drawPiece(canvas);
+        //Draws the board according to color
+        for (int i = 0; i < board.getHeight(); i++) {
+            for (int j = 0; j < board.getWidth(); j++) {
+                paint.setColor(board.getColor(i, j));
+                canvas.drawRect(startX + i * unitSize, startY + j * unitSize, startX + (i + 1) * unitSize, startY + (j + 1) * unitSize, paint);
+
+                if (board.getTile(i, j).getPiece() != null) {
+                    Piece temp = board.getTile(i, j).getPiece();
+                    paint.setColor(playerColor[temp.getOwner()]);//put in array
+                    canvas.drawCircle(startX + j * unitSize + unitSize / 2, startY + unitSize * i + unitSize / 2, unitSize / 2, paint);
+                    paint.setColor(temp.getColor());
+                    canvas.drawCircle(startX + j * unitSize + unitSize / 2, startY + unitSize * i + unitSize / 2, unitSize / 3, paint);
+                    paint.setColor(Color.BLACK);
+                    canvas.drawText("" + temp.getRank(), startX + j * unitSize + unitSize / 2, startY + unitSize * i + unitSize / 2, paint);
+
+                }
+
+            }
+        }
 
         //Displays the available moves
         if(selectedPiece != null)
@@ -190,7 +182,7 @@ public class GameBoardView extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent event){
-        if(board.getWin() != -1) {
+        if (gameLogic.getWin() != -1) {
             resolveSwipe(event);
         }
         else if(event.getAction() == 1){
@@ -200,7 +192,6 @@ public class GameBoardView extends View {
         }
         return true;
     }//Handles the touch events
-
 
 
     public interface OnBoardEvent{
