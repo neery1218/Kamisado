@@ -22,6 +22,7 @@ public class GameBoard extends View {
 
     private TextView scoreView;
     //testing commit on alternate branch
+    //forgot to make a good commit message,
     private float startX = -1;
     private float endX = -1;
     private float startY = -1;
