@@ -1,7 +1,9 @@
 package com.radiance.kamisado;
 
 import android.graphics.Color;
-import android.util.Log;
+import android.graphics.Point;
+
+import java.util.ArrayList;
 
 public class Board {
 	int[][] board8Color;
@@ -12,7 +14,37 @@ public class Board {
             Color.parseColor("#964B00")};
     private int r = colors[0], o = colors[1], ye = colors[2], g = colors[3], b = colors[4], p = colors[5], pk = colors[6], br = colors[7];
     private GameBoard gameBoard;
+
+
+    private boolean firstMove = true;
+    private boolean pieceSelected = false;
+
     private int boardDimension = 8;
+    private Piece[][] pieces = new Piece[2][boardDimension];
+
+    private int counter = 1;
+    private int currColor = -1;
+    private Piece selectedPiece;
+
+    private int PLAYER_TWO = 0;
+    private int PLAYER_ONE = 1;
+    private int EMPTY = -1;
+
+    private ArrayList<Point> availMoves;
+    private Point sumoPushOption = new Point(0, 0);
+
+    private int sumoChain = 0;
+
+    private int MATCH_TYPE;
+    private int VERSUS_TYPE;
+
+    //Strength Variables for AI
+    private int EASY = 0;
+    private int MEDIUM = 1;
+    private int HARD = 2;
+
+
+    private int win = -1;
 
 	public Board(GameBoard gameBoard, int bd){
         this.boardDimension = bd;

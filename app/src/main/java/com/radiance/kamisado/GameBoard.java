@@ -17,7 +17,7 @@ import java.util.ArrayList;
  * Created by neerajen on 31/03/15.
  */
 public class GameBoard extends View {
-
+    //gameBoardVariables
     private Paint paint;//make these variables easier to read
 
     private TextView scoreView;
@@ -32,43 +32,17 @@ public class GameBoard extends View {
     private float borderWidth = 0;
     private float unitSize = 0;
 
-    private boolean firstTime = true;
-    private boolean firstMove = true;
-    private boolean pieceSelected = false;
-
-    private int boardDimension = 8;
-    private Piece[][] pieces = new Piece[2][boardDimension];
-    private Board board = new Board(this, boardDimension);
-    private int counter = 1;
-    private int currColor = -1;
-    private Piece selectedPiece;
-
-    private int PLAYER_TWO = 0;
-    private int PLAYER_ONE = 1;
-    private int EMPTY = -1;
-
-    private ArrayList<Point> availMoves;
-    private Point sumoPushOption = new Point(0, 0);
-
-    private int sumoChain = 0;
-
-    private int MATCH_TYPE;
-    private int VERSUS_TYPE;
-
-    //Strength Variables for AI
-    private int EASY = 0;
-    private int MEDIUM = 1;
-    private int HARD = 2;
-
-    //score array
-    private int[] score;
-
     private int eventAction = -1;
     private int initialClickX = -1;
     private int initialClickY = -1;
     private int finalClickX = -1;
     private int finalClickY = -1;
-    private int win = -1;
+
+    private boolean firstTime = true;
+    //score array
+    private int[] score;
+    private int boardDimension = 8;
+    private Board board = new Board(this, boardDimension);
 
     //TODO: Eventually all these constant integers should be switched to enums for typesafety/readability
 
@@ -79,6 +53,7 @@ public class GameBoard extends View {
         score = new int[2];
         score[0] = 0;
         score[1] = 0;
+        //board = new Board(this,BoardDimension);
 
         MATCH_TYPE = GamePlayFragment.getMATCH_TYPE();
         VERSUS_TYPE = GamePlayFragment.getVERSUS_TYPE();
@@ -618,6 +593,7 @@ public class GameBoard extends View {
         int e = event.getAction();
 
         //If player has won then swiping left or right will reset the board in that direction
+        //board.getWin();
         if(win == 1 || win == 0){
             resolveSwipe(event);
         }
@@ -628,6 +604,7 @@ public class GameBoard extends View {
             float x = event.getX(), y = event.getY();
             int convertedX = (int) ((x - startX) / unitSize), convertedY = (int) ((y - startY) / unitSize);//converts the passed coordinates into a location on the board
             if (counter % 2 == PLAYER_TWO) {//determines turn
+                //if it's an AI or online player?
                 p2Turn(convertedX, convertedY);
             } else {
                 p1Turn(convertedX, convertedY);
@@ -639,9 +616,11 @@ public class GameBoard extends View {
     public class AI {//private or public?
 
         private int strength;
+        private int player;
 
-        public AI(int strength) {
+        public AI(int strength, int player) {
             this.strength = strength;
+            this.player = player;
         }
 
         public AI() {
