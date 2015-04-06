@@ -21,7 +21,7 @@ public class GameBoard extends View {
     private Paint paint;//make these variables easier to read
 
     private TextView scoreView;
-
+    //testing commit on alternate branch
     private float startX = -1;
     private float endX = -1;
     private float startY = -1;
