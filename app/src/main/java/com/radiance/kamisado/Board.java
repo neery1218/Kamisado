@@ -47,4 +47,8 @@ public class Board {
         board[a.x][a.y].pop();
 
     }
+
+    public void rankUp (int r, int c){
+	board[r][c].rankUp(); 
+    }
 }
