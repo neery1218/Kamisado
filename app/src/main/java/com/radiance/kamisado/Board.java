@@ -7,7 +7,7 @@ import android.graphics.Point;
  * Created by neerajen on 06/04/15.
  */
 public class Board {
-    private Tile[][] board;
+    public Tile[][] board;
     private int[][] boardColor;
     private int boardDimenion = 8;
     private int PLAYER_ONE = 1, PLAYER_TWO = 0;
