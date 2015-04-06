@@ -15,7 +15,7 @@ import java.util.ArrayList;
 /**
  * Created by neerajen on 31/03/15.
  */
-public class GameBoard extends View {
+public class GameBoardView extends View {
     //gameBoardVariables
     private Paint paint;//make these variables easier to read
 
@@ -42,7 +42,7 @@ public class GameBoard extends View {
     private int boardDimension = 8;
     private Piece[][] pieces = new Piece[2][boardDimension];
     private GameLogic board = new GameLogic(this, boardDimension);
-    private GameBoard.OnBoardEvent onBoardEvent = (GameBoard.OnBoardEvent) board;
+    private GameBoardView.OnBoardEvent onBoardEvent = (GameBoardView.OnBoardEvent) board;
     private int PLAYER_TWO = 0;
     private int PLAYER_ONE = 1;
     private int EMPTY = -1;
@@ -53,7 +53,7 @@ public class GameBoard extends View {
 
     //TODO: Eventually all these constant integers should be switched to enums for typesafety/readability
 
-    public GameBoard(Context context, AttributeSet attrs) {
+    public GameBoardView(Context context, AttributeSet attrs) {
         super(context, attrs);
 
         paint = new Paint();
@@ -74,7 +74,7 @@ public class GameBoard extends View {
         scoreView.setText(score[PLAYER_ONE] + " " + score[PLAYER_TWO]);
     }
 
-    public void setup(Canvas canvas){
+    public void setup(){
         //Only ran once when the view is first created
         if(!firstTime)
             return;
@@ -146,7 +146,7 @@ public class GameBoard extends View {
         this.pieces = p;
     }
 
-    private void drawPossibleMoves(Canvas canvas, int x, int y){
+    private void drawPossibleMoves(Canvas canvas){
 
         //Draws the squares highlighting the available moves
         for(int i = 0; i < availMoves.size(); i++){
@@ -168,19 +168,9 @@ public class GameBoard extends View {
             finalClickX = (int)event.getX(); finalClickY = (int)event.getY();
             if(finalClickX - initialClickX > 200 && Math.abs(finalClickY - initialClickY) < 100){
                 initialClickX = -1; finalClickX = -1; initialClickY = -1; finalClickY = -1;
-                /*//TODO add the reset methods
-                Piece[][] temp = board.fillLeft(pieces[PLAYER_TWO], pieces[PLAYER_ONE]);
-                pieces[PLAYER_TWO] = temp[0]; pieces[PLAYER_ONE] = temp[1];
-                invalidate();
-                win = -1;*/
                 onBoardEvent.onSwipeLeft();
             }
             if(initialClickX - finalClickX > 200 && Math.abs(finalClickY - initialClickY) < 100){
-                //TODO add the reset methods
-                /*Piece[][] temp = board.fillRight(pieces[PLAYER_TWO], pieces[PLAYER_ONE]);
-                pieces[PLAYER_TWO] = temp[0]; pieces[PLAYER_ONE] = temp[1];
-                invalidate();
-                board.getWin() = -1;*/
                 onBoardEvent.onSwipeRight();
             }
         }
@@ -189,13 +179,13 @@ public class GameBoard extends View {
     @Override
     public void onDraw (Canvas canvas){
         super.onDraw(canvas);
-        setup(canvas);
+        setup();
         drawBoard(canvas);
         drawPiece(canvas);
 
         //Displays the available moves
         if(selectedPiece != null)
-            drawPossibleMoves(canvas, selectedPiece.getX(), selectedPiece.getY());
+            drawPossibleMoves(canvas);
     }//Draws on the fragment
 
     @Override

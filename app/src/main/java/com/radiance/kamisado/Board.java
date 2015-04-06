@@ -7,9 +7,8 @@ import android.graphics.Point;
  * Created by neerajen on 06/04/15.
  */
 public class Board {
-    public Tile[][] board;
+    private Tile[][] board;
     private int[][] boardColor;
-    private int boardDimenion = 8;
     private int PLAYER_ONE = 1, PLAYER_TWO = 0;
     private int[] colors = {Color.RED, Color.parseColor("#ED872D"), Color.YELLOW,
             Color.GREEN, Color.BLUE, Color.parseColor("#69359C"), Color.parseColor("#FFB7C5"),

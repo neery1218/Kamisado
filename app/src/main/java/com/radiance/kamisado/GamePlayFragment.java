@@ -14,7 +14,7 @@ public class GamePlayFragment extends Fragment {
 
     private static int VERSUS_TYPE;
     private static int MATCH_TYPE;
-    private GameBoard gameBoard;
+    private GameBoardView gameBoardView;
 
     private OnGamePlayInteractionListener mListener;
 
@@ -66,8 +66,8 @@ public class GamePlayFragment extends Fragment {
         scoreTextView = (TextView) view.findViewById(R.id.scoreTextView);
         scoreTextView.setText("yo");
 
-        gameBoard = (GameBoard) view.findViewById(R.id.gameBoard);
-        gameBoard.setScoreView(scoreTextView);
+        gameBoardView = (GameBoardView) view.findViewById(R.id.gameBoard);
+        gameBoardView.setScoreView(scoreTextView);
 
         return view;
     }
