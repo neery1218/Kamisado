@@ -37,8 +37,8 @@ public class Board {
 
         //set pieces
         for (int i = 0; i < board[0].length; i++) {
-            board[0][i].setPiece(new Piece(board[0][i].getColor(), PLAYER_ONE));
-            board[board.length - 1][i].setPiece(new Piece(board[board.length - 1][i].getColor(), PLAYER_TWO));
+            board[0][i].setPiece(new Piece(board[0][i].getColor(), PLAYER_TWO));
+            board[board.length - 1][i].setPiece(new Piece(board[board.length - 1][i].getColor(), PLAYER_ONE));
         }
     }
 
