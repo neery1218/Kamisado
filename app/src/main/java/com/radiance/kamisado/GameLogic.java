@@ -150,28 +150,26 @@ public class GameLogic implements GameBoardView.OnBoardEvent {
 
     private void searchP1() {
 
-        Piece current = new Piece(0,0,0,0);
         boolean leftDiagonalBlocked = false;
         boolean rightDiagonalBlocked = false;
         boolean forwardBlocked = false;
 
-        //find piece that is making the move
-        for (int i = 0; i < pieces[PLAYER_ONE].length; i++){
-            if (pieces[PLAYER_ONE][i].getX() == x && pieces[PLAYER_ONE][i].getY() == y)
-                current = pieces[PLAYER_ONE][i];
-        }
-        Log.v("GAT", "Current Distance:" + current.getDistance() + " Rank:" + current.getRank());
-        for (int i = 1; i <= current.getDistance(); i++) {
+        int x = selectedPiece.getX();
+        int y = selectedPiece.getY();
+
+        Log.v("GAT", "Current Distance:" + selectedPiece.getDistance() + " Rank:" + selectedPiece.getRank());
+
+        for (int i = 1; i <= selectedPiece.getDistance(); i++) {
 
             if (!forwardBlocked && valid(y - i)) { //finds moves directly forward
-                if (board[x][y - i] == EMPTY)
-                    availMoves.add(new Point(x, y - i));
-                else if (current.getRank() > 0) {//check for sumoPushes
+                if (board.getTile(y - i, x).getPiece() == null)
+                    availMoves.add(new Point(y - i, x));
+                else if (selectedPiece.getRank() > 0) {//check for sumoPushes
 
                     int sumoCounter = 0;
 
-                    while (valid(y - i - sumoCounter) && board[x][y - i - sumoCounter] == PLAYER_TWO) {//checks for a chain of opponent pieces
-                        if(find(x, y - i - sumoCounter).getRank() >= current.getRank()){
+                    while (valid(y - i - sumoCounter) && board.getTile(y - i - sumoCounter, x).getPiece().getOwner() == PLAYER_TWO) {//checks for a chain of opponent pieces
+                        if (board.getTile(y - i - sumoCounter, x).getPiece().getRank() >= selectedPiece.getRank()) {
                             sumoCounter = 0;
                             break;
                         }
@@ -179,9 +177,9 @@ public class GameLogic implements GameBoardView.OnBoardEvent {
                     }
                     Log.v("GAT", "counter:" + sumoCounter);
                     //if the number of opponent pieces are less than the current piece's rank, and the square behind the chain is empty
-                    if (valid(y - i - sumoCounter) && sumoCounter > 0 && sumoCounter <= current.getRank() && board[x][y - i - sumoCounter] == EMPTY) {
-                        sumoPushOption = new Point(x, y - i - sumoCounter);
-                        availMoves.add(new Point(x, y - i - sumoCounter));//adds it as a valid move
+                    if (valid(y - i - sumoCounter) && sumoCounter > 0 && sumoCounter <= selectedPiece.getRank() && board.getTile(y - i - sumoCounter, x).getPiece() == null) {
+                        sumoPushOption = new Point(y - i - sumoCounter, x);
+                        availMoves.add(sumoPushOption);//adds it as a valid move
                         sumoChain = sumoCounter;
                     }
 
@@ -194,15 +192,15 @@ public class GameLogic implements GameBoardView.OnBoardEvent {
 
 
             if (!leftDiagonalBlocked && valid(y - i) && valid(x - i)) {//left diagonal
-                if (board[x - i][y - i] == EMPTY)
-                    availMoves.add(new Point(x - i, y - i));
+                if (board.getTile(y - i, x - i).getPiece() == null)
+                    availMoves.add(new Point(y - i, x - i));
                 else
                     leftDiagonalBlocked = true;
             }
 
             if (!rightDiagonalBlocked && valid(i + x) && valid(y - i)) {//right diagonal
-                if (board[x + i][y - i] == EMPTY)
-                    availMoves.add(new Point(x + i, y - i));
+                if (board.getTile(y - i, i + x).getPiece() == null)
+                    availMoves.add(new Point(y - i, x + i));
                 else
                     rightDiagonalBlocked = true;
             }
@@ -213,13 +211,12 @@ public class GameLogic implements GameBoardView.OnBoardEvent {
     }//Search for moves for player 2
 
     private void searchP2() {
-        Piece current = new Piece(0,0,0,0);
         int x = selectedPiece.getX(), y = selectedPiece.getY();
 
         boolean leftDiagonalBlocked = false;
         boolean rightDiagonalBlocked = false;
         boolean forwardBlocked = false;
-        Log.v("GAT", "Current Distance:" + current.getDistance() + " Rank:" + current.getRank());
+        Log.v("GAT", "Current Distance:" + selectedPiece.getDistance() + " Rank:" + selectedPiece.getRank());
 
         for (int i = 1; i <= selectedPiece.getDistance(); i++) {//checking for available moves
 
@@ -227,12 +224,12 @@ public class GameLogic implements GameBoardView.OnBoardEvent {
             if (!forwardBlocked && valid(i + y)) {//finds moves directly forward
                 if (board.getTile(i + y, x).getPiece() == null)
                     availMoves.add(new Point(y + i, x));
-                else if (current.getRank() > 0) {//check for sumoPushes
+                else if (selectedPiece.getRank() > 0) {//check for sumoPushes
 
                     int sumoCounter = 0;
 
                     while (valid(i + y + sumoCounter) && board.getTile(i + y + sumoCounter, x).getPiece().getOwner() == PLAYER_ONE) {//checks for a chain of opponent pieces
-                        if (board.getTile(i + y + sumoCounter, x).getPiece().getRank() >= current.getRank()) {
+                        if (board.getTile(i + y + sumoCounter, x).getPiece().getRank() >= selectedPiece.getRank()) {
                             sumoCounter = 0;
                             break;
                         }
@@ -240,9 +237,9 @@ public class GameLogic implements GameBoardView.OnBoardEvent {
                     }
                     Log.v("GAT", "counter:" + sumoCounter);
                     //if the number of opponent pieces are less than the current piece's rank, and the square behind the chain is empty
-                    if (valid(i + y + sumoCounter) && sumoCounter > 0 && sumoCounter <= current.getRank() && board[x][y + i + sumoCounter] == EMPTY) {
-                        availMoves.add(new Point(x, y + i + sumoCounter));//adds it as a valid move
-                        sumoPushOption = new Point(x, y + i + sumoCounter);
+                    if (valid(i + y + sumoCounter) && sumoCounter > 0 && sumoCounter <= selectedPiece.getRank() && board.getTile(y + i + sumoCounter, x).getPiece() == null) {
+                        sumoPushOption = new Point(y + i + sumoCounter, x);
+                        availMoves.add(sumoPushOption);//adds it as a valid move
                         sumoChain = sumoCounter;
                     }
 
@@ -254,15 +251,15 @@ public class GameLogic implements GameBoardView.OnBoardEvent {
             }
 
             if (!rightDiagonalBlocked && valid(i + y) && valid(i + x)) {
-                if (board[x + i][y + i] == EMPTY)
-                    availMoves.add(new Point(x + i, y + i));
+                if (board.getTile(y + i, x + i).getPiece() == null)
+                    availMoves.add(new Point(y + i, x + i));
                 else
                     rightDiagonalBlocked = true;
             }
 
 
             if (!leftDiagonalBlocked && valid(i + y) && valid(x - i)) {//left diagonal
-                if (board[x - i][y + i] == EMPTY)
+                if (board.getTile(y + i, x - i).getPiece() == null)
                     availMoves.add(new Point(x - i, y + i));
                 else
                     leftDiagonalBlocked = true;
