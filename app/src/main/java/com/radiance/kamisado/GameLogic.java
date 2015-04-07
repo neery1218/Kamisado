@@ -156,10 +156,12 @@ public class GameLogic implements GameBoardView.OnBoardEvent {
         Log.v("GAT", "Current Distance:" + selectedPiece.getDistance() + " Rank:" + selectedPiece.getRank());
 
         for (int i = 1; i <= selectedPiece.getDistance(); i++) {
-
             if (!forwardBlocked && valid(y - i)) { //finds moves directly forward
-                if (board.getTile(y - i, x).getPiece() == null)
+                if (board.getTile(y - i, x).isEmpty()) {
                     availMoves.add(new Point(y - i, x));
+                    Log.v("TAG", "Hi");
+                }
+
                 else if (selectedPiece.getRank() > 0) {//check for sumoPushes
 
                     int sumoCounter = 0;
@@ -188,20 +190,21 @@ public class GameLogic implements GameBoardView.OnBoardEvent {
 
 
             if (!leftDiagonalBlocked && valid(y - i) && valid(x - i)) {//left diagonal
-                if (board.getTile(y - i, x - i).getPiece() == null)
+                if (board.getTile(y - i, x - i).isEmpty())
                     availMoves.add(new Point(y - i, x - i));
                 else
                     leftDiagonalBlocked = true;
             }
 
             if (!rightDiagonalBlocked && valid(i + x) && valid(y - i)) {//right diagonal
-                if (board.getTile(y - i, i + x).getPiece() == null)
+                if (board.getTile(y - i, i + x).isEmpty())
                     availMoves.add(new Point(y - i, x + i));
                 else
                     rightDiagonalBlocked = true;
             }
 
         }
+        Log.v("TAG", "Availmovessize" + availMoves.size());
 
 
     }//Search for moves for player 2
@@ -256,7 +259,7 @@ public class GameLogic implements GameBoardView.OnBoardEvent {
 
             if (!leftDiagonalBlocked && valid(i + y) && valid(x - i)) {//left diagonal
                 if (board.getTile(y + i, x - i).getPiece() == null)
-                    availMoves.add(new Point(x - i, y + i));
+                    availMoves.add(new Point(y + i, x - i));
                 else
                     leftDiagonalBlocked = true;
             }
@@ -270,26 +273,27 @@ public class GameLogic implements GameBoardView.OnBoardEvent {
         //make points
         for (int j = sumoChain; j >= 1; j--) {
             // findPieceAt (x,y+j);
-            for (int k = 0; k < pieces[PLAYER_TWO].length; k++) {
-                if (pieces[PLAYER_TWO][k].getX() == x && pieces[PLAYER_TWO][k].getY() == selectedPiece.getY() - j) {
-                    pieces[PLAYER_TWO][k].setLoc(x, pieces[PLAYER_TWO][k].getY() - 1);
+            board.move(new Point(selectedPiece.getY() - j, selectedPiece.getX()), new Point(selectedPiece.getY() - j - 1, selectedPiece.getX()));
+
+
+        }
+        board.move(new Point(selectedPiece.getY(), selectedPiece.getX()), new Point(selectedPiece.getY() - 1, selectedPiece.getX()));
+        counter++;
+        currColor = board.getColor(sumoPushOption.y, sumoPushOption.x);
+        findPiece(PLAYER_ONE);
+        gameBoardView.drawBoard(board);
+    }
+
+    private void findPiece(int PLAYER) {
+        for (int i = 0; i < board.getHeight(); i++)
+            for (int j = 0; j < board.getWidth(); j++) {
+                Piece temp = board.getTile(i, j).getPiece();
+                if (temp != null && temp.getColor() == currColor && temp.getOwner() == PLAYER) {
+                    selectedPiece = temp;
                 }
 
-
             }
-            counter++;
 
-        }
-        selectedPiece.setLoc(selectedPiece.getX(), selectedPiece.getY() - 1);
-        currColor = board8Color[x][sumoPushOption.y];
-
-        for (int j = 0; j < boardDimension; j++) {
-            if (pieces[PLAYER_ONE][j].getColor() == currColor) {
-                selectedPiece = pieces[PLAYER_ONE][j];
-                gameBoardView.drawBoard(board);
-               
-            }
-        }
     }
 
     public void resolveSumoPushP2(int x){
@@ -300,41 +304,23 @@ public class GameLogic implements GameBoardView.OnBoardEvent {
 
             // findPieceAt (x,y+j);
             //Push
-            for (int k = 0; k < pieces[PLAYER_ONE].length; k++) {
-                if (pieces[PLAYER_ONE][k].getX() == x && pieces[PLAYER_ONE][k].getY() == selectedPiece.getY() + j) {
-                    pieces[PLAYER_ONE][k].setLoc(x, pieces[PLAYER_ONE][k].getY() + 1);
-                }
-            }
-            counter++;
-        }
+            board.move(new Point(selectedPiece.getY() + j, selectedPiece.getX()), new Point(selectedPiece.getY() + j + 1, selectedPiece.getX()));
 
-        //Set location of piece to 1 square in front of it
-        selectedPiece.setLoc(selectedPiece.getX(), selectedPiece.getY() + 1);
-        currColor = board8Color[x][sumoPushOption.y];
 
-        //Find the next piece of other player
-        for (int j = 0; j < boardDimension; j++) {
-            if (pieces[PLAYER_TWO][j].getColor() == currColor) {
-                selectedPiece = pieces[PLAYER_TWO][j];
-                gameBoardView.drawBoard(board);
-            }
         }
+        counter++;
+
+        board.move(new Point(selectedPiece.getY(), selectedPiece.getX()), new Point(selectedPiece.getY() + 1, selectedPiece.getX()));
+        currColor = board.getColor(sumoPushOption.y, sumoPushOption.x);
+        findPiece(PLAYER_TWO);
+        gameBoardView.drawBoard(board);
     }
 
     private void p1Turn(int x, int y){
 
         //Initiating first move of the game
         if(!pieceSelected) {
-            /*for (int i = 0; i < boardDimension; i++) {
-                if (pieces[PLAYER_ONE][i].getX() == x && pieces[PLAYER_ONE][i].getY() == y) {
-                    pieceSelected = true;
-                    selectedPiece = pieces[PLAYER_ONE][i];
-                    findPossibleMoves(selectedPiece.getX(), selectedPiece.getY());
-                    gameBoardView.drawBoard(board);
-                    break;
-                }
-            }*/
-            if(board.getTile(y,x).getPiece().getOwner() == PLAYER_ONE){
+            if (board.getTile(y, x).getPiece() != null && board.getTile(y, x).getPiece().getOwner() == PLAYER_ONE) {
                 pieceSelected = true;
                 selectedPiece = board.getTile(y,x).getPiece();
                 findPossibleMoves(selectedPiece.getX(), selectedPiece.getY());
@@ -344,16 +330,7 @@ public class GameLogic implements GameBoardView.OnBoardEvent {
         else{
             //Deselecting on first move\
             if(firstMove){
-                /*for(int i = 0; i < boardDimension; i++){
-                    if(pieces[PLAYER_ONE][i].getX() == x && pieces[PLAYER_ONE][i].getY() == y){
-                        selectedPiece = pieces[PLAYER_ONE][i];
-                        firstMove = true;
-                        findPossibleMoves(selectedPiece.getX(), selectedPiece.getY());
-                        gameBoardView.drawBoard(board);
-                        break;
-                    }
-                }*/
-                if(board.getTile(y,x).getPiece().getOwner() == PLAYER_ONE){
+                if (board.getTile(y, x).getPiece() != null && board.getTile(y, x).getPiece().getOwner() == PLAYER_ONE) {
                     selectedPiece = board.getTile(y,x).getPiece();
                     firstMove = true;
                     findPossibleMoves(selectedPiece.getX(), selectedPiece.getY());
@@ -365,14 +342,6 @@ public class GameLogic implements GameBoardView.OnBoardEvent {
             if(availMoves.size() == 0){
                 counter++;
                 Log.d("TAG", counter + " p1 availMoves size 0");
-                /*for(int j = 0; j < boardDimension; j++){
-                    if(pieces[PLAYER_TWO][j].getColor() == currColor){
-                        selectedPiece = pieces[PLAYER_TWO][j];
-                        Log.d("TAG", pieces[PLAYER_TWO][j].toString());
-                        findPossibleMoves(selectedPiece.getX(), selectedPiece.getY());
-                        gameBoardView.drawBoard(board);
-                    }
-                }*/
                 for(int i = 0; i < boardDimension; i++){
                     for(int j = 0; j < boardDimension; j++){
                         if(board.getTile(i, j).getColor() == currColor && board.getTile(i,j).getPiece().getOwner() == PLAYER_TWO){
@@ -386,7 +355,7 @@ public class GameLogic implements GameBoardView.OnBoardEvent {
             //Finds if the clicked square is an available move
             for(int i = 0; i < availMoves.size(); i++){
                 Point temp = availMoves.get(i);
-                if(temp.x == x && temp.y == y){
+                if (temp.y == x && temp.x == y) {
                     if (selectedPiece.getRank() > 0 && sumoPushOption != null && temp.x == sumoPushOption.x && temp.y == sumoPushOption.y) {
                         resolveSumoPushP1(x);
 
@@ -395,18 +364,12 @@ public class GameLogic implements GameBoardView.OnBoardEvent {
                         Log.d("TAG", counter + " p1 normal increment");
                         /*selectedPiece.setLoc(x, y);
                         currColor = board8Color[x][y];//next piece color*/
-                        board.move(new Point(selectedPiece.getX(),selectedPiece.getY()), new Point(x, y));
-                        currColor = board.getColor(x,y);
-                        /*for (int j = 0; j < boardDimension; j++) {
-                            if (pieces[PLAYER_TWO][j].getColor() == currColor) {
-                                selectedPiece = pieces[PLAYER_TWO][j];
-                                findPossibleMoves(selectedPiece.getX(), selectedPiece.getY());
-                                gameBoardView.drawBoard(board);
-                            }
-                        }*/
+                        board.move(new Point(selectedPiece.getY(), selectedPiece.getX()), new Point(y, x));
+                        currColor = board.getColor(y, x);
+
                         for(int j = 0; j < boardDimension; j++){
                             for(int k = 0; k < boardDimension; k++){
-                                if(board.getTile(j,k).getPiece().getOwner() == PLAYER_TWO && board.getTile(j,k).getPiece().getColor() == currColor){
+                                if (board.getTile(j, k).getPiece() != null && board.getTile(j, k).getPiece().getOwner() == PLAYER_TWO && board.getTile(j, k).getPiece().getColor() == currColor) {
                                     selectedPiece = board.getTile(j,k).getPiece();
                                     findPossibleMoves(selectedPiece.getX(), selectedPiece.getY());
                                     gameBoardView.drawBoard(board);
@@ -438,16 +401,7 @@ public class GameLogic implements GameBoardView.OnBoardEvent {
 
         //First move of the game
         if(!pieceSelected) {
-            /*for (int i = 0; i < boardDimension; i++) {
-                if (pieces[PLAYER_TWO][i].getX() == x && pieces[PLAYER_TWO][i].getY() == y) {
-                    pieceSelected = true;
-                    selectedPiece = pieces[PLAYER_TWO][i];
-                    findPossibleMoves(selectedPiece.getX(), selectedPiece.getY());
-                    gameBoardView.drawBoard(board);
-                    break;
-                }
-            }*/
-            if(board.getTile(y,x).getPiece().getOwner() == PLAYER_TWO){
+            if (board.getTile(y, x).getPiece() != null && board.getTile(y, x).getPiece().getOwner() == PLAYER_TWO) {
                 selectedPiece = board.getTile(y,x).getPiece();
                 firstMove = true;
                 findPossibleMoves(selectedPiece.getX(), selectedPiece.getY());
@@ -468,7 +422,7 @@ public class GameLogic implements GameBoardView.OnBoardEvent {
                         break;
                     }
                 }*/
-                if(board.getTile(y,x).getPiece().getOwner() == PLAYER_TWO){
+                if (board.getTile(y, x).getPiece() != null && board.getTile(y, x).getPiece().getOwner() == PLAYER_TWO) {
                     selectedPiece = board.getTile(y,x).getPiece();
                     firstMove = true;
                     findPossibleMoves(selectedPiece.getX(), selectedPiece.getY());
@@ -503,7 +457,7 @@ public class GameLogic implements GameBoardView.OnBoardEvent {
             for (int i = 0; i < availMoves.size(); i++) {
                 Point temp = availMoves.get(i);
 
-                if (temp.x == x && temp.y == y) {
+                if (temp.x == y && temp.y == x) {
 
                     //Sumo push
                     if (selectedPiece.getRank() > 0 && sumoPushOption != null && temp.x == sumoPushOption.x && temp.y == sumoPushOption.y) {
@@ -517,8 +471,8 @@ public class GameLogic implements GameBoardView.OnBoardEvent {
                         Log.d("TAG", counter + " p2 normal increase");
                         /*selectedPiece.setLoc(x, y);
                         currColor = board8Color[x][y];//next piece color*/
-                        board.move(new Point(selectedPiece.getX(),selectedPiece.getY()), new Point(x, y));
-                        currColor = board.getColor(x,y);
+                        board.move(new Point(selectedPiece.getY(), selectedPiece.getX()), new Point(y, x));
+                        currColor = board.getColor(y, x);
                         /*for (int j = 0; j < boardDimension; j++) {
                             if (pieces[PLAYER_ONE][j].getColor() == currColor) {
                                 selectedPiece = pieces[PLAYER_ONE][j];
@@ -528,7 +482,7 @@ public class GameLogic implements GameBoardView.OnBoardEvent {
                         }*/
                         for(int j = 0; j < boardDimension; j++){
                             for(int k = 0; k < boardDimension; k++){
-                                if(board.getTile(j,k).getPiece().getOwner() == PLAYER_ONE && board.getTile(j,k).getPiece().getColor() == currColor){
+                                if (board.getTile(j, k).getPiece() != null && board.getTile(j, k).getPiece().getOwner() == PLAYER_ONE && board.getTile(j, k).getPiece().getColor() == currColor) {
                                     selectedPiece = board.getTile(j,k).getPiece();
                                     findPossibleMoves(selectedPiece.getX(), selectedPiece.getY());
                                     gameBoardView.drawBoard(board);
@@ -567,6 +521,7 @@ public class GameLogic implements GameBoardView.OnBoardEvent {
 
     @Override
     public void onTouch(int x, int y){
+        Log.v("GAT", "X:" + x + " Y:" + y);
         if (counter % 2 == PLAYER_TWO) {//determines turn
             //if it's an AI or online player?
             p2Turn(x, y);

@@ -12,11 +12,15 @@ public class Tile {
     public Tile(int color, Piece piece, int r, int c) {
         this.color = color;
         this.piece = piece;
+        this.r = r;
+        this.c = c;
     }
 
     public Tile(int color, int r, int c) {
         this.color = color;
         this.piece = null;
+        this.r = r;
+        this.c = c;
     }
 
     public int getColor() {

@@ -18,12 +18,15 @@ public class Piece {
     public Piece(int color, int owner) {
         this.color = color;
         this.owner = owner;
+        rank = 0;
+        distance = 7;
     }
 
     public Piece(int color, int owner, int rank) {
         this.color = color;
         this.owner = owner;
         this.rank = rank;
+        distance = 7 - 2 * rank;
     }
 
     public int getX(){

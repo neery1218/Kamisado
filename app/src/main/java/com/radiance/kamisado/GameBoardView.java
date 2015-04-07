@@ -129,7 +129,7 @@ public class GameBoardView extends View {
             paint.setColor(Color.WHITE);
             paint.setStyle(Paint.Style.FILL);
             paint.setAlpha(150);
-            canvas.drawRect(startX + p.x * unitSize, startY + p.y * unitSize, startX + (p.x + 1) * unitSize, startY + (p.y + 1) * unitSize, paint);
+            canvas.drawRect(startX + p.y * unitSize, startY + p.x * unitSize, startX + (p.y + 1) * unitSize, startY + (p.x + 1) * unitSize, paint);
             //switch to circles eventually?
         }
     }
@@ -159,7 +159,7 @@ public class GameBoardView extends View {
         for (int i = 0; i < board.getHeight(); i++) {
             for (int j = 0; j < board.getWidth(); j++) {
                 paint.setColor(board.getColor(i, j));
-                canvas.drawRect(startX + i * unitSize, startY + j * unitSize, startX + (i + 1) * unitSize, startY + (j + 1) * unitSize, paint);
+                canvas.drawRect(startX + j * unitSize, startY + i * unitSize, startX + (j + 1) * unitSize, startY + (i + 1) * unitSize, paint);
 
                 if (board.getTile(i, j).getPiece() != null) {
                     Piece temp = board.getTile(i, j).getPiece();
@@ -188,11 +188,15 @@ public class GameBoardView extends View {
         else if(event.getAction() == 1){
             float x = event.getX(), y = event.getY();
             int convertedX = (int) ((x - startX) / unitSize), convertedY = (int) ((y - startY) / unitSize);//converts the passed coordinates into a location on the board
-            onBoardEvent.onTouch(convertedX, convertedY);
+            if (valid(convertedX) && valid(convertedY))
+                onBoardEvent.onTouch(convertedX, convertedY);
         }
         return true;
     }//Handles the touch events
 
+    private boolean valid(int a) {
+        return (a >= 0 && a < boardDimension);
+    }//Finds available moves of each player
 
     public interface OnBoardEvent{
         public void onTouch(int x, int y);
