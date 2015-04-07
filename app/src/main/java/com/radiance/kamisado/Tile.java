@@ -6,13 +6,15 @@ package com.radiance.kamisado;
 public class Tile {
     private int color;
     private Piece piece; //easily moved
+    private int r;
+    private int c;
 
-    public Tile(int color, Piece piece) {
+    public Tile(int color, Piece piece, int r, int c) {
         this.color = color;
         this.piece = piece;
     }
 
-    public Tile(int color) {
+    public Tile(int color, int r, int c) {
         this.color = color;
         this.piece = null;
     }
@@ -26,14 +28,14 @@ public class Tile {
     }
 
     public void setPiece(Piece piece) {
+
         this.piece = piece;
+        piece.setLoc(c, r);
     }
 
     public boolean isEmpty() {
-        if (piece != null)
-            return true;
-        else
-            return false;
+
+        return (piece == null);
     }
 
     public void pop() {

@@ -31,7 +31,7 @@ public class Board {
         //set tile colors
         for (int i = 0; i < board.length; i++)//row
             for (int j = 0; j < board[i].length; j++) {//column
-                board[i][j] = new Tile(boardColor[i][j]);
+                board[i][j] = new Tile(boardColor[i][j], i, j);
             }
 
         //set pieces
