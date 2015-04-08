@@ -34,12 +34,19 @@ public class Tile {
     public void setPiece(Piece piece) {
 
         this.piece = piece;
-        piece.setLoc(c, r);
+        if (this.piece != null)
+            piece.setLoc(c, r);
     }
 
     public boolean isEmpty() {
 
-        return (piece == null);
+        try {
+            if (piece.getX() == c && piece.getY() == r) {
+                return false;
+            }
+        } catch (NullPointerException e) {
+        }
+        return true;
     }
 
     public void pop() {

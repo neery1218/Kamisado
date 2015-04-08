@@ -52,51 +52,9 @@ public class GameLogic implements GameBoardView.OnBoardEvent {
 
 	}
 
-    public void search() {//computes for fill left and right
-
-        int counter1 = 0;
-        int counter2 = 0;
-
-        for (int i = 0; i < boardDimension; i++)//finds all the pieces starting from the top left to the bottom right
-            for (int j = 0; j < boardDimension; j++){
-
-                if (!board.getTile(i, j).isEmpty()) {
-                    Piece temp = board.getTile(i, j).getPiece();
-                    if (temp.getOwner() == PLAYER_ONE) {
-                        collected[PLAYER_ONE][counter1] = new Point(temp.getY(), temp.getX());
-                        counter1++;
-                        Log.v("One", temp.getY() + " " + temp.getX());
-                    } else {
-                        collected[PLAYER_TWO][counter2] = new Point(temp.getY(), temp.getX());
-                        counter2++;
-                        Log.v("Two", temp.getY() + " " + temp.getX());
-                    }
-
-                }
-            }
-        Log.v("TAG", "Counter One:" + counter1 + " Counter Two:" + counter2);
-
-    }
-
-    public void fillRight(){
 
 
-        for (int i = 0; i < collected[0].length; i++) {
-            board.move(collected[PLAYER_ONE][i], new Point(boardDimension - 1, i));
-            board.move(collected[PLAYER_TWO][i], new Point(0, i));
-        }
-        Log.v("fill", "Right");
-    }
 
-    public void fillLeft(){
-
-        for (int i = 0; i < collected[0].length; i++) {
-            board.move(collected[PLAYER_ONE][i], new Point(boardDimension - 1, boardDimension - 1 - i));
-            board.move(collected[PLAYER_TWO][i], new Point(0, boardDimension - 1 - i));
-        }
-
-        Log.v("fill", "Left");
-    }
 
     private void win (){
 
@@ -139,7 +97,6 @@ public class GameLogic implements GameBoardView.OnBoardEvent {
         //Finds available moves for each player
         if (counter % 2 == PLAYER_TWO) {
             searchP2();
-            Log.d("TAG", availMoves.size() + "");
         }
         else{
             searchP1();
@@ -163,14 +120,13 @@ public class GameLogic implements GameBoardView.OnBoardEvent {
             if (!forwardBlocked && valid(y - i)) { //finds moves directly forward
                 if (board.getTile(y - i, x).isEmpty()) {
                     availMoves.add(new Point(y - i, x));
-                    Log.v("TAG", "Hi");
                 }
 
                 else if (selectedPiece.getRank() > 0) {//check for sumoPushes
 
                     int sumoCounter = 0;
 
-                    while (valid(y - i - sumoCounter) && board.getTile(y - i - sumoCounter, x).getPiece().getOwner() == PLAYER_TWO) {//checks for a chain of opponent pieces
+                    while (valid(y - i - sumoCounter) && !board.getTile(y - i - sumoCounter, x).isEmpty() && board.getTile(y - i - sumoCounter, x).getPiece().getOwner() == PLAYER_TWO) {//checks for a chain of opponent pieces
                         if (board.getTile(y - i - sumoCounter, x).getPiece().getRank() >= selectedPiece.getRank()) {
                             sumoCounter = 0;
                             break;
@@ -208,7 +164,6 @@ public class GameLogic implements GameBoardView.OnBoardEvent {
             }
 
         }
-        Log.v("TAG", "Availmovessize" + availMoves.size());
 
 
     }//Search for moves for player 2
@@ -345,7 +300,6 @@ public class GameLogic implements GameBoardView.OnBoardEvent {
             //If no moves available then goes to player 1
             if(availMoves.size() == 0){
                 counter++;
-                Log.d("TAG", counter + " p1 availMoves size 0");
                 for(int i = 0; i < boardDimension; i++){
                     for(int j = 0; j < boardDimension; j++){
                         if(board.getTile(i, j).getColor() == currColor && board.getTile(i,j).getPiece().getOwner() == PLAYER_TWO){
@@ -365,7 +319,6 @@ public class GameLogic implements GameBoardView.OnBoardEvent {
 
                     } else {
                         counter++;
-                        Log.d("TAG", counter + " p1 normal increment");
                         /*selectedPiece.setLoc(x, y);
                         currColor = board8Color[x][y];//next piece color*/
                         board.move(new Point(selectedPiece.getY(), selectedPiece.getX()), new Point(y, x));
@@ -391,7 +344,6 @@ public class GameLogic implements GameBoardView.OnBoardEvent {
                         pieceSelected = false;
                         gameBoardView.drawBoard(board);
                         counter--;
-                        search();
                         return;
                     }
 
@@ -437,7 +389,6 @@ public class GameLogic implements GameBoardView.OnBoardEvent {
             //If player has no moves available
             if (availMoves.size() == 0) {
                 counter++;
-                Log.d("TAG", counter + " p2 availMoves size 0");
                 /*for (int j = 0; j < boardDimension; j++) {
                     if (pieces[PLAYER_ONE][j].getColor() == currColor) {
                         selectedPiece = pieces[PLAYER_ONE][j];
@@ -472,7 +423,6 @@ public class GameLogic implements GameBoardView.OnBoardEvent {
 
                         //Sets piece to mouse clicked location
                         counter++;
-                        Log.d("TAG", counter + " p2 normal increase");
                         /*selectedPiece.setLoc(x, y);
                         currColor = board8Color[x][y];//next piece color*/
                         board.move(new Point(selectedPiece.getY(), selectedPiece.getX()), new Point(y, x));
@@ -505,7 +455,6 @@ public class GameLogic implements GameBoardView.OnBoardEvent {
                         firstMove = true;
                         gameBoardView.drawBoard(board);
                         counter--;
-                        search();
                         sumoPushOption = null;
                         return;
                     }
@@ -541,14 +490,16 @@ public class GameLogic implements GameBoardView.OnBoardEvent {
     }
 
     @Override
-    public void onSwipeLeft(){
-        fillLeft();
+    public void onSwipeRight() {
+        board.search();
+        board.fillRight();
         reset();
     }
 
     @Override
-    public void onSwipeRight(){
-        fillRight();
+    public void onSwipeLeft() {
+        board.search();
+        board.fillLeft();
         reset();
 
     }

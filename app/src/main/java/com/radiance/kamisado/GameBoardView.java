@@ -6,7 +6,6 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
@@ -144,10 +143,10 @@ public class GameBoardView extends View {
             finalClickX = (int)event.getX(); finalClickY = (int)event.getY();
             if(finalClickX - initialClickX > 200 && Math.abs(finalClickY - initialClickY) < 100){
                 initialClickX = -1; finalClickX = -1; initialClickY = -1; finalClickY = -1;
-                onBoardEvent.onSwipeLeft();
+                onBoardEvent.onSwipeRight();
             }
             if(initialClickX - finalClickX > 200 && Math.abs(finalClickY - initialClickY) < 100){
-                onBoardEvent.onSwipeRight();
+                onBoardEvent.onSwipeLeft();
             }
         }
     }
@@ -162,7 +161,7 @@ public class GameBoardView extends View {
                 paint.setColor(board.getColor(i, j));
                 canvas.drawRect(startX + j * unitSize, startY + i * unitSize, startX + (j + 1) * unitSize, startY + (i + 1) * unitSize, paint);
 
-                if (board.getTile(i, j).getPiece() != null) {
+                if (!board.getTile(i, j).isEmpty()) {
                     Piece temp = board.getTile(i, j).getPiece();
                     paint.setColor(playerColor[temp.getOwner()]);//put in array
                     canvas.drawCircle(startX + j * unitSize + unitSize / 2, startY + unitSize * i + unitSize / 2, unitSize / 2, paint);
@@ -185,7 +184,6 @@ public class GameBoardView extends View {
     public boolean onTouchEvent(MotionEvent event){
         if (gameLogic.getWin() != -1) {
             resolveSwipe(event);
-            Log.v("TAG", "Swipe");
         }
         else if(event.getAction() == 1){
             float x = event.getX(), y = event.getY();
@@ -203,8 +201,8 @@ public class GameBoardView extends View {
     public interface OnBoardEvent{
         public void onTouch(int x, int y);
 
-        public void onSwipeLeft();
-
         public void onSwipeRight();
+
+        public void onSwipeLeft();
     }
 }
