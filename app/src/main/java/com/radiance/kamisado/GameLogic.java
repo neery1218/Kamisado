@@ -59,18 +59,22 @@ public class GameLogic implements GameBoardView.OnBoardEvent {
 
         for (int i = 0; i < boardDimension; i++)//finds all the pieces starting from the top left to the bottom right
             for (int j = 0; j < boardDimension; j++){
-                Piece temp = board.getTile(i, j).getPiece();
-                if (temp != null) {
+
+                if (!board.getTile(i, j).isEmpty()) {
+                    Piece temp = board.getTile(i, j).getPiece();
                     if (temp.getOwner() == PLAYER_ONE) {
                         collected[PLAYER_ONE][counter1] = new Point(temp.getY(), temp.getX());
                         counter1++;
+                        Log.v("One", temp.getY() + " " + temp.getX());
                     } else {
                         collected[PLAYER_TWO][counter2] = new Point(temp.getY(), temp.getX());
                         counter2++;
+                        Log.v("Two", temp.getY() + " " + temp.getX());
                     }
 
                 }
             }
+        Log.v("TAG", "Counter One:" + counter1 + " Counter Two:" + counter2);
 
     }
 
@@ -546,6 +550,7 @@ public class GameLogic implements GameBoardView.OnBoardEvent {
     public void onSwipeRight(){
         fillRight();
         reset();
+
     }
 
     public class AI {//private or public?

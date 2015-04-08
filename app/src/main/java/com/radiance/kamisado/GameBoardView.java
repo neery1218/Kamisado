@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
@@ -184,6 +185,7 @@ public class GameBoardView extends View {
     public boolean onTouchEvent(MotionEvent event){
         if (gameLogic.getWin() != -1) {
             resolveSwipe(event);
+            Log.v("TAG", "Swipe");
         }
         else if(event.getAction() == 1){
             float x = event.getX(), y = event.getY();

@@ -49,8 +49,12 @@ public class Board {
         return board.length;
     }
     public void move(Point a, Point b) {
-        board[b.x][b.y].setPiece(board[a.x][a.y].getPiece());
-        board[a.x][a.y].pop();
+        if (!getTile(a).isEmpty()) {
+            Piece temp = board[a.x][a.y].getPiece();
+            board[a.x][a.y].pop();
+            board[b.x][b.y].setPiece(temp);
+        }
+
 
     }
 
@@ -64,5 +68,9 @@ public class Board {
 
     public Tile getTile(int r, int c) {
         return board[r][c];
+    }
+
+    public Tile getTile(Point a) {
+        return board[a.x][a.y];
     }
 }
