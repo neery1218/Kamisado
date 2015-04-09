@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
@@ -43,13 +44,12 @@ public class GameBoardView extends View {
     //score array
     private int boardDimension = 8;
     /* private Piece[][] pieces = new Piece[2][boardDimension];*/
-    private GameLogic gameLogic = new GameLogic(this, boardDimension);
+    private GameLogic gameLogic;
     private GameBoardView.OnBoardEvent onBoardEvent = (GameBoardView.OnBoardEvent) gameLogic;
     private int PLAYER_TWO = 0;
     private int PLAYER_ONE = 1;
     private int EMPTY = -1;
-    private int MATCH_TYPE;
-    private int VERSUS_TYPE;
+
     private ArrayList<Point> availMoves = new ArrayList<>();
     private Piece selectedPiece;
 
@@ -60,10 +60,10 @@ public class GameBoardView extends View {
 
         paint = new Paint();
 
+        gameLogic = new GameLogic(this, boardDimension, GamePlayFragment.getMATCH_TYPE(), GamePlayFragment.getVERSUS_TYPE());
+
         //board = new GameLogic(this,BoardDimension);
 
-        MATCH_TYPE = GamePlayFragment.getMATCH_TYPE();
-        VERSUS_TYPE = GamePlayFragment.getVERSUS_TYPE();
 
     }//Calls the super constructor and creates a new paint object
 
@@ -151,6 +151,9 @@ public class GameBoardView extends View {
         }
     }
 
+    public void end() {
+        Log.v("Game", "Game Over");
+    }
     @Override
     public void onDraw (Canvas canvas){
         super.onDraw(canvas);
