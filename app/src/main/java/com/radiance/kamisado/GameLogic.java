@@ -9,6 +9,7 @@ public class GameLogic implements GameBoardView.OnBoardEvent {
     Board board = new Board();
     private Point[][] collected;
     private GameBoardView gameBoardView;
+    private int[] scores = {1, 3, 7, 15};
 
 
     private boolean firstMove = true;
@@ -65,16 +66,17 @@ public class GameLogic implements GameBoardView.OnBoardEvent {
             //check if player one has won
             Piece temp = board.getTile(0, i).getPiece();
             if (temp != null && temp.getOwner() == PLAYER_ONE) {
+
+                score[PLAYER_ONE] += scores[temp.getRank()];
                 board.rankUp(0, i);
-                score[PLAYER_ONE] += temp.getRank();
                 win = PLAYER_ONE;
                 gameBoardView.updateScore(score);
             }
 
             temp = board.getTile(boardDimension - 1, i).getPiece();
             if (temp != null && temp.getOwner() == PLAYER_TWO) {
+                score[PLAYER_TWO] += scores[temp.getRank()];
                 board.rankUp(boardDimension - 1, i);
-                score[PLAYER_TWO] += temp.getRank();
                 win = PLAYER_TWO;
                 gameBoardView.updateScore(score);
             }
