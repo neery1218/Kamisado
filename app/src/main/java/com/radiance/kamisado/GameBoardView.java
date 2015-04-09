@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
@@ -64,16 +65,22 @@ public class GameBoardView extends View {
 
         MATCH_TYPE = GamePlayFragment.getMATCH_TYPE();
         VERSUS_TYPE = GamePlayFragment.getVERSUS_TYPE();
+        Log.v("Game", "versustype:" + VERSUS_TYPE);
+        Log.v("Game", "matchType:" + MATCH_TYPE);
 
     }//Calls the super constructor and creates a new paint object
 
     public void setScoreView(TextView textView) {
         scoreView = textView;
         updateScore(new int[]{0, 0});
+
     }
 
     public void updateScore(int[] score) {
         scoreView.setText(score[PLAYER_ONE] + " " + score[PLAYER_TWO]);
+        if (score[PLAYER_ONE] >= MATCH_TYPE || score[PLAYER_TWO] >= MATCH_TYPE) {
+            Log.v("Game", "Win");
+        }
     }
 
     public void setup(){

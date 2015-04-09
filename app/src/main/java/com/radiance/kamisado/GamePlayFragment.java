@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,8 +50,7 @@ public class GamePlayFragment extends Fragment {
             VERSUS_TYPE = getArguments().getInt(MainActivity.ARG_VERSUS_TYPE);
             MATCH_TYPE = getArguments().getInt(MainActivity.ARG_MATCH_TYPE);
 
-            Log.v("TAG","versustype:"+VERSUS_TYPE);
-            Log.v("TAG", "matchType:" + MATCH_TYPE);
+
         }
     }
 
