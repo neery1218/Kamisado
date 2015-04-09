@@ -42,12 +42,9 @@ public class GameLogic implements GameBoardView.OnBoardEvent {
 
     private int win = -1;
 
-    public GameLogic(GameBoardView gameBoardView, int bd, int MATCH_TYPE, int VERSUS_TYPE) {
+    public GameLogic(GameBoardView gameBoardView, int bd) {
         this.boardDimension = bd;
         this.gameBoardView = gameBoardView;
-
-        this.MATCH_TYPE = MATCH_TYPE;
-        this.VERSUS_TYPE = VERSUS_TYPE;
 
         collected = new Point[2][boardDimension];
         board = new Board();
@@ -71,8 +68,7 @@ public class GameLogic implements GameBoardView.OnBoardEvent {
             if (temp != null && temp.getOwner() == PLAYER_ONE) {
 
                 score[PLAYER_ONE] += scores[temp.getRank()];
-                if (score[PLAYER_ONE] >= MATCH_TYPE)
-                    gameBoardView.end();
+
                 board.rankUp(0, i);
                 win = PLAYER_ONE;
                 gameBoardView.updateScore(score);
@@ -81,8 +77,6 @@ public class GameLogic implements GameBoardView.OnBoardEvent {
             temp = board.getTile(boardDimension - 1, i).getPiece();
             if (temp != null && temp.getOwner() == PLAYER_TWO) {
                 score[PLAYER_TWO] += scores[temp.getRank()];
-                if (score[PLAYER_TWO] >= MATCH_TYPE)
-                    gameBoardView.end();
                 board.rankUp(boardDimension - 1, i);
                 win = PLAYER_TWO;
                 gameBoardView.updateScore(score);

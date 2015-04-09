@@ -52,6 +52,8 @@ public class GameBoardView extends View {
 
     private ArrayList<Point> availMoves = new ArrayList<>();
     private Piece selectedPiece;
+    private int MATCH_TYPE;
+    private int VERSUS_TYPE;
 
     //TODO: Eventually all these constant integers should be switched to enums for typesafety/readability
 
@@ -60,9 +62,15 @@ public class GameBoardView extends View {
 
         paint = new Paint();
 
-        gameLogic = new GameLogic(this, boardDimension, GamePlayFragment.getMATCH_TYPE(), GamePlayFragment.getVERSUS_TYPE());
+        gameLogic = new GameLogic(this, boardDimension);
 
         //board = new GameLogic(this,BoardDimension);
+
+
+        MATCH_TYPE = GamePlayFragment.getMATCH_TYPE();
+        VERSUS_TYPE = GamePlayFragment.getVERSUS_TYPE();
+        Log.v("Game", "versustype:" + VERSUS_TYPE);
+        Log.v("Game", "matchType:" + MATCH_TYPE);
 
 
     }//Calls the super constructor and creates a new paint object
@@ -70,10 +78,14 @@ public class GameBoardView extends View {
     public void setScoreView(TextView textView) {
         scoreView = textView;
         updateScore(new int[]{0, 0});
+
     }
 
     public void updateScore(int[] score) {
         scoreView.setText(score[PLAYER_ONE] + " " + score[PLAYER_TWO]);
+        if (score[PLAYER_ONE] >= MATCH_TYPE || score[PLAYER_TWO] >= MATCH_TYPE) {
+            Log.v("Game", "Win");
+        }
     }
 
     public void setup(){
@@ -151,9 +163,7 @@ public class GameBoardView extends View {
         }
     }
 
-    public void end() {
-        Log.v("Game", "Game Over");
-    }
+
     @Override
     public void onDraw (Canvas canvas){
         super.onDraw(canvas);
