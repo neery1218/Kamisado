@@ -237,9 +237,11 @@ public class GameLogic implements GameBoardView.OnBoardEvent {
 
         }
         board.move(new Point(selectedPiece.getY(), selectedPiece.getX()), new Point(selectedPiece.getY() - 1, selectedPiece.getX()));
-        counter++;
-        currColor = board.getColor(sumoPushOption.y, sumoPushOption.x);
+        // counter++;
+        currColor = board.getColor(sumoPushOption.x, sumoPushOption.y);
+        Log.v("currColor", "" + currColor);
         findPiece(PLAYER_ONE);
+        findPossibleMoves(selectedPiece.getX(), selectedPiece.getY());
         gameBoardView.drawBoard(board);
     }
 
@@ -267,11 +269,12 @@ public class GameLogic implements GameBoardView.OnBoardEvent {
 
 
         }
-        counter++;
+        //  counter++;
 
         board.move(new Point(selectedPiece.getY(), selectedPiece.getX()), new Point(selectedPiece.getY() + 1, selectedPiece.getX()));
         currColor = board.getColor(sumoPushOption.y, sumoPushOption.x);
         findPiece(PLAYER_TWO);
+        findPossibleMoves(selectedPiece.getX(), selectedPiece.getY());
         gameBoardView.drawBoard(board);
     }
 

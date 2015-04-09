@@ -8,6 +8,7 @@ public class Tile {
     private Piece piece; //easily moved
     private int r;
     private int c;
+    //TODO: isEmpty boolean variable?
 
     public Tile(int color, Piece piece, int r, int c) {
         this.color = color;
