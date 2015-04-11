@@ -7,9 +7,7 @@ import java.util.ArrayList;
 
 public class GameLogic implements GameBoardView.OnBoardEvent{
     private static boolean firstMove = true;
-    private final int HUMAN_PLAYER = 0;
-    private final int AI_PLAYER = 1;
-    private final int ONLINE_PLAYER = 2;
+
     Board board = new Board();
     private Point inValid = new Point(-1, -1);
     private Player[] players;
@@ -173,10 +171,8 @@ public class GameLogic implements GameBoardView.OnBoardEvent{
         gameBoardView.drawBoard(board);
 
         Point temp = players[counter % 2].resolveMove(new Point(y, x));
-        if (!temp.equals(-1, -1)) {
-            if (selectedPiece.getRank() > 0) {
-                counter++;
-            } else
+        if (!temp.equals(inValid)) {
+
                 board.move(new Point(selectedPiece.getY(), selectedPiece.getX()), temp);
             counter++;
 
