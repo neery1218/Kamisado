@@ -16,6 +16,7 @@ abstract class Player {
     protected int sumoChain = 0;
     protected Point sumoPushOption;
     protected ArrayList<Point> availMoves = new ArrayList<Point>();
+    protected Piece selectedPiece;
 
     public Player(){
 
@@ -25,12 +26,7 @@ abstract class Player {
         this.player = id;
     }
 
-    public Point turn(Board temp, Piece selectedPiece) {
-
-        return new Point();
-    }
-
-    public void resolveMove(Piece selectedPiece){
+    public Point resolveMove(Piece selectedPiece) {
 
 
     }
@@ -59,7 +55,10 @@ abstract class Player {
         return (a >= 0 && a < boardDimension);
     }
 
-    public ArrayList<Point> calcMoves(Piece selectedPiece) {
+    public ArrayList<Point> calcMoves(Board temp, Piece selectedPiece) {
+        temp.flip();
+        this.board = temp;
+        this.selectedPiece = selectedPiece;
         ArrayList<Point> availMoves = new ArrayList<>();
 
         boolean leftDiagonalBlocked = false;
