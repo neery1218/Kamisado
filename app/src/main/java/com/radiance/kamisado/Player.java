@@ -9,13 +9,13 @@ import java.util.ArrayList;
  * Created by Admin on 4/10/2015.
  */
 abstract class Player {
-    private int player = -1;
-    private int boardDimension = 8;
-    private final int PLAYER_ONE = 0;
-    private final int PLAYER_TWO = 1;
-    private Board board;
-    private int sumoChain = 0;
-    private Point sumoPushOption;
+    protected int player = -1;
+    protected int boardDimension = 8;
+    protected final int PLAYER_ONE = 0;
+    protected final int PLAYER_TWO = 1;
+    protected Board board;
+    protected int sumoChain = 0;
+    protected Point sumoPushOption;
 
     public Player(){
 

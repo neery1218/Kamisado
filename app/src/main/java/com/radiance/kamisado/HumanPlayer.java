@@ -14,7 +14,7 @@ public class HumanPlayer extends Player{
     }
 
     @Override
-    public void resolveMove(){
+    public void resolveMove(Piece selectedPiece){
 
     }
 

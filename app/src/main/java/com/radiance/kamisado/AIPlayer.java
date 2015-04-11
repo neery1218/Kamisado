@@ -8,4 +8,9 @@ public class AIPlayer extends Player{
     public AIPlayer(){
         super();
     }
+
+    @Override
+    public void resolveMove(Piece selectedPiece){
+
+    }
 }
