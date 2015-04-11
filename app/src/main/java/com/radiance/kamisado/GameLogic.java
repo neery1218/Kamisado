@@ -52,10 +52,6 @@ public class GameLogic implements GameBoardView.OnBoardEvent{
 
 	}
 
-
-
-
-
     private void win (){
 
         win = -1;
@@ -165,8 +161,6 @@ public class GameLogic implements GameBoardView.OnBoardEvent{
             }
 
         }
-
-
     }//Search for moves for player 2
 
     private void searchP2() {
