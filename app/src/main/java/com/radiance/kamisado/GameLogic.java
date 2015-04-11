@@ -5,7 +5,7 @@ import android.util.Log;
 
 import java.util.ArrayList;
 
-public class GameLogic implements GameBoardView.OnBoardEvent{
+public class GameLogic implements GameBoardView.OnBoardEvent {
     private static boolean firstMove = true;
     private final int PLAYER_TWO = 0;
     private final int PLAYER_ONE = 1;
@@ -14,18 +14,13 @@ public class GameLogic implements GameBoardView.OnBoardEvent{
     private Player[] players;
     private GameBoardView gameBoardView;
     private int[] scores = {1, 3, 7, 15};
-    private boolean pieceSelected = false;
     private int boardDimension = 8;
     private int counter = 1;
     private int[] score = new int[2];
     private int currColor = -1;
     private Piece selectedPiece;
-    private int EMPTY = -1;
     private ArrayList<Point> availMoves;
-    private Point sumoPushOption = new Point(0, 0);
     private int sumoChain = 0;
-    private int MATCH_TYPE;
-    private int VERSUS_TYPE;
     //Strength Variables for AI
     private int EASY = 0;
     private int MEDIUM = 1;
@@ -56,9 +51,9 @@ public class GameLogic implements GameBoardView.OnBoardEvent{
         gameBoardView.setAvailMoves(availMoves);
         gameBoardView.drawBoard(board);
 
-	}
+    }
 
-    private void win (){
+    private void win() {
 
         win = -1;
         //check if pieces have reached opposite side
@@ -119,14 +114,14 @@ public class GameLogic implements GameBoardView.OnBoardEvent{
 
     }
 
-    public int getWin(){
+    public int getWin() {
         return win;
     }
 
     @Override
-    public void onTouch(int x, int y){
+    public void onTouch(int x, int y) {
 
-        if(firstMove) {
+        if (firstMove) {
             if (!board.getTile(y, x).isEmpty()) {
                 Log.d("debug", "called");
                 selectedPiece = board.getTile(y, x).getPiece();
@@ -135,8 +130,7 @@ public class GameLogic implements GameBoardView.OnBoardEvent{
                 gameBoardView.setAvailMoves(availMoves);
                 gameBoardView.drawBoard(board);
                 return;
-            }
-            else if(selectedPiece == null)
+            } else if (selectedPiece == null)
                 return;
         }
 
@@ -174,7 +168,7 @@ public class GameLogic implements GameBoardView.OnBoardEvent{
         win();
     }
 
-    public void reset(){
+    public void reset() {
         counter = win;
         win = -1;
         firstMove = true;
@@ -182,6 +176,7 @@ public class GameLogic implements GameBoardView.OnBoardEvent{
         gameBoardView.setSelectedPiece(null);
         gameBoardView.drawBoard(board);
     }
+
     @Override
     public void onSwipeRight() {
         board.search();
