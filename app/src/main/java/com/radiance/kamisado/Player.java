@@ -65,6 +65,7 @@ abstract class Player {
     }
 
     public ArrayList<Point> calcMoves(Board temp, Piece selectedPiece) {
+        sumoPushOption = new Point(-1, -1);
         if(player == PLAYER_TWO)
             temp.flip();
 
@@ -145,6 +146,14 @@ abstract class Player {
         this.availMoves = availMoves;
         return availMoves;
     }//Finds available moves of each player
+
+    public Point getSumoPushPoint() {
+        return sumoPushOption;
+    }
+
+    public int getSumoChain() {
+        return sumoChain;
+    }
 
 
 }

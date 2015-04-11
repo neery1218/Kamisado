@@ -7,7 +7,8 @@ import java.util.ArrayList;
 
 public class GameLogic implements GameBoardView.OnBoardEvent{
     private static boolean firstMove = true;
-
+    private final int PLAYER_TWO = 0;
+    private final int PLAYER_ONE = 1;
     Board board = new Board();
     private Point inValid = new Point(-1, -1);
     private Player[] players;
@@ -19,8 +20,6 @@ public class GameLogic implements GameBoardView.OnBoardEvent{
     private int[] score = new int[2];
     private int currColor = -1;
     private Piece selectedPiece;
-    private int PLAYER_TWO = 0;
-    private int PLAYER_ONE = 1;
     private int EMPTY = -1;
     private ArrayList<Point> availMoves;
     private Point sumoPushOption = new Point(0, 0);
@@ -59,9 +58,6 @@ public class GameLogic implements GameBoardView.OnBoardEvent{
 
 	}
 
-    public boolean isFirstMove() {
-        return firstMove;
-    }
     private void win (){
 
         win = -1;
@@ -90,25 +86,14 @@ public class GameLogic implements GameBoardView.OnBoardEvent{
         }
     }//Check for win. Return 1 if player 1 won, 0 if player 2 won, -1 if no one won yet
 
+    public void resolveSumoPushP1() {
 
-    private boolean valid (int a){
-        return (a >= 0 && a < boardDimension);
-    }//Finds available moves of each player
-
-    public void resolveSumoPushP1(int x){
         //find pieces that are gonna get sumo pushed
-        //make points
-        for (int j = sumoChain; j >= 1; j--) {
-            // findPieceAt (x,y+j);
+        for (int j = sumoChain; j >= 1; j--)
             board.move(new Point(selectedPiece.getY() - j, selectedPiece.getX()), new Point(selectedPiece.getY() - j - 1, selectedPiece.getX()));
 
-
-        }
         board.move(new Point(selectedPiece.getY(), selectedPiece.getX()), new Point(selectedPiece.getY() - 1, selectedPiece.getX()));
-        // counter++;
-        currColor = board.getColor(sumoPushOption.x, sumoPushOption.y);
 
-        gameBoardView.drawBoard(board);
     }
 
     private void findPiece(int PLAYER) {
@@ -123,25 +108,15 @@ public class GameLogic implements GameBoardView.OnBoardEvent{
 
     }
 
-    public void resolveSumoPushP2(int x){
-        //find pieces that are gonna get sumo pushed
-        //make points
-        //Pushing from the other end so it doesn't get overwritten
-        for (int j = sumoChain; j >= 1; j--) {
+    public void resolveSumoPushP2() {
 
-            // findPieceAt (x,y+j);
-            //Push
+        //Pushing from the other end so it doesn't get overwritten
+        for (int j = sumoChain; j >= 1; j--)
             board.move(new Point(selectedPiece.getY() + j, selectedPiece.getX()), new Point(selectedPiece.getY() + j + 1, selectedPiece.getX()));
 
 
-        }
-        //  counter++;
-
         board.move(new Point(selectedPiece.getY(), selectedPiece.getX()), new Point(selectedPiece.getY() + 1, selectedPiece.getX()));
-        currColor = board.getColor(sumoPushOption.y, sumoPushOption.x);
-        findPiece(PLAYER_TWO);
-        //findPossibleMoves(selectedPiece.getX(), selectedPiece.getY());
-        gameBoardView.drawBoard(board);
+
     }
 
     public int getWin(){
@@ -165,14 +140,25 @@ public class GameLogic implements GameBoardView.OnBoardEvent{
                 return;
         }
 
-        //first move has not been configured yet
         availMoves = players[counter % 2].calcMoves(board, selectedPiece);
         gameBoardView.setAvailMoves(availMoves);
         gameBoardView.drawBoard(board);
 
         Point temp = players[counter % 2].resolveMove(new Point(y, x));
         if (!temp.equals(inValid)) {
+            if (selectedPiece.getRank() > 0 && temp.equals(players[counter % 2].getSumoPushPoint())) {
+                sumoChain = players[counter % 2].getSumoChain();
+                switch (counter % 2) {
+                    case PLAYER_ONE:
+                        resolveSumoPushP1();
+                        break;
+                    case PLAYER_TWO:
+                        resolveSumoPushP2();
+                        break;
 
+                }
+                counter++;
+            } else
                 board.move(new Point(selectedPiece.getY(), selectedPiece.getX()), temp);
             counter++;
 
