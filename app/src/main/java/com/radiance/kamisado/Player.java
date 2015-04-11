@@ -124,7 +124,6 @@ abstract class Player {
                 else
                     rightDiagonalBlocked = true;
             }
-
         }
         return availMoves;
     }//Search for moves for player 2
