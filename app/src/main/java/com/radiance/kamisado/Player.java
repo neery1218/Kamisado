@@ -1,7 +1,6 @@
 package com.radiance.kamisado;
 
 import android.graphics.Point;
-import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -9,13 +8,14 @@ import java.util.ArrayList;
  * Created by Admin on 4/10/2015.
  */
 abstract class Player {
-    protected int player = -1;
-    protected int boardDimension = 8;
     protected final int PLAYER_ONE = 0;
     protected final int PLAYER_TWO = 1;
+    protected int player = -1;
+    protected int boardDimension = 8;
     protected Board board;
     protected int sumoChain = 0;
     protected Point sumoPushOption;
+    protected ArrayList<Point> availMoves = new ArrayList<Point>();
 
     public Player(){
 
@@ -25,20 +25,13 @@ abstract class Player {
         this.player = id;
     }
 
-    public Board turn(Board temp, Piece selectedPiece){
-        this.board = temp;
-        if(player == PLAYER_TWO){
-            board.flip();
-        }
-        resolveMove(selectedPiece);
-        if(player == PLAYER_TWO){
-            board.flip();
-        }
-        return board;
+    public Point turn(Board temp, Piece selectedPiece) {
+
+        return new Point();
     }
 
     public void resolveMove(Piece selectedPiece){
-        ArrayList<Point> availMoves = search(selectedPiece);
+
 
     }
 
@@ -64,9 +57,9 @@ abstract class Player {
 
     private boolean valid (int a){
         return (a >= 0 && a < boardDimension);
-    }//Finds available moves of each player
+    }
 
-    private ArrayList<Point> search(Piece selectedPiece) {
+    public ArrayList<Point> calcMoves(Piece selectedPiece) {
         ArrayList<Point> availMoves = new ArrayList<>();
 
         boolean leftDiagonalBlocked = false;
@@ -76,7 +69,7 @@ abstract class Player {
         int x = selectedPiece.getX();
         int y = selectedPiece.getY();
 
-        Log.v("GAT", "Current Distance:" + selectedPiece.getDistance() + " Rank:" + selectedPiece.getRank());
+        // Log.v("GAT", "Current Distance:" + selectedPiece.getDistance() + " Rank:" + selectedPiece.getRank());
 
         for (int i = 1; i <= selectedPiece.getDistance(); i++) {
             if (!forwardBlocked && valid(y - i)) { //finds moves directly forward
@@ -95,7 +88,7 @@ abstract class Player {
                         }
                         sumoCounter++;
                     }
-                    Log.v("GAT", "counter:" + sumoCounter);
+                    // Log.v("GAT", "counter:" + sumoCounter);
                     //if the number of opponent pieces are less than the current piece's rank, and the square behind the chain is empty
                     if (valid(y - i - sumoCounter) && sumoCounter > 0 && sumoCounter <= selectedPiece.getRank() && board.getTile(y - i - sumoCounter, x).getPiece() == null) {
                         sumoPushOption = new Point(y - i - sumoCounter, x);
@@ -125,24 +118,9 @@ abstract class Player {
                     rightDiagonalBlocked = true;
             }
         }
+        this.availMoves = availMoves;
         return availMoves;
-    }//Search for moves for player 2
+    }//Finds available moves of each player
 
-    public void resolveSumoPushP1(int x, Piece selectedPiece){
-        //find pieces that are gonna get sumo pushed
-        //make points
-        for (int j = sumoChain; j >= 1; j--) {
-            // findPieceAt (x,y+j);
-            board.move(new Point(selectedPiece.getY() - j, selectedPiece.getX()), new Point(selectedPiece.getY() - j - 1, selectedPiece.getX()));
-        }
-        board.move(new Point(selectedPiece.getY(), selectedPiece.getX()), new Point(selectedPiece.getY() - 1, selectedPiece.getX()));
-    }
 
-    public void getBoard(Board board){
-        this.board = board;
-    }
-
-    public Board getBoard(){
-        return board;
-    }
 }
