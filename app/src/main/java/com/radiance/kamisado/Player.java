@@ -8,8 +8,8 @@ import java.util.ArrayList;
  * Created by Admin on 4/10/2015.
  */
 abstract class Player {
-    protected final int PLAYER_ONE = 0;
-    protected final int PLAYER_TWO = 1;
+    protected final int PLAYER_ONE = 1;
+    protected final int PLAYER_TWO = 0;
     protected int player = -1;
     protected int boardDimension = 8;
     protected Board board;
@@ -26,10 +26,17 @@ abstract class Player {
         this.player = id;
     }
 
-    public Point resolveMove(Piece selectedPiece) {
-
-
+    //calcMoves gets called first by gameLogic
+    //resolveMoves then immediately called
+    //gameLogic will decide whether to print stuff or not, depending on what type of player it is.
+    public Point resolveMove() {
+        //in Human Player, resolveMove will be passed selectedX and Y and it will determine if it's a correct move
+        //in AI Player, resolveMove will be called right after selected Move
+        //in online Player, ...have to figure this one out
+        return new Point(0, 0);
     }
+
+
 
     public int win(){
         //check if pieces have reached opposite side

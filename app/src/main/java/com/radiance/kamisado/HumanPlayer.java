@@ -2,8 +2,6 @@ package com.radiance.kamisado;
 
 import android.graphics.Point;
 
-import java.util.ArrayList;
-
 /**
  * Created by Admin on 4/10/2015.
  */
@@ -14,8 +12,9 @@ public class HumanPlayer extends Player{
     }
 
     @Override
-    public void resolveMove(Piece selectedPiece){
-
+    public Point resolveMove() {
+        //in Human Player, resolveMove will be passed selectedX and Y and it will determine if it's a correct move
+        return new Point(0, 0);
     }
 
 }

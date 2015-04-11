@@ -6,53 +6,57 @@ import android.util.Log;
 import java.util.ArrayList;
 
 public class GameLogic implements GameBoardView.OnBoardEvent{
+    private static boolean firstMove = true;
+    private final int HUMAN_PLAYER = 0;
+    private final int AI_PLAYER = 1;
+    private final int ONLINE_PLAYER = 2;
     Board board = new Board();
     private Point inValid = new Point(-1, -1);
-    private Point[][] collected;
+    private Player[] players;
     private GameBoardView gameBoardView;
     private int[] scores = {1, 3, 7, 15};
-
-    private boolean firstMove = true;
     private boolean pieceSelected = false;
-
     private int boardDimension = 8;
-
     private int counter = 1;
     private int[] score = new int[2];
     private int currColor = -1;
     private Piece selectedPiece;
-
     private int PLAYER_TWO = 0;
     private int PLAYER_ONE = 1;
     private int EMPTY = -1;
-
     private ArrayList<Point> availMoves;
     private Point sumoPushOption = new Point(0, 0);
-
     private int sumoChain = 0;
-
     private int MATCH_TYPE;
     private int VERSUS_TYPE;
-
     //Strength Variables for AI
     private int EASY = 0;
     private int MEDIUM = 1;
     private int HARD = 2;
-
-
     private int win = -1;
 
-    public GameLogic(GameBoardView gameBoardView, int bd) {
+    public GameLogic(GameBoardView gameBoardView, int bd, int VERSUS_TYPE) {
         this.boardDimension = bd;
         this.gameBoardView = gameBoardView;
 
-        collected = new Point[2][boardDimension];
         board = new Board();
+        players[PLAYER_ONE] = new HumanPlayer();
+        switch (VERSUS_TYPE) {
+            case HUMAN_PLAYER:
+                players[PLAYER_TWO] = new HumanPlayer();
+                break;
+            case AI_PLAYER:
+                players[PLAYER_TWO] = new AIPlayer();
+                break;
+        }
 
         gameBoardView.drawBoard(board); 
 
 	}
 
+    public boolean isFirstMove() {
+        return firstMove;
+    }
     private void win (){
 
         win = -1;
@@ -474,9 +478,20 @@ public class GameLogic implements GameBoardView.OnBoardEvent{
     @Override
     public void onTouch(int x, int y){
         Log.v("GAT", "X:" + x + " Y:" + y);
+        //if is firstMove
+        //gameBoardView.setAvailMoves(players[counter%2].calcMoves(x,y));
+        //
+        //else
+        //Point temp = players[counter%2].resolveMoves(x,y);
+        //if temp!= (-1,-1)
+        //board.move(selectedPiece.getY(),selectedPiece.getX(), temp);
+        //gameBoardView.drawBoard(board);
+        //counter++;
+
         if (counter % 2 == PLAYER_TWO) {//determines turn
             //if it's an AI or online player?
             p2Turn(x, y);
+
         } else {
             p1Turn(x, y);
         }
@@ -501,35 +516,5 @@ public class GameLogic implements GameBoardView.OnBoardEvent{
         board.fillLeft();
         reset();
 
-    }
-
-    public class AI {//private or public?
-
-        private int strength;
-        private int player;
-
-        public AI(int strength, int player) {
-            this.strength = strength;
-            this.player = player;
-        }
-
-        public AI() {
-
-        }
-
-        public int getStrength() {
-            return strength;
-        }
-
-        public void setStrength(int strength) {
-            this.strength = strength;
-        }
-
-        public Point move(){
-            if (strength == EASY)
-                return availMoves.get((int) (Math.random()) * availMoves.size());
-
-            return availMoves.get(0);
-        }
     }
 }
