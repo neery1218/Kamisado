@@ -51,7 +51,7 @@ public class GameLogic implements GameBoardView.OnBoardEvent{
                 Log.v("Game", "AIPlayer");
                 break;
         }
-        currColor = board.getColor(0, 0);
+        currColor = board.getColor(boardDimension - 1, 0);
         findPiece(counter % 2);
         availMoves = players[counter % 2].calcMoves(board, selectedPiece);
 
@@ -244,6 +244,7 @@ public class GameLogic implements GameBoardView.OnBoardEvent{
                     counter++;
                 } else
                     board.move(new Point(selectedPiece.getY(), selectedPiece.getX()), temp);
+                gameBoardView.drawBoard(board);
                 counter++;
 
                 //find next piece
