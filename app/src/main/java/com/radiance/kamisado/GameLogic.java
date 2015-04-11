@@ -231,17 +231,20 @@ public class GameLogic implements GameBoardView.OnBoardEvent{
     @Override
     public void onTouch(int x, int y){
 
-        if(selectedPiece == null){
-            if(board.getTile(y, x).isEmpty()){
+        if(firstMove) {
+            if (!board.getTile(y, x).isEmpty()) {
+                Log.d("debug", "called");
+                selectedPiece = board.getTile(y, x).getPiece();
+                availMoves = players[counter % 2].calcMoves(board, selectedPiece);
+                gameBoardView.setSelectedPiece(selectedPiece);
+                gameBoardView.setAvailMoves(availMoves);
+                gameBoardView.drawBoard(board);
                 return;
             }
-            selectedPiece = board.getTile(y, x).getPiece();
-            availMoves = players[counter % 2].calcMoves(board, selectedPiece);
-            gameBoardView.setSelectedPiece(selectedPiece);
-            gameBoardView.setAvailMoves(availMoves);
-            gameBoardView.drawBoard(board);
-            return;
+            else if(selectedPiece == null)
+                return;
         }
+
         //first move has not been configured yet
         availMoves = players[counter % 2].calcMoves(board, selectedPiece);
         gameBoardView.setAvailMoves(availMoves);
@@ -263,14 +266,18 @@ public class GameLogic implements GameBoardView.OnBoardEvent{
             Log.d("debug", availMoves.size() + "");
             gameBoardView.drawBoard(board);
         }
+        firstMove = false;
+        win();
     }
 
     public void reset(){
+        counter = win;
         win = -1;
+        firstMove = true;
+        selectedPiece = null;
         gameBoardView.setSelectedPiece(null);
         gameBoardView.drawBoard(board);
     }
-
     @Override
     public void onSwipeRight() {
         board.search();
