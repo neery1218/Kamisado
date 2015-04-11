@@ -43,7 +43,7 @@ public class GameLogic implements GameBoardView.OnBoardEvent{
         players[PLAYER_ONE] = new HumanPlayer(PLAYER_ONE);
         switch (VERSUS_TYPE) {
             case MainActivity.TWO_PLAY_PRESSED:
-                players[PLAYER_TWO] = new HumanPlayer();
+                players[PLAYER_TWO] = new HumanPlayer(PLAYER_TWO);
                 Log.v("Game", "HumanPlayer");
                 break;
             case MainActivity.PLAY_PRESSED:
@@ -53,12 +53,11 @@ public class GameLogic implements GameBoardView.OnBoardEvent{
         }
         currColor = board.getColor(boardDimension - 1, 0);
         findPiece(counter % 2);
-        availMoves = players[counter % 2].calcMoves(board, selectedPiece);
 
-        gameBoardView.setSelectedPiece(selectedPiece);
+        selectedPiece = null;
+        availMoves = new ArrayList<>();
         gameBoardView.setAvailMoves(availMoves);
         gameBoardView.drawBoard(board);
-
 
 	}
 
@@ -225,38 +224,45 @@ public class GameLogic implements GameBoardView.OnBoardEvent{
         }
     }//Conducting player2's turn
 
-
-
     public int getWin(){
         return win;
     }
 
     @Override
     public void onTouch(int x, int y){
-        Log.v("GAT", "X:" + x + " Y:" + y);
 
-        //first move has not been configured yet
-        if (players[counter % 2] instanceof HumanPlayer) {
-            Point temp = players[counter % 2].resolveMove(new Point(y, x));
-            if (temp != new Point(-1, -1)) {
-                if (selectedPiece.getRank() > 0) {
-
-                    counter++;
-                } else
-                    board.move(new Point(selectedPiece.getY(), selectedPiece.getX()), temp);
-                gameBoardView.drawBoard(board);
-                counter++;
-
-                //find next piece
-                currColor = board.getColor(y, x);
-                findPiece(counter % 2);
-                gameBoardView.setAvailMoves(players[counter % 2].calcMoves(board, selectedPiece));
-
-
+        if(selectedPiece == null){
+            if(board.getTile(y, x).isEmpty()){
+                return;
             }
+            selectedPiece = board.getTile(y, x).getPiece();
+            availMoves = players[counter % 2].calcMoves(board, selectedPiece);
+            gameBoardView.setSelectedPiece(selectedPiece);
+            gameBoardView.setAvailMoves(availMoves);
+            gameBoardView.drawBoard(board);
+            return;
         }
+        //first move has not been configured yet
+        availMoves = players[counter % 2].calcMoves(board, selectedPiece);
+        gameBoardView.setAvailMoves(availMoves);
+        gameBoardView.drawBoard(board);
 
+        Point temp = players[counter % 2].resolveMove(new Point(y, x));
+        if (!temp.equals(-1, -1)) {
+            if (selectedPiece.getRank() > 0) {
+                counter++;
+            } else
+                board.move(new Point(selectedPiece.getY(), selectedPiece.getX()), temp);
+            counter++;
 
+            //find next piece
+            currColor = board.getColor(y, x);
+            findPiece(counter % 2);
+            availMoves = players[counter % 2].calcMoves(board, selectedPiece);
+            gameBoardView.setAvailMoves(availMoves);
+            Log.d("debug", availMoves.size() + "");
+            gameBoardView.drawBoard(board);
+        }
     }
 
     public void reset(){

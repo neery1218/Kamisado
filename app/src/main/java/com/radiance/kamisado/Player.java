@@ -1,6 +1,7 @@
 package com.radiance.kamisado;
 
 import android.graphics.Point;
+import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -29,10 +30,14 @@ abstract class Player {
     //calcMoves gets called first by gameLogic
     //resolveMoves then immediately called
     //gameLogic will decide whether to print stuff or not, depending on what type of player it is.
-    public Point resolveMove(Point point) {
+    public Point resolveMove() {
         //in Human Player, resolveMove will be passed selectedX and Y and it will determine if it's a correct move
         //in AI Player, resolveMove will be called right after selected Move
         //in online Player, ...have to figure this one out
+        return new Point(-1, -1);
+    }
+
+    public Point resolveMove(Point point){
         return new Point(-1, -1);
     }
 
@@ -51,7 +56,6 @@ abstract class Player {
                 return PLAYER_TWO;
             }
 
-
         }
         return -1;
     }
@@ -61,7 +65,9 @@ abstract class Player {
     }
 
     public ArrayList<Point> calcMoves(Board temp, Piece selectedPiece) {
-        temp.flip();
+        if(player == PLAYER_TWO)
+            temp.flip();
+
         this.board = temp;
         this.selectedPiece = selectedPiece;
         ArrayList<Point> availMoves = new ArrayList<>();
@@ -76,7 +82,7 @@ abstract class Player {
         if (player == PLAYER_TWO) {
             x = boardDimension - 1 - x;
             y = boardDimension - 1 - y;
-
+            Log.d("debug", board.getTile(y, x).getPiece().toString());
         }
 
 
@@ -128,6 +134,13 @@ abstract class Player {
                 else
                     rightDiagonalBlocked = true;
             }
+        }
+        if(player == PLAYER_TWO) {
+            for(int i = 0; i < availMoves.size(); i++){
+                Point orient = availMoves.get(i);
+                availMoves.set(i, new Point(boardDimension - 1 - orient.x, boardDimension - 1 - orient.y));
+            }
+            temp.flip();
         }
         this.availMoves = availMoves;
         return availMoves;
