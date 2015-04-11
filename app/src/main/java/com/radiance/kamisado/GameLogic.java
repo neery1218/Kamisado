@@ -146,7 +146,6 @@ public class GameLogic implements GameBoardView.OnBoardEvent{
         gameBoardView.drawBoard(board);
     }
 
-
     public int getWin(){
         return win;
     }
