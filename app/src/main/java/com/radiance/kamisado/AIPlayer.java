@@ -25,7 +25,6 @@ public class AIPlayer extends Player{
     @Override
     public Point resolveMove(Piece selectedPiece){
         if(difficulty == 1){
-
         }
         return new Point();
     }
