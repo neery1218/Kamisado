@@ -14,8 +14,8 @@ public class HumanPlayer extends Player{
     }
 
     @Override
-    public void resolveMove(Piece selectedPiece){
-
+    public Point resolveMove(Piece selectedPiece){
+        return new Point();
     }
 
 }
