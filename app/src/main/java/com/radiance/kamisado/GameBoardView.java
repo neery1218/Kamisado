@@ -60,6 +60,7 @@ public class GameBoardView extends View {
         super(context, attrs);
 
         paint = new Paint();
+        paint.setTextSize(90);
 
         //board = new GameLogic(this,BoardDimension);
 
@@ -176,8 +177,8 @@ public class GameBoardView extends View {
                     canvas.drawCircle(startX + j * unitSize + unitSize / 2, startY + unitSize * i + unitSize / 2, unitSize / 2, paint);
                     paint.setColor(temp.getColor());
                     canvas.drawCircle(startX + j * unitSize + unitSize / 2, startY + unitSize * i + unitSize / 2, unitSize / 3, paint);
-                    paint.setColor(Color.BLACK);
-                    canvas.drawText("" + temp.getRank(), startX + j * unitSize + unitSize / 2, startY + unitSize * i + unitSize / 2, paint);
+                    paint.setColor(playerColor[temp.getOwner() == PLAYER_ONE ? PLAYER_TWO : PLAYER_ONE]);
+                    canvas.drawText("" + temp.getRank(), startX + j * unitSize + unitSize / 2 - 25, startY + unitSize * i + unitSize / 2 + 30, paint);
 
                 }
 
