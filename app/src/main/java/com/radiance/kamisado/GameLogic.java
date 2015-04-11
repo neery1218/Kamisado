@@ -82,13 +82,11 @@ public class GameLogic implements GameBoardView.OnBoardEvent {
     }//Check for win. Return 1 if player 1 won, 0 if player 2 won, -1 if no one won yet
 
     public void resolveSumoPushP1() {
-
         //find pieces that are gonna get sumo pushed
         for (int j = sumoChain; j >= 1; j--)
             board.move(new Point(selectedPiece.getY() - j, selectedPiece.getX()), new Point(selectedPiece.getY() - j - 1, selectedPiece.getX()));
 
         board.move(new Point(selectedPiece.getY(), selectedPiece.getX()), new Point(selectedPiece.getY() - 1, selectedPiece.getX()));
-
     }
 
     private void findPiece(int PLAYER) {
@@ -120,6 +118,8 @@ public class GameLogic implements GameBoardView.OnBoardEvent {
 
     @Override
     public void onTouch(int x, int y) {
+        if (players[counter % 2] instanceof AIPlayer)//clicks by other player during AI move
+            return;
 
         if (firstMove) {
             if (!board.getTile(y, x).isEmpty()) {
@@ -160,9 +160,27 @@ public class GameLogic implements GameBoardView.OnBoardEvent {
             currColor = board.getColor(y, x);
             findPiece(counter % 2);
             availMoves = players[counter % 2].calcMoves(board, selectedPiece);
-            gameBoardView.setAvailMoves(availMoves);
-            Log.d("debug", availMoves.size() + "");
+            if (players[counter % 2] instanceof HumanPlayer) {
+                gameBoardView.setAvailMoves(availMoves);
+                Log.d("debug", availMoves.size() + "");
+
+            }
+
             gameBoardView.drawBoard(board);
+            if (players[counter % 2] instanceof AIPlayer) {
+                Point tempA = players[counter % 2].resolveMove();
+
+                board.move(new Point(selectedPiece.getY(), selectedPiece.getX()), tempA);
+                counter++;
+
+                //find next piece
+                currColor = board.getColor(y, x);
+                findPiece(counter % 2);
+                availMoves = players[counter % 2].calcMoves(board, selectedPiece);
+                gameBoardView.setAvailMoves(availMoves);
+                Log.d("debug", availMoves.size() + "");
+                gameBoardView.drawBoard(board);
+            }
         }
         firstMove = false;
         win();

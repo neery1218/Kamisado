@@ -16,6 +16,9 @@ public class AIPlayer extends Player{
     @Override
     public Point resolveMove(Point point) {
         if(difficulty == 1){
+            int index = (int) (Math.random() * availMoves.size());
+            return availMoves.get(0);
+
         }
         return new Point();
     }
