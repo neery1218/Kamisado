@@ -70,8 +70,15 @@ abstract class Player {
         boolean rightDiagonalBlocked = false;
         boolean forwardBlocked = false;
 
+        //these have a different orientation
         int x = selectedPiece.getX();
         int y = selectedPiece.getY();
+        if (player == PLAYER_TWO) {
+            x = boardDimension - 1 - x;
+            y = boardDimension - 1 - y;
+
+        }
+
 
         // Log.v("GAT", "Current Distance:" + selectedPiece.getDistance() + " Rank:" + selectedPiece.getRank());
 

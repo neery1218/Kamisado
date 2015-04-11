@@ -45,7 +45,7 @@ public class GameBoardView extends View {
     private int boardDimension = 8;
     /* private Piece[][] pieces = new Piece[2][boardDimension];*/
     private GameLogic gameLogic;
-    private GameBoardView.OnBoardEvent onBoardEvent = (GameBoardView.OnBoardEvent) gameLogic;
+    private GameBoardView.OnBoardEvent onBoardEvent;
     private int PLAYER_TWO = 0;
     private int PLAYER_ONE = 1;
     private int EMPTY = -1;
@@ -66,6 +66,7 @@ public class GameBoardView extends View {
         MATCH_TYPE = GamePlayFragment.getMATCH_TYPE();
         VERSUS_TYPE = GamePlayFragment.getVERSUS_TYPE();
         gameLogic = new GameLogic(this, boardDimension, VERSUS_TYPE);
+        onBoardEvent = (GameBoardView.OnBoardEvent) gameLogic;
         Log.v("Game", "versustype:" + VERSUS_TYPE);
         Log.v("Game", "matchType:" + MATCH_TYPE);
 

@@ -13,17 +13,17 @@ public class AIPlayer extends Player{
         this.difficulty = difficulty;
     }
 
-    @Override
+
     public Point turn(Board temp, Piece selectedPiece){
         Point movePoint = new Point(-1, -1);
         if(player == PLAYER_TWO)
             temp.flip();
-        resolveMove(selectedPiece);
+        resolveMove(null);
         return movePoint;
     }
 
     @Override
-    public Point resolveMove(Piece selectedPiece){
+    public Point resolveMove(Point point) {
         if(difficulty == 1){
         }
         return new Point();

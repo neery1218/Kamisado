@@ -8,7 +8,11 @@ import android.graphics.Point;
 public class HumanPlayer extends Player{
 
     public HumanPlayer(){
+        super();
+    }
 
+    public HumanPlayer(int id) {
+        super(id);
     }
 
     @Override
