@@ -75,6 +75,14 @@ public class Board {
         return board[r][c];
     }
 
+    public Tile getTile(int PLAYER, int r, int c) {
+        if (PLAYER == PLAYER_TWO) {
+            r = boardDimension - 1 - r;
+            c = boardDimension - 1 - c;
+        }
+        return board[r][c];
+    }
+
     public Tile getTile(Point a) {
         return board[a.x][a.y];
     }

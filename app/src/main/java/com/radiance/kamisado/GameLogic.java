@@ -46,10 +46,11 @@ public class GameLogic implements GameBoardView.OnBoardEvent{
                 players[PLAYER_TWO] = new HumanPlayer();
                 break;
             case AI_PLAYER:
-                players[PLAYER_TWO] = new AIPlayer();
+                players[PLAYER_TWO] = new AIPlayer(EASY);
                 break;
         }
-
+        currColor = board.getColor(boardDimension - 1, 0);
+        findPiece(counter % 2);
         gameBoardView.drawBoard(board); 
 
 	}
@@ -478,23 +479,21 @@ public class GameLogic implements GameBoardView.OnBoardEvent{
     @Override
     public void onTouch(int x, int y){
         Log.v("GAT", "X:" + x + " Y:" + y);
-        //if is firstMove
-        //gameBoardView.setAvailMoves(players[counter%2].calcMoves(x,y));
-        //
-        //else
-        //Point temp = players[counter%2].resolveMoves(x,y);
-        //if temp!= (-1,-1)
-        //board.move(selectedPiece.getY(),selectedPiece.getX(), temp);
-        //gameBoardView.drawBoard(board);
-        //counter++;
 
-        if (counter % 2 == PLAYER_TWO) {//determines turn
-            //if it's an AI or online player?
-            p2Turn(x, y);
+        //first move has not been configured yet
 
-        } else {
-            p1Turn(x, y);
+        Point temp = players[counter % 2].resolveMove(new Point(y, x));
+        if (temp != new Point(-1, -1)) {
+            board.move(new Point(selectedPiece.getY(), selectedPiece.getX()), temp);
+            counter++;
+            //find next piece
+            currColor = board.getColor(y, x);
+            findPiece(counter % 2);
+            gameBoardView.setAvailMoves(players[counter % 2].calcMoves(board, selectedPiece));
+
         }
+
+
     }
 
     public void reset(){

@@ -29,16 +29,12 @@ abstract class Player {
     //calcMoves gets called first by gameLogic
     //resolveMoves then immediately called
     //gameLogic will decide whether to print stuff or not, depending on what type of player it is.
-    public Point resolveMove() {
+    public Point resolveMove(Point point) {
         //in Human Player, resolveMove will be passed selectedX and Y and it will determine if it's a correct move
         //in AI Player, resolveMove will be called right after selected Move
         //in online Player, ...have to figure this one out
-        return new Point(0, 0);
+        return new Point(-1, -1);
     }
-
-
-
-    
 
     public int win(){
         //check if pieces have reached opposite side
