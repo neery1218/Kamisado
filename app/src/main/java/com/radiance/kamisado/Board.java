@@ -143,4 +143,14 @@ public class Board {
         }
         Log.v("fill", "Right");
     }
+
+    public void flip(){
+        Tile[][] temp = new Tile[boardDimension][boardDimension];
+        for(int i = 0; i < boardDimension; i++){
+            for (int j = 0; j < boardDimension; j++){
+                temp[j][i] = board[boardDimension - 1 - j][boardDimension -1 - i];
+            }
+        }
+        board = temp;
+    }
 }

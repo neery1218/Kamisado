@@ -5,12 +5,11 @@ import android.util.Log;
 
 import java.util.ArrayList;
 
-public class GameLogic implements GameBoardView.OnBoardEvent {
+public class GameLogic implements GameBoardView.OnBoardEvent{
     Board board = new Board();
     private Point[][] collected;
     private GameBoardView gameBoardView;
     private int[] scores = {1, 3, 7, 15};
-
 
     private boolean firstMove = true;
     private boolean pieceSelected = false;
@@ -537,7 +536,5 @@ public class GameLogic implements GameBoardView.OnBoardEvent {
 
             return availMoves.get(0);
         }
-
-
     }
 }
