@@ -1,6 +1,7 @@
 package com.radiance.kamisado;
 
 import android.graphics.Point;
+import android.util.Log;
 
 /**
  * Created by Admin on 4/10/2015.
@@ -14,11 +15,11 @@ public class AIPlayer extends Player{
     }
 
     @Override
-    public Point resolveMove(Point point) {
-        if(difficulty == 1){
+    public Point resolveMove() {
+        if(difficulty == 0){
             int index = (int) (Math.random() * availMoves.size());
             return availMoves.get(0);
         }
-        return new Point();
+        return new Point(-1, -1);
     }
 }
