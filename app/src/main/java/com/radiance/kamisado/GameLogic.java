@@ -131,6 +131,7 @@ public class GameLogic implements GameBoardView.OnBoardEvent {
         availMoves = players[counter % 2].calcMoves(board, selectedPiece);
         gameBoardView.setAvailMoves(availMoves);
         gameBoardView.drawBoard(board);
+        win();
     }
 
     public int getWin() {
@@ -146,6 +147,7 @@ public class GameLogic implements GameBoardView.OnBoardEvent {
             if(!resolveFirstMove(x, y))
                 return;
         }
+        firstMove = false;
 
         Point temp = players[counter % 2].resolveMove(new Point(y, x));
         if (!temp.equals(inValid)) {
@@ -167,8 +169,6 @@ public class GameLogic implements GameBoardView.OnBoardEvent {
 
             //find next piece
             resolveNormalMove(temp.x, temp.y);
-            firstMove = false;
-            win();
 
             if (players[counter % 2] instanceof AIPlayer && win == -1) {
                 Point tempA = players[counter % 2].resolveMove();
