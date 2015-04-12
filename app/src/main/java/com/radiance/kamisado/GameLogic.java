@@ -167,7 +167,6 @@ public class GameLogic implements GameBoardView.OnBoardEvent {
 
             //find next piece
             resolveNormalMove(temp.x, temp.y);
-
             firstMove = false;
             win();
             if (players[counter % 2] instanceof AIPlayer && win == -1) {
