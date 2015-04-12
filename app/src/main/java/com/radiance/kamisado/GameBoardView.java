@@ -21,8 +21,6 @@ public class GameBoardView extends View {
     private Paint paint;//make these variables easier to read
     private Board board;
     private TextView scoreView;
-    //testing commit on alternate branch
-    //forgot to make a good commit message,
     private float startX = -1;
     private float endX = -1;
     private float startY = -1;
@@ -46,8 +44,8 @@ public class GameBoardView extends View {
     /* private Piece[][] pieces = new Piece[2][boardDimension];*/
     private GameLogic gameLogic;
     private GameBoardView.OnBoardEvent onBoardEvent;
-    private int PLAYER_TWO = 0;
-    private int PLAYER_ONE = 1;
+    private int PLAYER_ONE = gameLogic.PLAYER_ONE;
+    private int PLAYER_TWO = gameLogic.PLAYER_TWO;
     private int EMPTY = -1;
     private int MATCH_TYPE;
     private int VERSUS_TYPE;
@@ -80,8 +78,8 @@ public class GameBoardView extends View {
     }
 
     public void updateScore(int[] score) {
-        scoreView.setText(score[PLAYER_ONE] + " " + score[PLAYER_TWO]);
-        if (score[PLAYER_ONE] >= MATCH_TYPE || score[PLAYER_TWO] >= MATCH_TYPE) {
+        scoreView.setText(score[PLAYER_TWO] + " " + score[PLAYER_ONE]);
+        if (score[PLAYER_TWO] >= MATCH_TYPE || score[PLAYER_ONE] >= MATCH_TYPE) {
             Log.v("Game", "Win");
         }
     }
@@ -177,7 +175,7 @@ public class GameBoardView extends View {
                     canvas.drawCircle(startX + j * unitSize + unitSize / 2, startY + unitSize * i + unitSize / 2, unitSize / 2, paint);
                     paint.setColor(temp.getColor());
                     canvas.drawCircle(startX + j * unitSize + unitSize / 2, startY + unitSize * i + unitSize / 2, unitSize / 3, paint);
-                    paint.setColor(playerColor[temp.getOwner() == PLAYER_ONE ? PLAYER_TWO : PLAYER_ONE]);
+                    paint.setColor(playerColor[temp.getOwner() == PLAYER_TWO ? PLAYER_ONE : PLAYER_TWO]);
                     canvas.drawText("" + temp.getRank(), startX + j * unitSize + unitSize / 2 - 25, startY + unitSize * i + unitSize / 2 + 30, paint);
 
                 }

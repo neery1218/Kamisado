@@ -6,9 +6,9 @@ import android.util.Log;
 import java.util.ArrayList;
 
 public class GameLogic implements GameBoardView.OnBoardEvent {
+    public static final int PLAYER_ONE = 0;
+    public static final int PLAYER_TWO = 1;
     private static boolean firstMove = true;
-    private final int PLAYER_ONE = 0;
-    private final int PLAYER_TWO = 1;
     Board board = new Board();
     private Point inValid = new Point(-1, -1);
     private Player[] players;

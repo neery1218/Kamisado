@@ -12,7 +12,7 @@ public class Board {
     private int[][] boardColor;
     private int boardDimension = 8;
     private Point[][] collected = new Point[2][boardDimension];
-    private int PLAYER_TWO = 1, PLAYER_ONE = 0;
+    private int PLAYER_TWO = GameLogic.PLAYER_TWO, PLAYER_ONE = GameLogic.PLAYER_ONE;
     private int[] colors = {Color.RED, Color.parseColor("#ED872D"), Color.YELLOW,
             Color.GREEN, Color.BLUE, Color.parseColor("#69359C"), Color.parseColor("#FFB7C5"),
             Color.parseColor("#964B00")};

@@ -9,8 +9,8 @@ import java.util.ArrayList;
  * Created by Admin on 4/10/2015.
  */
 abstract class Player {
-    protected final int PLAYER_TWO = 1;
-    protected final int PLAYER_ONE = 0;
+    protected final int PLAYER_TWO = GameLogic.PLAYER_TWO;
+    protected final int PLAYER_ONE = GameLogic.PLAYER_ONE;
     protected int player = -1;
     protected int boardDimension = 8;
     protected Board board;
