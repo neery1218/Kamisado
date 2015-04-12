@@ -12,7 +12,7 @@ public class Board {
     private int[][] boardColor;
     private int boardDimension = 8;
     private Point[][] collected = new Point[2][boardDimension];
-    private int PLAYER_ONE = 1, PLAYER_TWO = 0;
+    private int PLAYER_TWO = 1, PLAYER_ONE = 0;
     private int[] colors = {Color.RED, Color.parseColor("#ED872D"), Color.YELLOW,
             Color.GREEN, Color.BLUE, Color.parseColor("#69359C"), Color.parseColor("#FFB7C5"),
             Color.parseColor("#964B00")};
@@ -39,8 +39,8 @@ public class Board {
 
         //set pieces
         for (int i = 0; i < board[0].length; i++) {
-            board[0][i].setPiece(new Piece(board[0][i].getColor(), PLAYER_TWO));
-            board[board.length - 1][i].setPiece(new Piece(board[board.length - 1][i].getColor(), PLAYER_ONE));
+            board[0][i].setPiece(new Piece(board[0][i].getColor(), PLAYER_ONE));
+            board[board.length - 1][i].setPiece(new Piece(board[board.length - 1][i].getColor(), PLAYER_TWO));
         }
     }
 
@@ -76,7 +76,7 @@ public class Board {
     }
 
     public Tile getTile(int PLAYER, int r, int c) {
-        if (PLAYER == PLAYER_TWO) {
+        if (PLAYER == PLAYER_ONE) {
             r = boardDimension - 1 - r;
             c = boardDimension - 1 - c;
         }
@@ -97,12 +97,12 @@ public class Board {
 
                 if (!getTile(i, j).isEmpty()) {
                     Piece temp = getTile(i, j).getPiece();
-                    if (temp.getOwner() == PLAYER_ONE) {
-                        collected[PLAYER_ONE][counter1] = new Point(temp.getY(), temp.getX());
+                    if (temp.getOwner() == PLAYER_TWO) {
+                        collected[PLAYER_TWO][counter1] = new Point(temp.getY(), temp.getX());
                         counter1++;
                         Log.v("One", temp.getY() + " " + temp.getX());
                     } else {
-                        collected[PLAYER_TWO][counter2] = new Point(temp.getY(), temp.getX());
+                        collected[PLAYER_ONE][counter2] = new Point(temp.getY(), temp.getX());
                         counter2++;
                         Log.v("Two", temp.getY() + " " + temp.getX());
                     }
@@ -125,8 +125,8 @@ public class Board {
         Board temp = new Board();
         temp.clear();
         for (int i = 0; i < collected[0].length; i++) {
-            temp.board[boardDimension - 1][i].setPiece(this.getTile(collected[PLAYER_ONE][i].x, collected[PLAYER_ONE][i].y).getPiece());
-            temp.board[0][i].setPiece(this.getTile(collected[PLAYER_TWO][i].x, collected[PLAYER_TWO][i].y).getPiece());
+            temp.board[boardDimension - 1][i].setPiece(this.getTile(collected[PLAYER_TWO][i].x, collected[PLAYER_TWO][i].y).getPiece());
+            temp.board[0][i].setPiece(this.getTile(collected[PLAYER_ONE][i].x, collected[PLAYER_ONE][i].y).getPiece());
         }
         for (int i = 0; i < boardDimension; i++) {
             for (int j = 0; j < boardDimension; j++) {
@@ -141,8 +141,8 @@ public class Board {
         Board temp = new Board();
         temp.clear();
         for (int i = 0; i < collected[0].length; i++) {
-            temp.board[boardDimension - 1][7 - i].setPiece(this.getTile(collected[PLAYER_ONE][i].x, collected[PLAYER_ONE][i].y).getPiece());
-            temp.board[0][7 - i].setPiece(this.getTile(collected[PLAYER_TWO][i].x, collected[PLAYER_TWO][i].y).getPiece());
+            temp.board[boardDimension - 1][7 - i].setPiece(this.getTile(collected[PLAYER_TWO][i].x, collected[PLAYER_TWO][i].y).getPiece());
+            temp.board[0][7 - i].setPiece(this.getTile(collected[PLAYER_ONE][i].x, collected[PLAYER_ONE][i].y).getPiece());
         }
         for (int i = 0; i < boardDimension; i++) {
             for (int j = 0; j < boardDimension; j++) {
