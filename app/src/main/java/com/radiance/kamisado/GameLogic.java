@@ -140,8 +140,6 @@ public class GameLogic implements GameBoardView.OnBoardEvent {
 
     @Override
     public void onTouch(int x, int y) {
-        if (players[counter % 2] instanceof AIPlayer && !firstMove)//clicks by other player during AI move
-            return;
 
         if (firstMove) {
             if(players[counter % 2] instanceof HumanPlayer && !resolveFirstMove(x, y))
@@ -169,10 +167,10 @@ public class GameLogic implements GameBoardView.OnBoardEvent {
 
 
             //find next piece
-            resolveNormalMove(temp.x, temp.y);
+            resolveNormalMove(temp.y, temp.x);
 
             if (players[counter % 2] instanceof AIPlayer && win == -1) {
-                Point tempA = players[counter % 2].resolveMove();
+                Point tempA = players[counter % 2].resolveMove(new Point());
                 Log.d("debug", tempA.toString());
                 if(tempA.equals(inValid))
                     return;

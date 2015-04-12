@@ -15,7 +15,7 @@ public class AIPlayer extends Player{
     }
 
     @Override
-    public Point resolveMove() {
+    public Point resolveMove(Point point) {
         if(difficulty == 0){
             int index = (int) (Math.random() * availMoves.size());
             return availMoves.get(index);
