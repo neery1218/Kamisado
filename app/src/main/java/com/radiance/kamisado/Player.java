@@ -8,12 +8,16 @@ import java.util.ArrayList;
 /**
  * Created by Admin on 4/10/2015.
  */
-abstract class Player {
+abstract class Player {//abstract class used to hold player logic and give way to AI and HumanPlayer and onlinePlayer subclasses
+
     protected final int PLAYER_TWO = GameLogic.PLAYER_TWO;
     protected final int PLAYER_ONE = GameLogic.PLAYER_ONE;
+
     protected int player = -1;
     protected int boardDimension = 8;
+
     protected Board board;
+
     protected int sumoChain = 0;
     protected Point sumoPushOption;
     protected ArrayList<Point> availMoves = new ArrayList<Point>();
@@ -27,10 +31,7 @@ abstract class Player {
         this.player = id;
     }
 
-    //calcMoves gets called first by gameLogic
-    //resolveMoves then immediately called
-    //gameLogic will decide whether to print stuff or not, depending on what type of player it is.
-    public Point resolveMove() {
+    public Point resolveMove() {//move called by gamelogic to determine validity or to choose one from availMoves
         //in Human Player, resolveMove will be passed selectedX and Y and it will determine if it's a correct move
         //in AI Player, resolveMove will be called right after selected Move
         //in online Player, ...have to figure this one out
@@ -41,30 +42,12 @@ abstract class Player {
         return new Point(-1, -1);
     }
 
-    public int win(){
-        //check if pieces have reached opposite side
-        for (int i = 0; i < boardDimension; i++) {
-
-            //check if player one has won
-            Piece temp = board.getTile(0, i).getPiece();
-            if (temp != null && temp.getOwner() == PLAYER_TWO) {
-                return PLAYER_TWO;
-            }
-
-            temp = board.getTile(boardDimension - 1, i).getPiece();
-            if (temp != null && temp.getOwner() == PLAYER_ONE) {
-                return PLAYER_ONE;
-            }
-
-        }
-        return -1;
-    }
 
     private boolean valid (int a){
         return (a >= 0 && a < boardDimension);
     }
 
-    public ArrayList<Point> calcMoves(Board temp, Piece selectedPiece) {
+    public ArrayList<Point> calcMoves(Board temp, Piece selectedPiece) {//determines all available moves
         sumoPushOption = new Point(-1, -1);
         if(player == PLAYER_ONE)
             temp.flip();

@@ -5,7 +5,7 @@ package com.radiance.kamisado;
  */
 public class Tile {
     private int color;
-    private Piece piece; //easily moved
+    private Piece piece;
     private int r;
     private int c;
     //TODO: isEmpty boolean variable?

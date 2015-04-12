@@ -7,7 +7,7 @@ import android.util.Log;
 /**
  * Created by neerajen on 06/04/15.
  */
-public class Board {
+public class Board {//board object
     private Tile[][] board;
     private int[][] boardColor;
     private int boardDimension = 8;
@@ -53,7 +53,7 @@ public class Board {
         return board.length;
     }
 
-    public void move(Point a, Point b) {
+    public void move(Point a, Point b) {//moves piece from point a to point b
         if (!getTile(a).isEmpty()) {
             Piece temp = board[a.x][a.y].getPiece();
             board[a.x][a.y].pop();
@@ -63,8 +63,8 @@ public class Board {
 
     }
 
-    public void rankUp (int r, int c){
-	    board[r][c].rankUp();
+    public void rankUp(int r, int c) {//increases rank of a piece
+        board[r][c].rankUp();
     }
 
     public int getColor(int r, int c) {
@@ -152,7 +152,7 @@ public class Board {
         Log.v("fill", "Right");
     }
 
-    public void flip(){
+    public void flip() {//used in player logic in order to retain calcMoves algorithm across all orientations
         Tile[][] temp = new Tile[boardDimension][boardDimension];
         for(int i = 0; i < boardDimension; i++){
             for (int j = 0; j < boardDimension; j++){
