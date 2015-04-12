@@ -158,7 +158,6 @@ public class GameLogic implements GameBoardView.OnBoardEvent {
                     case PLAYER_ONE:
                         resolveSumoPushP2();
                         break;
-
                 }
                 counter++;
             } else
