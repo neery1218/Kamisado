@@ -170,20 +170,7 @@ public class GameLogic implements GameBoardView.OnBoardEvent {
             resolveNormalMove(temp.y, temp.x);
 
             if (players[counter % 2] instanceof AIPlayer && win == -1) {
-                Point tempA = players[counter % 2].resolveMove(new Point());
-                Log.d("debug", tempA.toString());
-                if(tempA.equals(inValid))
-                    return;
-                //TODO: add in deadlock handling
-
-                x = tempA.y;
-                y = tempA.x;
-
-                board.move(new Point(selectedPiece.getY(), selectedPiece.getX()), tempA);
-                counter++;
-
-                //find next piece
-                resolveNormalMove(x, y);
+                onTouch(-1, -1);
             }
         }
     }
