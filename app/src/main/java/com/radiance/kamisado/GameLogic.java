@@ -140,11 +140,11 @@ public class GameLogic implements GameBoardView.OnBoardEvent {
 
     @Override
     public void onTouch(int x, int y) {
-        if (players[counter % 2] instanceof AIPlayer)//clicks by other player during AI move
+        if (players[counter % 2] instanceof AIPlayer && !firstMove)//clicks by other player during AI move
             return;
 
         if (firstMove) {
-            if(!resolveFirstMove(x, y))
+            if(players[counter % 2] instanceof HumanPlayer && !resolveFirstMove(x, y))
                 return;
         }
         firstMove = false;
