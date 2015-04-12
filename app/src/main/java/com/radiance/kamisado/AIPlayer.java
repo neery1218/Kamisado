@@ -8,8 +8,8 @@ import android.graphics.Point;
 public class AIPlayer extends Player{
 
     private int difficulty = 1;
-    public AIPlayer(int difficulty){
-        super();
+    public AIPlayer(int difficulty, int id){
+        super(id);
         this.difficulty = difficulty;
     }
 

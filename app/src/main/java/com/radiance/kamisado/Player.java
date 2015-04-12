@@ -9,8 +9,8 @@ import java.util.ArrayList;
  * Created by Admin on 4/10/2015.
  */
 abstract class Player {
-    protected final int PLAYER_ONE = 1;
-    protected final int PLAYER_TWO = 0;
+    protected final int PLAYER_TWO = 1;
+    protected final int PLAYER_ONE = 0;
     protected int player = -1;
     protected int boardDimension = 8;
     protected Board board;
@@ -47,13 +47,13 @@ abstract class Player {
 
             //check if player one has won
             Piece temp = board.getTile(0, i).getPiece();
-            if (temp != null && temp.getOwner() == PLAYER_ONE) {
-                return PLAYER_ONE;
+            if (temp != null && temp.getOwner() == PLAYER_TWO) {
+                return PLAYER_TWO;
             }
 
             temp = board.getTile(boardDimension - 1, i).getPiece();
-            if (temp != null && temp.getOwner() == PLAYER_TWO) {
-                return PLAYER_TWO;
+            if (temp != null && temp.getOwner() == PLAYER_ONE) {
+                return PLAYER_ONE;
             }
 
         }
@@ -66,7 +66,7 @@ abstract class Player {
 
     public ArrayList<Point> calcMoves(Board temp, Piece selectedPiece) {
         sumoPushOption = new Point(-1, -1);
-        if(player == PLAYER_TWO)
+        if(player == PLAYER_ONE)
             temp.flip();
 
         this.board = temp;
@@ -80,10 +80,9 @@ abstract class Player {
         //these have a different orientation
         int x = selectedPiece.getX();
         int y = selectedPiece.getY();
-        if (player == PLAYER_TWO) {
+        if (player == PLAYER_ONE) {
             x = boardDimension - 1 - x;
             y = boardDimension - 1 - y;
-            Log.d("debug", board.getTile(y, x).getPiece().toString());
         }
 
 
@@ -99,7 +98,7 @@ abstract class Player {
 
                     int sumoCounter = 0;
 
-                    while (valid(y - i - sumoCounter) && !board.getTile(y - i - sumoCounter, x).isEmpty() && board.getTile(y - i - sumoCounter, x).getPiece().getOwner() == PLAYER_TWO) {//checks for a chain of opponent pieces
+                    while (valid(y - i - sumoCounter) && !board.getTile(y - i - sumoCounter, x).isEmpty() && board.getTile(y - i - sumoCounter, x).getPiece().getOwner() == PLAYER_ONE) {//checks for a chain of opponent pieces
                         if (board.getTile(y - i - sumoCounter, x).getPiece().getRank() >= selectedPiece.getRank()) {
                             sumoCounter = 0;
                             break;
@@ -136,13 +135,14 @@ abstract class Player {
                     rightDiagonalBlocked = true;
             }
         }
-        if(player == PLAYER_TWO) {
+        if(player == PLAYER_ONE) {
             for(int i = 0; i < availMoves.size(); i++){
                 Point orient = availMoves.get(i);
                 availMoves.set(i, new Point(boardDimension - 1 - orient.x, boardDimension - 1 - orient.y));
             }
             temp.flip();
         }
+        Log.d("debug", availMoves.size() + " " + player + "");
         this.availMoves = availMoves;
         return availMoves;
     }//Finds available moves of each player

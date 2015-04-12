@@ -7,8 +7,8 @@ import java.util.ArrayList;
 
 public class GameLogic implements GameBoardView.OnBoardEvent {
     private static boolean firstMove = true;
-    private final int PLAYER_TWO = 0;
-    private final int PLAYER_ONE = 1;
+    private final int PLAYER_ONE = 0;
+    private final int PLAYER_TWO = 1;
     Board board = new Board();
     private Point inValid = new Point(-1, -1);
     private Player[] players;
@@ -32,14 +32,14 @@ public class GameLogic implements GameBoardView.OnBoardEvent {
         this.gameBoardView = gameBoardView;
         players = new Player[2];
         board = new Board();
-        players[PLAYER_ONE] = new HumanPlayer(PLAYER_ONE);
+        players[PLAYER_TWO] = new HumanPlayer(PLAYER_TWO);
         switch (VERSUS_TYPE) {
             case MainActivity.TWO_PLAY_PRESSED:
-                players[PLAYER_TWO] = new HumanPlayer(PLAYER_TWO);
+                players[PLAYER_ONE] = new HumanPlayer(PLAYER_ONE);
                 Log.v("Game", "HumanPlayer");
                 break;
             case MainActivity.PLAY_PRESSED:
-                players[PLAYER_TWO] = new AIPlayer(EASY);
+                players[PLAYER_ONE] = new AIPlayer(EASY, PLAYER_ONE);
                 Log.v("Game", "AIPlayer");
                 break;
         }
@@ -61,19 +61,19 @@ public class GameLogic implements GameBoardView.OnBoardEvent {
 
             //check if player one has won
             Piece temp = board.getTile(0, i).getPiece();
-            if (temp != null && temp.getOwner() == PLAYER_ONE) {
+            if (temp != null && temp.getOwner() == PLAYER_TWO) {
 
-                score[PLAYER_ONE] += scores[temp.getRank()];
+                score[PLAYER_TWO] += scores[temp.getRank()];
                 board.rankUp(0, i);
-                win = PLAYER_ONE;
+                win = PLAYER_TWO;
                 gameBoardView.updateScore(score);
             }
 
             temp = board.getTile(boardDimension - 1, i).getPiece();
-            if (temp != null && temp.getOwner() == PLAYER_TWO) {
-                score[PLAYER_TWO] += scores[temp.getRank()];
+            if (temp != null && temp.getOwner() == PLAYER_ONE) {
+                score[PLAYER_ONE] += scores[temp.getRank()];
                 board.rankUp(boardDimension - 1, i);
-                win = PLAYER_TWO;
+                win = PLAYER_ONE;
                 gameBoardView.updateScore(score);
             }
 
@@ -112,16 +112,17 @@ public class GameLogic implements GameBoardView.OnBoardEvent {
 
     }
 
-    public void resolveFirstMove(int x, int y){
+    public boolean resolveFirstMove(int x, int y) {
         if (!board.getTile(y, x).isEmpty()) {
             selectedPiece = board.getTile(y, x).getPiece();
             availMoves = players[counter % 2].calcMoves(board, selectedPiece);
             gameBoardView.setSelectedPiece(selectedPiece);
             gameBoardView.setAvailMoves(availMoves);
             gameBoardView.drawBoard(board);
-            return;
+            return false;
         } else if (selectedPiece == null)
-            return;
+            return false;
+        return true;
     }
 
     public void resolveNormalMove(int x, int y){
@@ -142,7 +143,8 @@ public class GameLogic implements GameBoardView.OnBoardEvent {
             return;
 
         if (firstMove) {
-            resolveFirstMove(x, y);
+            if(!resolveFirstMove(x, y))
+                return;
         }
 
         Point temp = players[counter % 2].resolveMove(new Point(y, x));
@@ -150,10 +152,10 @@ public class GameLogic implements GameBoardView.OnBoardEvent {
             if (selectedPiece.getRank() > 0 && temp.equals(players[counter % 2].getSumoPushPoint())) {
                 sumoChain = players[counter % 2].getSumoChain();
                 switch (counter % 2) {
-                    case PLAYER_ONE:
+                    case PLAYER_TWO:
                         resolveSumoPushP1();
                         break;
-                    case PLAYER_TWO:
+                    case PLAYER_ONE:
                         resolveSumoPushP2();
                         break;
 
@@ -168,6 +170,7 @@ public class GameLogic implements GameBoardView.OnBoardEvent {
 
             if (players[counter % 2] instanceof AIPlayer) {
                 Point tempA = players[counter % 2].resolveMove();
+                Log.d("debug", tempA.toString());
                 if(tempA.equals(inValid))
                     return;
                 //TODO: add in deadlock handling
