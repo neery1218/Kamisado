@@ -167,7 +167,6 @@ public class GameLogic implements GameBoardView.OnBoardEvent {
                 board.move(new Point(selectedPiece.getY(), selectedPiece.getX()), temp);
             counter++;
 
-
             //find next piece
             resolveNormalMove(temp.x, temp.y);
 
