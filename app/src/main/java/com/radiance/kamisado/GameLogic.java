@@ -112,6 +112,26 @@ public class GameLogic implements GameBoardView.OnBoardEvent {
 
     }
 
+    public void resolveFirstMove(int x, int y){
+        if (!board.getTile(y, x).isEmpty()) {
+            selectedPiece = board.getTile(y, x).getPiece();
+            availMoves = players[counter % 2].calcMoves(board, selectedPiece);
+            gameBoardView.setSelectedPiece(selectedPiece);
+            gameBoardView.setAvailMoves(availMoves);
+            gameBoardView.drawBoard(board);
+            return;
+        } else if (selectedPiece == null)
+            return;
+    }
+
+    public void resolveNormalMove(int x, int y){
+        currColor = board.getColor(y, x);
+        findPiece(counter % 2);
+        availMoves = players[counter % 2].calcMoves(board, selectedPiece);
+        gameBoardView.setAvailMoves(availMoves);
+        gameBoardView.drawBoard(board);
+    }
+
     public int getWin() {
         return win;
     }
@@ -122,21 +142,8 @@ public class GameLogic implements GameBoardView.OnBoardEvent {
             return;
 
         if (firstMove) {
-            if (!board.getTile(y, x).isEmpty()) {
-                Log.d("debug", "called");
-                selectedPiece = board.getTile(y, x).getPiece();
-                availMoves = players[counter % 2].calcMoves(board, selectedPiece);
-                gameBoardView.setSelectedPiece(selectedPiece);
-                gameBoardView.setAvailMoves(availMoves);
-                gameBoardView.drawBoard(board);
-                return;
-            } else if (selectedPiece == null)
-                return;
+            resolveFirstMove(x, y);
         }
-
-        availMoves = players[counter % 2].calcMoves(board, selectedPiece);
-        gameBoardView.setAvailMoves(availMoves);
-        gameBoardView.drawBoard(board);
 
         Point temp = players[counter % 2].resolveMove(new Point(y, x));
         if (!temp.equals(inValid)) {
@@ -157,29 +164,22 @@ public class GameLogic implements GameBoardView.OnBoardEvent {
             counter++;
 
             //find next piece
-            currColor = board.getColor(y, x);
-            findPiece(counter % 2);
-            availMoves = players[counter % 2].calcMoves(board, selectedPiece);
-            if (players[counter % 2] instanceof HumanPlayer) {
-                gameBoardView.setAvailMoves(availMoves);
-                Log.d("debug", availMoves.size() + "");
+            resolveNormalMove(temp.x, temp.y);
 
-            }
-
-            gameBoardView.drawBoard(board);
             if (players[counter % 2] instanceof AIPlayer) {
                 Point tempA = players[counter % 2].resolveMove();
+                if(tempA.equals(inValid))
+                    return;
+                //TODO: add in deadlock handling
+
+                x = tempA.y;
+                y = tempA.x;
 
                 board.move(new Point(selectedPiece.getY(), selectedPiece.getX()), tempA);
                 counter++;
 
                 //find next piece
-                currColor = board.getColor(y, x);
-                findPiece(counter % 2);
-                availMoves = players[counter % 2].calcMoves(board, selectedPiece);
-                gameBoardView.setAvailMoves(availMoves);
-                Log.d("debug", availMoves.size() + "");
-                gameBoardView.drawBoard(board);
+                resolveNormalMove(x, y);
             }
         }
         firstMove = false;
