@@ -147,6 +147,7 @@ public class GameLogic implements GameBoardView.OnBoardEvent {
         }
         firstMove = false;
 
+
         Point temp = players[counter % 2].resolveMove(new Point(y, x));
         if (!temp.equals(inValid)) {
             if (selectedPiece.getRank() > 0 && temp.equals(players[counter % 2].getSumoPushPoint())) {
