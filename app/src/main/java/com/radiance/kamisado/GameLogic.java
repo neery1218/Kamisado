@@ -168,7 +168,9 @@ public class GameLogic implements GameBoardView.OnBoardEvent {
             //find next piece
             resolveNormalMove(temp.x, temp.y);
 
-            if (players[counter % 2] instanceof AIPlayer) {
+            firstMove = false;
+            win();
+            if (players[counter % 2] instanceof AIPlayer && win == -1) {
                 Point tempA = players[counter % 2].resolveMove();
                 Log.d("debug", tempA.toString());
                 if(tempA.equals(inValid))
@@ -185,8 +187,6 @@ public class GameLogic implements GameBoardView.OnBoardEvent {
                 resolveNormalMove(x, y);
             }
         }
-        firstMove = false;
-        win();
     }
 
     public void reset() {

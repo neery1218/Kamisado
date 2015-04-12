@@ -18,7 +18,7 @@ public class AIPlayer extends Player{
     public Point resolveMove() {
         if(difficulty == 0){
             int index = (int) (Math.random() * availMoves.size());
-            return availMoves.get(0);
+            return availMoves.get(index);
         }
         return new Point(-1, -1);
     }
