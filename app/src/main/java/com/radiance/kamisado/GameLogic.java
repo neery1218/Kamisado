@@ -129,6 +129,12 @@ public class GameLogic implements GameBoardView.OnBoardEvent {
         currColor = board.getColor(y, x);
         findPiece(counter % 2);
         availMoves = players[counter % 2].calcMoves(board, selectedPiece);
+        if (availMoves.size() == 0) {//if there are no available moves, it skips the player's turn
+            counter++;
+            currColor = board.getColor(selectedPiece.getY(), selectedPiece.getX());
+            findPiece(counter % 2);
+            onTouch(-1, -1);
+        }
         gameBoardView.setAvailMoves(availMoves);
         gameBoardView.drawBoard(board);
         win();
@@ -181,6 +187,14 @@ public class GameLogic implements GameBoardView.OnBoardEvent {
         firstMove = true;
         selectedPiece = null;
         gameBoardView.setSelectedPiece(null);
+        if (players[counter % 2] instanceof AIPlayer) {
+            Point A = players[counter % 2].selectPiece(board);
+            Point B = players[counter % 2].resolveMove(A);
+            board.move(A, B);
+            counter++;
+            resolveNormalMove(B.y, B.x);
+
+        }
         gameBoardView.drawBoard(board);
     }
 

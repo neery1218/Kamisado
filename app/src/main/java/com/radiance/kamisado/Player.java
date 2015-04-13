@@ -38,6 +38,10 @@ abstract class Player {//abstract class used to hold player logic and give way t
         return new Point(-1, -1);
     }
 
+    public Point selectPiece(Board board) {
+        return new Point();
+    }
+
     public Point resolveMove(Point point){
         return new Point(-1, -1);
     }
