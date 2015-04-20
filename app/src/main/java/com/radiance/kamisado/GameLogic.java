@@ -45,7 +45,7 @@ public class GameLogic implements GameBoardView.OnBoardEvent {
                 break;
         }
         currColor = board.getColor(boardDimension - 1, 0);
-        findPiece(counter % 2);
+        findPiece(counter % 2, currColor);
 
         selectedPiece = null;
         availMoves = new ArrayList<>();
@@ -91,7 +91,7 @@ public class GameLogic implements GameBoardView.OnBoardEvent {
         board.move(new Point(selectedPiece.getY(), selectedPiece.getX()), new Point(selectedPiece.getY() - 1, selectedPiece.getX()));
     }
 
-    private void findPiece(int PLAYER) {
+    private void findPiece(int PLAYER, int currColor) {
         for (int i = 0; i < board.getHeight(); i++)
             for (int j = 0; j < board.getWidth(); j++) {
                 Piece temp = board.getTile(i, j).getPiece();
@@ -131,7 +131,7 @@ public class GameLogic implements GameBoardView.OnBoardEvent {
         if (availMoves.size() != 0)
             win();
         currColor = board.getColor(y, x);
-        findPiece(counter % 2);
+        findPiece(counter % 2, currColor);
         availMoves = players[counter % 2].calcMoves(board, selectedPiece);
         Log.v("Game", "availMoves: " + availMoves.size());
         if (availMoves.size() == 0 && win == -1) {//if there are no available moves, it skips the player's turn
