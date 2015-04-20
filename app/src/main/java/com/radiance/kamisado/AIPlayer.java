@@ -1,7 +1,6 @@
 package com.radiance.kamisado;
 
 import android.graphics.Point;
-import android.util.Log;
 
 /**
  * Created by Admin on 4/10/2015.
@@ -21,7 +20,7 @@ public class AIPlayer extends Player {//AI player
         return availMoves.get(i);
     }
 
-    public Point difficulty1(){
+    public Point difficulty1() {//if there is a winning move, it takes it, otherwise it returns a random move
         int distance = 0;
         for(int i = 0; i < availMoves.size(); i++){
             if(super.player == PLAYER_ONE && availMoves.get(i).x == 7){
@@ -50,7 +49,7 @@ public class AIPlayer extends Player {//AI player
     @Override
     public Point resolveMove(Point point) {//overridden method, returns a move based on difficulty
         if(difficulty == 0){
-            return difficulty1();
+            return difficulty1();//TODO: configure AI skill levels
         }
         else if(difficulty == 1){
             return difficulty1();

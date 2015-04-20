@@ -128,8 +128,6 @@ public class GameLogic implements GameBoardView.OnBoardEvent {
     }
 
     public void resolveNormalMove(int x, int y){
-        if (availMoves.size() != 0)
-            win();
         currColor = board.getColor(y, x);
         findPiece(counter % 2);
         availMoves = players[counter % 2].calcMoves(board, selectedPiece);
@@ -148,8 +146,11 @@ public class GameLogic implements GameBoardView.OnBoardEvent {
 
             deadlockCount = 0;
         }
-        if (win != -1)
+        if (win != -1) {
             availMoves = new ArrayList<Point>();
+            Log.v("game", "hi");
+        }
+
         gameBoardView.setAvailMoves(availMoves);
         gameBoardView.drawBoard(board);
 
@@ -170,6 +171,7 @@ public class GameLogic implements GameBoardView.OnBoardEvent {
 
 
         Point temp = players[counter % 2].resolveMove(new Point(y, x));
+        Log.v("temp", temp.x + " " + temp.y);
         if (!temp.equals(inValid)) {
             if (selectedPiece.getRank() > 0 && temp.equals(players[counter % 2].getSumoPushPoint())) {
                 sumoChain = players[counter % 2].getSumoChain();
@@ -188,12 +190,34 @@ public class GameLogic implements GameBoardView.OnBoardEvent {
 
 
             //find next piece
+            win();
             resolveNormalMove(temp.y, temp.x);
+            if (win != -1) {
+                Log.v("game", "somebody has won");
+                counter = win;
 
-            if (players[counter % 2] instanceof AIPlayer && win == -1) {
-                onTouch(-1, -1);
-                //TODO: win calling is all over the place, has to be fixed
+                //if it's a player, just return and wait for swipe
+                //if ai,
+
+                if (players[counter % 2] instanceof AIPlayer) {
+                    onSwipeLeft();
+                    Point A = players[counter % 2].selectPiece(board);
+                    selectedPiece = board.getTile(A.x, A.y).getPiece();
+                    availMoves = players[counter % 2].calcMoves(board, selectedPiece);
+                    onTouch(-1, -1);
+
+
+                } else
+                    return;
+
+            } else {
+
+
+                if (players[counter % 2] instanceof AIPlayer && win == -1)
+                    onTouch(-1, -1);
             }
+
+
         }
     }
 
@@ -203,13 +227,6 @@ public class GameLogic implements GameBoardView.OnBoardEvent {
         firstMove = true;
         selectedPiece = null;
         gameBoardView.setSelectedPiece(null);
-        if (players[counter % 2] instanceof AIPlayer) {
-            Point A = players[counter % 2].selectPiece(board);
-            firstMove = false;
-            onTouch(A.y, A.x);
-
-
-        }
         gameBoardView.drawBoard(board);
     }
 
