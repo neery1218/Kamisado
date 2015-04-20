@@ -203,6 +203,7 @@ public class GameLogic implements GameBoardView.OnBoardEvent {
                     onSwipeLeft();
                     Point A = players[counter % 2].selectPiece(board);
                     selectedPiece = board.getTile(A.x, A.y).getPiece();
+                    gameBoardView.setSelectedPiece(selectedPiece);
                     availMoves = players[counter % 2].calcMoves(board, selectedPiece);
                     onTouch(-1, -1);
 
