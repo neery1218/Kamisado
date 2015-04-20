@@ -56,8 +56,6 @@ public class GameLogic implements GameBoardView.OnBoardEvent {
 
     private void win() {
         Log.v("Game", "Win called");
-        if (firstMove)
-            return;
         win = -1;
         //check if pieces have reached opposite side
         for (int i = 0; i < boardDimension; i++) {
@@ -83,8 +81,6 @@ public class GameLogic implements GameBoardView.OnBoardEvent {
 
 
         }
-        if (win != -1)
-            firstMove = true;
     }//Check for win. Return 1 if player 1 won, 0 if player 2 won, -1 if no one won yet
 
     public void resolveSumoPushP1() {
@@ -132,7 +128,8 @@ public class GameLogic implements GameBoardView.OnBoardEvent {
     }
 
     public void resolveNormalMove(int x, int y){
-
+        if (availMoves.size() != 0)
+            win();
         currColor = board.getColor(y, x);
         findPiece(counter % 2);
         availMoves = players[counter % 2].calcMoves(board, selectedPiece);
@@ -148,7 +145,7 @@ public class GameLogic implements GameBoardView.OnBoardEvent {
                 resolveNormalMove(selectedPiece.getX(), selectedPiece.getY());
             }
         } else {
-            win();
+
             deadlockCount = 0;
         }
         if (win != -1)
