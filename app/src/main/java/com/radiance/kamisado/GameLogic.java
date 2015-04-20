@@ -26,6 +26,7 @@ public class GameLogic implements GameBoardView.OnBoardEvent {
     private int MEDIUM = 1;
     private int HARD = 2;
     private int win = -1;
+    private int deadlockCount = 0;
 
     public GameLogic(GameBoardView gameBoardView, int bd, int VERSUS_TYPE) {
         this.boardDimension = bd;
@@ -54,24 +55,27 @@ public class GameLogic implements GameBoardView.OnBoardEvent {
     }
 
     private void win() {
-
+        Log.v("Game", "Win called");
+        if (firstMove)
+            return;
         win = -1;
         //check if pieces have reached opposite side
         for (int i = 0; i < boardDimension; i++) {
 
             //check if player one has won
-            Piece temp = board.getTile(0, i).getPiece();
-            if (temp != null && temp.getOwner() == PLAYER_TWO) {
-
-                score[PLAYER_TWO] += scores[temp.getRank()];
+            Tile temp = board.getTile(0, i);
+            if (!temp.isEmpty() && temp.getPiece().getOwner() == PLAYER_TWO) {
+                Log.v("Game", "Rank: " + temp.getPiece().getRank());
+                score[PLAYER_TWO] += scores[temp.getPiece().getRank()];
                 board.rankUp(0, i);
                 win = PLAYER_TWO;
                 gameBoardView.updateScore(score);
             }
 
-            temp = board.getTile(boardDimension - 1, i).getPiece();
-            if (temp != null && temp.getOwner() == PLAYER_ONE) {
-                score[PLAYER_ONE] += scores[temp.getRank()];
+            temp = board.getTile(boardDimension - 1, i);
+            if (!temp.isEmpty() && temp.getPiece().getOwner() == PLAYER_ONE) {
+                Log.v("Game", "Rank: " + temp.getPiece().getRank());
+                score[PLAYER_ONE] += scores[temp.getPiece().getRank()];
                 board.rankUp(boardDimension - 1, i);
                 win = PLAYER_ONE;
                 gameBoardView.updateScore(score);
@@ -79,6 +83,8 @@ public class GameLogic implements GameBoardView.OnBoardEvent {
 
 
         }
+        if (win != -1)
+            firstMove = true;
     }//Check for win. Return 1 if player 1 won, 0 if player 2 won, -1 if no one won yet
 
     public void resolveSumoPushP1() {
@@ -126,18 +132,30 @@ public class GameLogic implements GameBoardView.OnBoardEvent {
     }
 
     public void resolveNormalMove(int x, int y){
+
         currColor = board.getColor(y, x);
         findPiece(counter % 2);
         availMoves = players[counter % 2].calcMoves(board, selectedPiece);
-        if (availMoves.size() == 0) {//if there are no available moves, it skips the player's turn
-            counter++;
-            currColor = board.getColor(selectedPiece.getY(), selectedPiece.getX());
-            findPiece(counter % 2);
-            onTouch(-1, -1);
+        Log.v("Game", "availMoves: " + availMoves.size());
+        if (availMoves.size() == 0 && win == -1) {//if there are no available moves, it skips the player's turn
+            deadlockCount++;
+            if (deadlockCount == 2) {//this means that both players can't move
+                win = counter % 2;
+                //TODO: make deadlock screen
+
+            } else {
+                counter++;
+                resolveNormalMove(selectedPiece.getX(), selectedPiece.getY());
+            }
+        } else {
+            win();
+            deadlockCount = 0;
         }
+        if (win != -1)
+            availMoves = new ArrayList<Point>();
         gameBoardView.setAvailMoves(availMoves);
         gameBoardView.drawBoard(board);
-        win();
+
     }
 
     public int getWin() {
@@ -177,6 +195,7 @@ public class GameLogic implements GameBoardView.OnBoardEvent {
 
             if (players[counter % 2] instanceof AIPlayer && win == -1) {
                 onTouch(-1, -1);
+                //TODO: win calling is all over the place, has to be fixed
             }
         }
     }
@@ -189,10 +208,9 @@ public class GameLogic implements GameBoardView.OnBoardEvent {
         gameBoardView.setSelectedPiece(null);
         if (players[counter % 2] instanceof AIPlayer) {
             Point A = players[counter % 2].selectPiece(board);
-            Point B = players[counter % 2].resolveMove(A);
-            board.move(A, B);
-            counter++;
-            resolveNormalMove(B.y, B.x);
+            firstMove = false;
+            onTouch(A.y, A.x);
+
 
         }
         gameBoardView.drawBoard(board);
