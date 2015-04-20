@@ -24,7 +24,6 @@ abstract class Player {//abstract class used to hold player logic and give way t
     protected Piece selectedPiece;
 
     public Player(){
-
     }
 
     public Player(int id){
@@ -133,6 +132,61 @@ abstract class Player {//abstract class used to hold player logic and give way t
         this.availMoves = availMoves;
         return availMoves;
     }//Finds available moves of each player
+
+    public ArrayList<Point> findNextMoves(Board temp, int player, Piece selectedPiece){
+        if(player == PLAYER_ONE)
+            temp.flip();
+
+        ArrayList<Point> availMoves = new ArrayList<>();
+
+        boolean leftDiagonalBlocked = false;
+        boolean rightDiagonalBlocked = false;
+        boolean forwardBlocked = false;
+
+        //these have a different orientation
+        int x = selectedPiece.getX();
+        int y = selectedPiece.getY();
+        if (player == PLAYER_ONE) {
+            x = boardDimension - 1 - x;
+            y = boardDimension - 1 - y;
+        }
+
+
+        // Log.v("GAT", "Current Distance:" + selectedPiece.getDistance() + " Rank:" + selectedPiece.getRank());
+
+        for (int i = 1; i <= selectedPiece.getDistance(); i++) {
+            if (!forwardBlocked && valid(y - i)) { //finds moves directly forward
+                if (board.getTile(y - i, x).isEmpty()) {
+                    availMoves.add(new Point(y - i, x));
+                }
+                else
+                    forwardBlocked = true;
+            }
+
+
+            if (!leftDiagonalBlocked && valid(y - i) && valid(x - i)) {//left diagonal
+                if (board.getTile(y - i, x - i).isEmpty())
+                    availMoves.add(new Point(y - i, x - i));
+                else
+                    leftDiagonalBlocked = true;
+            }
+
+            if (!rightDiagonalBlocked && valid(i + x) && valid(y - i)) {//right diagonal
+                if (board.getTile(y - i, i + x).isEmpty())
+                    availMoves.add(new Point(y - i, x + i));
+                else
+                    rightDiagonalBlocked = true;
+            }
+        }
+        if(player == PLAYER_ONE) {
+            for(int i = 0; i < availMoves.size(); i++){
+                Point orient = availMoves.get(i);
+                availMoves.set(i, new Point(boardDimension - 1 - orient.x, boardDimension - 1 - orient.y));
+            }
+            temp.flip();
+        }
+        return availMoves;
+    }
 
     public Point getSumoPushPoint() {
         return sumoPushOption;

@@ -29,6 +29,7 @@ public class AIPlayer extends Player {//AI player
             else if(super.player == PLAYER_TWO && availMoves.get(i).x == 0){
                 return availMoves.get(i);
             }
+            findNextMoves(board, (super.player == PLAYER_ONE ? PLAYER_TWO : PLAYER_ONE), board.getTile(availMoves.get(i).y, availMoves.get(i).y).getPiece());
         }
         return difficulty0();
     }
