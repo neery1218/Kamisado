@@ -54,34 +54,7 @@ public class GameControl implements GameBoardView.OnBoardEvent {
 
     }
 
-    private void win() {
-        Log.v("Game", "Win called");
-        win = -1;
-        //check if pieces have reached opposite side
-        for (int i = 0; i < boardDimension; i++) {
 
-            //check if player one has won
-            Tile temp = board.getTile(0, i);
-            if (!temp.isEmpty() && temp.getPiece().getOwner() == PLAYER_TWO) {
-                Log.v("Game", "Rank: " + temp.getPiece().getRank());
-                score[PLAYER_TWO] += scores[temp.getPiece().getRank()];
-                board.rankUp(0, i);
-                win = PLAYER_TWO;
-                gameBoardView.updateScore(score);
-            }
-
-            temp = board.getTile(boardDimension - 1, i);
-            if (!temp.isEmpty() && temp.getPiece().getOwner() == PLAYER_ONE) {
-                Log.v("Game", "Rank: " + temp.getPiece().getRank());
-                score[PLAYER_ONE] += scores[temp.getPiece().getRank()];
-                board.rankUp(boardDimension - 1, i);
-                win = PLAYER_ONE;
-                gameBoardView.updateScore(score);
-            }
-
-
-        }
-    }//Check for win. Return 1 if player 1 won, 0 if player 2 won, -1 if no one won yet
 
     public void resolveSumoPushP1() {
         //find pieces that are gonna get sumo pushed
@@ -178,7 +151,19 @@ public class GameControl implements GameBoardView.OnBoardEvent {
 
 
             //find next piece
-            win();
+            Point winPoint = GameLogic.win(board);
+            if(!winPoint.equals(-1,-1)){
+                Piece winPiece = board.getTile(winPoint.x, winPoint.y).getPiece();
+                Log.d("debug", winPoint.x + " " + winPoint.y + " wtf");
+                int winPlayer = winPiece.getOwner();
+                score[winPlayer] += scores[winPiece.getRank()];
+                win = winPlayer;
+                gameBoardView.updateScore(score);
+                board.rankUp(winPiece.getY(), winPiece.getX());
+            }
+            else{
+                win = -1;
+            }
             resolveNormalMove(temp.y, temp.x);
             if (win != -1) {
                 Log.v("game", "somebody has won");

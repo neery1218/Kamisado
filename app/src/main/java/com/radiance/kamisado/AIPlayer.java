@@ -32,7 +32,8 @@ public class AIPlayer extends Player {//AI player
             else if(super.player == PLAYER_TWO && availMoves.get(i).x == 0){
                 return availMoves.get(i);
             }
-            ArrayList<Point> test = findNextMoves(board, (super.player == PLAYER_ONE ? PLAYER_TWO : PLAYER_ONE), GameLogic.findPiece(board, (super.player == PLAYER_ONE ? PLAYER_TWO : PLAYER_ONE), board.getColor(availMoves.get(i).y, availMoves.get(i).x)));
+            int nextPlayer = (player == PLAYER_ONE ? PLAYER_TWO : PLAYER_ONE);
+            ArrayList<Point> test = findNextMoves(board, nextPlayer, GameLogic.findPiece(board, nextPlayer, board.getColor(availMoves.get(i).y, availMoves.get(i).x)));
             for(int j = 0; j < test.size(); j++)
                 Log.d("debug", test.get(j).toString());
         }
