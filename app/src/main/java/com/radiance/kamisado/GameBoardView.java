@@ -42,10 +42,10 @@ public class GameBoardView extends View {
     //score array
     private int boardDimension = 8;
     /* private Piece[][] pieces = new Piece[2][boardDimension];*/
-    private GameLogic gameLogic;
+    private GameControl gameControl;
     private GameBoardView.OnBoardEvent onBoardEvent;
-    private int PLAYER_ONE = gameLogic.PLAYER_ONE;
-    private int PLAYER_TWO = gameLogic.PLAYER_TWO;
+    private int PLAYER_ONE = gameControl.PLAYER_ONE;
+    private int PLAYER_TWO = gameControl.PLAYER_TWO;
     private int EMPTY = -1;
     private int MATCH_TYPE;
     private int VERSUS_TYPE;
@@ -60,12 +60,12 @@ public class GameBoardView extends View {
         paint = new Paint();
         paint.setTextSize(90);
 
-        //board = new GameLogic(this,BoardDimension);
+        //board = new GameControl(this,BoardDimension);
 
         MATCH_TYPE = GamePlayFragment.getMATCH_TYPE();
         VERSUS_TYPE = GamePlayFragment.getVERSUS_TYPE();
-        gameLogic = new GameLogic(this, boardDimension, VERSUS_TYPE);
-        onBoardEvent = (GameBoardView.OnBoardEvent) gameLogic;
+        gameControl = new GameControl(this, boardDimension, VERSUS_TYPE);
+        onBoardEvent = (GameBoardView.OnBoardEvent) gameControl;
         Log.v("Game", "versustype:" + VERSUS_TYPE);
         Log.v("Game", "matchType:" + MATCH_TYPE);
 
@@ -91,21 +91,21 @@ public class GameBoardView extends View {
 
         firstTime = false;
 
-        //Sets up the width and height of the gameLogic on the screen
-        //The gameLogic is centered in the screen with a possible border around them
+        //Sets up the width and height of the gameControl on the screen
+        //The gameControl is centered in the screen with a possible border around them
         width = getWidth();
         height = getHeight();
 
-        //Finding the start and end point of the gameLogic with border included
+        //Finding the start and end point of the gameControl with border included
         startX = borderWidth;
         endX = width - borderWidth;
 
-        //The size of each individual square on the gameLogic
+        //The size of each individual square on the gameControl
         unitSize = (endX - startX) / boardDimension;
 
         //Finding the start and end point along the vertical axis
-        //Calculated by subtracting half the remainder of height with the gameLogic accounted for and then subtracting the gameLogic height for start point
-        //End point is same thing except without subtracting the gameLogic width
+        //Calculated by subtracting half the remainder of height with the gameControl accounted for and then subtracting the gameControl height for start point
+        //End point is same thing except without subtracting the gameControl width
         startY = height - (height - width) / 2 - width + borderWidth;
         endX = height - (height - width) / 2 + borderWidth;
 
@@ -190,7 +190,7 @@ public class GameBoardView extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent event){
-        if (gameLogic.getWin() != -1) {
+        if (gameControl.getWin() != -1) {
             resolveSwipe(event);
         }
         else if(event.getAction() == 1){

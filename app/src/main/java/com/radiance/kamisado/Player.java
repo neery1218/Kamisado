@@ -10,8 +10,8 @@ import java.util.ArrayList;
  */
 abstract class Player {//abstract class used to hold player logic and give way to AI and HumanPlayer and onlinePlayer subclasses
 
-    protected final int PLAYER_TWO = GameLogic.PLAYER_TWO;
-    protected final int PLAYER_ONE = GameLogic.PLAYER_ONE;
+    protected final int PLAYER_TWO = GameControl.PLAYER_TWO;
+    protected final int PLAYER_ONE = GameControl.PLAYER_ONE;
 
     protected int player = -1;
     protected int boardDimension = 8;

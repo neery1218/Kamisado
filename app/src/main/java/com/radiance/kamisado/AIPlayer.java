@@ -1,6 +1,9 @@
 package com.radiance.kamisado;
 
 import android.graphics.Point;
+import android.util.Log;
+
+import java.util.ArrayList;
 
 /**
  * Created by Admin on 4/10/2015.
@@ -29,7 +32,9 @@ public class AIPlayer extends Player {//AI player
             else if(super.player == PLAYER_TWO && availMoves.get(i).x == 0){
                 return availMoves.get(i);
             }
-            findNextMoves(board, (super.player == PLAYER_ONE ? PLAYER_TWO : PLAYER_ONE), board.getTile(availMoves.get(i).y, availMoves.get(i).y).getPiece());
+            ArrayList<Point> test = findNextMoves(board, (super.player == PLAYER_ONE ? PLAYER_TWO : PLAYER_ONE), GameLogic.findPiece(board, (super.player == PLAYER_ONE ? PLAYER_TWO : PLAYER_ONE), board.getColor(availMoves.get(i).y, availMoves.get(i).x)));
+            for(int j = 0; j < test.size(); j++)
+                Log.d("debug", test.get(j).toString());
         }
         return difficulty0();
     }
@@ -45,6 +50,25 @@ public class AIPlayer extends Player {//AI player
         calcMoves(board, board.getTile(A.x, A.y).getPiece());
         return A;
     }
+
+    public boolean hasOpponentWinMove(ArrayList<Point> p){
+        for(int i = 0; i < p.size(); i++){
+            if((p.get(i).x == 0 && this.player == PLAYER_TWO) || (p.get(i).x == 7 && this.player == PLAYER_ONE)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean hasPlayerWinMove(ArrayList<Point> p){
+        for(int i = 0; i < p.size(); i++){
+            if((p.get(i).x == 0 && this.player == PLAYER_ONE) || (p.get(i).x == 7 && this.player == PLAYER_TWO)){
+                return true;
+            }
+        }
+        return false;
+    }
+
 
 
     @Override
