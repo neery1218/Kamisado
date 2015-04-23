@@ -190,7 +190,7 @@ public class GameBoardView extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent event){
-        if (gameControl.getWin() != -1) {
+        if (!gameControl.getWin().equals(-1, -1)) {
             resolveSwipe(event);
         }
         else if(event.getAction() == 1){
