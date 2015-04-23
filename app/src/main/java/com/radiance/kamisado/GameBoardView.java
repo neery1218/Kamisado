@@ -130,7 +130,7 @@ public class GameBoardView extends View {
 
 
     private void drawPossibleMoves(Canvas canvas){
-        Log.v("Game", "GameBoard: Availsize: " + availMoves.size());
+
         //Draws the squares highlighting the available moves
         for(int i = 0; i < availMoves.size(); i++){
             Point p = availMoves.get(i);

@@ -153,8 +153,7 @@ public class GameControl implements GameBoardView.OnBoardEvent {
             //find next piece
             Point winPoint = GameLogic.win(board);
             if(!winPoint.equals(-1,-1)){
-                Piece winPiece = board.getTile(winPoint.x, winPoint.y).getPiece();
-                Log.d("debug", winPoint.x + " " + winPoint.y + " wtf");
+                Piece winPiece = board.getTile(winPoint.y, winPoint.x).getPiece();
                 int winPlayer = winPiece.getOwner();
                 score[winPlayer] += scores[winPiece.getRank()];
                 win = winPlayer;
