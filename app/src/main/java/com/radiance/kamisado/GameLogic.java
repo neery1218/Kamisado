@@ -9,7 +9,7 @@ import android.util.Log;
 public abstract class GameLogic {
 
     private static int[] scores = {1, 3, 7, 15};
-    private static final int PLAYER_TWO = 1, PLAYER_ONE = 0;
+    private static final int PLAYER_TWO = GameControl.PLAYER_TWO, PLAYER_ONE = GameControl.PLAYER_ONE;
     public static Piece findPiece(Board board, int player, int currColor){
         for (int i = 0; i < board.getHeight(); i++)
             for (int j = 0; j < board.getWidth(); j++) {
@@ -27,15 +27,17 @@ public abstract class GameLogic {
         for (int i = 0; i < boardDimension; i++) {
             //check if player one has won
             Tile temp = board.getTile(0, i);
-            if (!temp.isEmpty() && temp.getPiece().getOwner() == PLAYER_ONE) {
+            if (!temp.isEmpty() && temp.getPiece().getOwner() == PLAYER_TWO) {
+                Log.d("winbug", "0, " + i + " player2");
                 return new Point(0, i);
             }
 
             temp = board.getTile(boardDimension - 1, i);
-            if (!temp.isEmpty() && temp.getPiece().getOwner() == PLAYER_TWO) {
-                return new Point(boardDimension - 1 - i, i);
+            if (!temp.isEmpty() && temp.getPiece().getOwner() == PLAYER_ONE) {
+                Log.d("winbug", (boardDimension - 1) + ", " + i + " player1");
+                return new Point(boardDimension - 1, i);
             }
         }
-        return new Point();
+        return new Point(-1, -1);
     }//Check for win. Return 1 if player 1 won, 0 if player 2 won, -1 if no one won yet
 }
