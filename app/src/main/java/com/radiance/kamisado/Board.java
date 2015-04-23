@@ -87,6 +87,10 @@ public class Board {//board object
         return board[a.x][a.y];
     }
 
+    public int getColor(Point p){
+        return board[p.x][p.y].getColor();
+    }
+
     public void search() {//computes for fill left and right
 
         int counter1 = 0;

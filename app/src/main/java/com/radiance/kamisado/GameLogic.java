@@ -10,6 +10,7 @@ public abstract class GameLogic {
 
     private static int[] scores = {1, 3, 7, 15};
     private static final int PLAYER_TWO = GameControl.PLAYER_TWO, PLAYER_ONE = GameControl.PLAYER_ONE;
+
     public static Piece findPiece(Board board, int player, int currColor){
         for (int i = 0; i < board.getHeight(); i++)
             for (int j = 0; j < board.getWidth(); j++) {
@@ -28,13 +29,11 @@ public abstract class GameLogic {
             //check if player one has won
             Tile temp = board.getTile(0, i);
             if (!temp.isEmpty() && temp.getPiece().getOwner() == PLAYER_TWO) {
-                Log.d("winbug", "0, " + i + " player2");
                 return new Point(0, i);
             }
 
             temp = board.getTile(boardDimension - 1, i);
             if (!temp.isEmpty() && temp.getPiece().getOwner() == PLAYER_ONE) {
-                Log.d("winbug", (boardDimension - 1) + ", " + i + " player1");
                 return new Point(boardDimension - 1, i);
             }
         }

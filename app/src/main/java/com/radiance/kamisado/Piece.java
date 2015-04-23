@@ -1,5 +1,6 @@
 package com.radiance.kamisado;
 
+import android.graphics.Point;
 import android.util.Log;
 
 public class Piece {
@@ -51,6 +52,10 @@ public class Piece {
 
     public int getOwner() {
         return owner;
+    }
+
+    public Point getPoint(){
+        return new Point(locX, locY);
     }
 
     public void setLoc(int x, int y) {

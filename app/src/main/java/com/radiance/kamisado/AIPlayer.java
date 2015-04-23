@@ -12,6 +12,14 @@ public class AIPlayer extends Player {//AI player
 
     private int difficulty = 0;
 
+    public Board nextMove(Board board, Point curPoint, Point movePoint){
+        board.move(curPoint, movePoint);
+        int nextPlayer = (player == PLAYER_ONE ? PLAYER_TWO : PLAYER_ONE);
+        ArrayList<Point> test = findNextMoves(board, nextPlayer, GameLogic.findPiece(board, nextPlayer, board.getColor(movePoint)));
+
+        return board;
+    }
+
     public AIPlayer(int difficulty, int id) {//basic constructor
         super(id);
         this.difficulty = difficulty;
@@ -20,22 +28,24 @@ public class AIPlayer extends Player {//AI player
     public Point difficulty0(){
         Point p = new Point();
         int i = (int) (Math.random() * availMoves.size());
+
         return availMoves.get(i);
     }
 
     public Point difficulty1() {//if there is a winning move, it takes it, otherwise it returns a random move
         int distance = 0;
+        if(hasPlayerWinMove(availMoves))
+            for(int i = 0; i < availMoves.size(); i++){
+                if(super.player == PLAYER_ONE && availMoves.get(i).x == 7){
+                    return availMoves.get(i);
+                }
+                else if(super.player == PLAYER_TWO && availMoves.get(i).x == 0){
+                    return availMoves.get(i);
+                }
+            }
+
         for(int i = 0; i < availMoves.size(); i++){
-            if(super.player == PLAYER_ONE && availMoves.get(i).x == 7){
-                return availMoves.get(i);
-            }
-            else if(super.player == PLAYER_TWO && availMoves.get(i).x == 0){
-                return availMoves.get(i);
-            }
-            int nextPlayer = (player == PLAYER_ONE ? PLAYER_TWO : PLAYER_ONE);
-            ArrayList<Point> test = findNextMoves(board, nextPlayer, GameLogic.findPiece(board, nextPlayer, board.getColor(availMoves.get(i).y, availMoves.get(i).x)));
-            for(int j = 0; j < test.size(); j++)
-                Log.d("debug", test.get(j).toString());
+            Board temp = nextMove(board, selectedPiece.getPoint(), availMoves.get(i));
         }
         return difficulty0();
     }

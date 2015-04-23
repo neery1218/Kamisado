@@ -109,7 +109,6 @@ public class GameControl implements GameBoardView.OnBoardEvent {
         }
         if (win != -1) {
             availMoves = new ArrayList<Point>();
-            Log.v("game", "hi");
         }
 
         gameBoardView.setAvailMoves(availMoves);
