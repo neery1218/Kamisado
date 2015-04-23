@@ -25,7 +25,7 @@ public class GameControl implements GameBoardView.OnBoardEvent {
     private int EASY = 0;
     private int MEDIUM = 1;
     private int HARD = 2;
-    private int win = -1;
+    private Point win = new Point(-1, -1);
     private int deadlockCount = 0;
 
     public GameControl(GameBoardView gameBoardView, int bd, int VERSUS_TYPE) {
@@ -93,10 +93,11 @@ public class GameControl implements GameBoardView.OnBoardEvent {
         selectedPiece = GameLogic.findPiece(board, counter % 2, currColor);
         availMoves = players[counter % 2].calcMoves(board, selectedPiece);
         Log.v("Game", "availMoves: " + availMoves.size());
-        if (availMoves.size() == 0 && win == -1) {//if there are no available moves, it skips the player's turn
+        if (availMoves.size() == 0 && win.equals(-1, -1)) {//if there are no available moves, it skips the player's turn
             deadlockCount++;
             if (deadlockCount == 2) {//this means that both players can't move
-                win = counter % 2;
+                //win = counter % 2;
+                //new rules: if deadlock, it's a tie
                 //TODO: make deadlock screen
 
             } else {
@@ -107,7 +108,7 @@ public class GameControl implements GameBoardView.OnBoardEvent {
 
             deadlockCount = 0;
         }
-        if (win != -1) {
+        if (!win.equals(-1, -1)) {
             availMoves = new ArrayList<Point>();
         }
 
@@ -116,7 +117,7 @@ public class GameControl implements GameBoardView.OnBoardEvent {
 
     }
 
-    public int getWin() {
+    public Point getWin() {
         return win;
     }
 
@@ -150,22 +151,18 @@ public class GameControl implements GameBoardView.OnBoardEvent {
 
 
             //find next piece
-            Point winPoint = GameLogic.win(board);
-            if(!winPoint.equals(-1,-1)){
-                Piece winPiece = board.getTile(winPoint.x, winPoint.y).getPiece();
+            win = GameLogic.win(board);
+            if (!win.equals(-1, -1)) {
+                Piece winPiece = board.getTile(win.x, win.y).getPiece();
                 int winPlayer = winPiece.getOwner();
                 score[winPlayer] += scores[winPiece.getRank()];
-                win = winPlayer;
                 gameBoardView.updateScore(score);
                 board.rankUp(winPiece.getY(), winPiece.getX());
             }
-            else{
-                win = -1;
-            }
             resolveNormalMove(temp.y, temp.x);
-            if (win != -1) {
+            if (!win.equals(-1, -1)) {
                 Log.v("game", "somebody has won");
-                counter = win;
+                counter = board.getTile(win.x, win.y).getPiece().getOwner();
 
                 //if it's a player, just return and wait for swipe
                 //if ai,
@@ -174,6 +171,7 @@ public class GameControl implements GameBoardView.OnBoardEvent {
                     onSwipeLeft();
                     Point A = players[counter % 2].selectPiece(board);
                     selectedPiece = board.getTile(A.x, A.y).getPiece();
+                    gameBoardView.setSelectedPiece(selectedPiece);
                     availMoves = players[counter % 2].calcMoves(board, selectedPiece);
                     onTouch(-1, -1);
 
@@ -184,7 +182,7 @@ public class GameControl implements GameBoardView.OnBoardEvent {
             } else {
 
 
-                if (players[counter % 2] instanceof AIPlayer && win == -1)
+                if (players[counter % 2] instanceof AIPlayer && win.equals(-1, -1))
                     onTouch(-1, -1);
             }
 
@@ -193,8 +191,8 @@ public class GameControl implements GameBoardView.OnBoardEvent {
     }
 
     public void reset() {
-        counter = win;
-        win = -1;
+        counter = (board.getTile(win.x, win.y).getPiece().getOwner() + 1) % 2;
+        win = new Point(-1, -1);
         firstMove = true;
         selectedPiece = null;
         gameBoardView.setSelectedPiece(null);
