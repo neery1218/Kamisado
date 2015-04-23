@@ -235,6 +235,7 @@ public class GameLogic implements GameBoardView.OnBoardEvent {
         board.search();
         board.fillRight();
         reset();
+
     }
 
     @Override
