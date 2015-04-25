@@ -5,7 +5,7 @@ import android.util.Log;
 
 import java.util.ArrayList;
 
-public class GameControl implements GameBoardView.OnBoardEvent {
+public class GameControl implements GameBoardView.OnBoardEvent {//runs the game counter and controls gameBoardView calls
     public static final int PLAYER_ONE = 0;
     public static final int PLAYER_TWO = 1;
     private static boolean firstMove = true;
@@ -31,9 +31,11 @@ public class GameControl implements GameBoardView.OnBoardEvent {
     public GameControl(GameBoardView gameBoardView, int bd, int VERSUS_TYPE) {
         this.boardDimension = bd;
         this.gameBoardView = gameBoardView;
+
         players = new Player[2];
         board = new Board();
         players[PLAYER_TWO] = new HumanPlayer(PLAYER_TWO);
+
         switch (VERSUS_TYPE) {
             case MainActivity.TWO_PLAY_PRESSED:
                 players[PLAYER_ONE] = new HumanPlayer(PLAYER_ONE);
@@ -44,6 +46,7 @@ public class GameControl implements GameBoardView.OnBoardEvent {
                 Log.v("Game", "AIPlayer");
                 break;
         }
+
         currColor = board.getColor(boardDimension - 1, 0);
         selectedPiece = GameLogic.findPiece(board, counter % 2, currColor);
 
@@ -55,8 +58,7 @@ public class GameControl implements GameBoardView.OnBoardEvent {
     }
 
 
-
-    public void resolveSumoPushP1() {
+    public void resolveSumoPushP1() {//moves the pieces from a player one sumopush
         //find pieces that are gonna get sumo pushed
         for (int j = sumoChain; j >= 1; j--)
             board.move(new Point(selectedPiece.getY() - j, selectedPiece.getX()), new Point(selectedPiece.getY() - j - 1, selectedPiece.getX()));
@@ -64,7 +66,7 @@ public class GameControl implements GameBoardView.OnBoardEvent {
         board.move(new Point(selectedPiece.getY(), selectedPiece.getX()), new Point(selectedPiece.getY() - 1, selectedPiece.getX()));
     }
 
-    public void resolveSumoPushP2() {
+    public void resolveSumoPushP2() {//moves the pieces from a player two sumopush
 
         //Pushing from the other end so it doesn't get overwritten
         for (int j = sumoChain; j >= 1; j--)
@@ -75,7 +77,7 @@ public class GameControl implements GameBoardView.OnBoardEvent {
 
     }
 
-    public boolean resolveFirstMove(int x, int y) {
+    public boolean resolveFirstMove(int x, int y) {//used to display moves when it's the first move of a game
         if (!board.getTile(y, x).isEmpty()) {
             selectedPiece = board.getTile(y, x).getPiece();
             availMoves = players[counter % 2].calcMoves(board, selectedPiece);
@@ -88,7 +90,7 @@ public class GameControl implements GameBoardView.OnBoardEvent {
         return true;
     }
 
-    public void resolveNormalMove(int x, int y){
+    public void resolveNormalMove(int x, int y) {//finds the next piece and availMoves. also checks for no moves and/or deadlock
         currColor = board.getColor(y, x);
         selectedPiece = GameLogic.findPiece(board, counter % 2, currColor);
         availMoves = players[counter % 2].calcMoves(board, selectedPiece);
@@ -119,22 +121,22 @@ public class GameControl implements GameBoardView.OnBoardEvent {
 
     public Point getWin() {
         return win;
-    }
+    }//getter method used by gameBoardView
 
     @Override
-    public void onTouch(int x, int y) {
+    public void onTouch(int x, int y) {//overriden method from the interface: all method calls originate from here
 
-        if (firstMove) {
+        if (firstMove) {//first move has its own resolve method
             if(players[counter % 2] instanceof HumanPlayer && !resolveFirstMove(x, y))
                 return;
         }
         firstMove = false;
 
 
-        Point temp = players[counter % 2].resolveMove(new Point(y, x));
+        Point temp = players[counter % 2].resolveMove(new Point(y, x));//returns the point that the piece should be moved to
         Log.v("temp", temp.x + " " + temp.y);
-        if (!temp.equals(inValid)) {
-            if (selectedPiece.getRank() > 0 && temp.equals(players[counter % 2].getSumoPushPoint())) {
+        if (!temp.equals(inValid)) {//check validity
+            if (selectedPiece.getRank() > 0 && temp.equals(players[counter % 2].getSumoPushPoint())) {//if it's sumo:
                 sumoChain = players[counter % 2].getSumoChain();
                 switch (counter % 2) {
                     case PLAYER_TWO:
@@ -152,7 +154,7 @@ public class GameControl implements GameBoardView.OnBoardEvent {
 
             //find next piece
             win = GameLogic.win(board);
-            if (!win.equals(-1, -1)) {
+            if (!win.equals(-1, -1)) {//if someone won:
                 Piece winPiece = board.getTile(win.x, win.y).getPiece();
                 int winPlayer = winPiece.getOwner();
                 score[winPlayer] += scores[winPiece.getRank()];
@@ -190,7 +192,7 @@ public class GameControl implements GameBoardView.OnBoardEvent {
         }
     }
 
-    public void reset() {
+    public void reset() {//resets the game board
         counter = (board.getTile(win.x, win.y).getPiece().getOwner() + 1) % 2;
         win = new Point(-1, -1);
         firstMove = true;

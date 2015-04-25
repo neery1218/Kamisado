@@ -1,17 +1,16 @@
 package com.radiance.kamisado;
 
 import android.graphics.Point;
-import android.util.Log;
 
 /**
  * Created by Michael on 4/22/2015.
  */
-public abstract class GameLogic {
+public abstract class GameLogic {//contains methods used by gameControl, and all Player sub-classes to conduct game logic
 
-    private static int[] scores = {1, 3, 7, 15};
     private static final int PLAYER_TWO = GameControl.PLAYER_TWO, PLAYER_ONE = GameControl.PLAYER_ONE;
+    private static int[] scores = {1, 3, 7, 15};
 
-    public static Piece findPiece(Board board, int player, int currColor){
+    public static Piece findPiece(Board board, int player, int currColor) {//find the next piece that must be moved
         for (int i = 0; i < board.getHeight(); i++)
             for (int j = 0; j < board.getWidth(); j++) {
                 Piece temp = board.getTile(i, j).getPiece();
@@ -22,7 +21,7 @@ public abstract class GameLogic {
         return null;
     }
 
-    public static Point win(Board board) {
+    public static Point win(Board board) {//checks if a player has won
         int win = 0, boardDimension = 8;
         //check if pieces have reached opposite side
         for (int i = 0; i < boardDimension; i++) {

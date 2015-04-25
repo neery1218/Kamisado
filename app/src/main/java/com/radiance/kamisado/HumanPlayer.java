@@ -5,9 +5,9 @@ import android.graphics.Point;
 /**
  * Created by Admin on 4/10/2015.
  */
-public class HumanPlayer extends Player{
+public class HumanPlayer extends Player {//humanPlayer
 
-    public HumanPlayer(){
+    public HumanPlayer() {
         super();
     }
 
@@ -16,11 +16,7 @@ public class HumanPlayer extends Player{
     }
 
     @Override
-    public Point resolveMove(Point point) {
-        //in Human Player, resolveMove will be passed selectedX and Y and it will determine if it's a correct move
-        //in AI Player, resolveMove will be called right after selected Move
-        //in online Player, ...have to figure this one out
-
+    public Point resolveMove(Point point) {//checks if the touchedPoint is an element in the availMoves array
         for (int i = 0; i < availMoves.size(); i++) {
             if (point.equals(availMoves.get(i)))
                 return point;
