@@ -7,7 +7,7 @@ import android.util.Log;
 /**
  * Created by neerajen on 06/04/15.
  */
-public class Board {//board object
+public class Board implements Cloneable{//board object
     private Tile[][] board;
     private int[][] boardColor;
     private int boardDimension = 8;
@@ -42,6 +42,20 @@ public class Board {//board object
             board[0][i].setPiece(new Piece(board[0][i].getColor(), PLAYER_ONE));
             board[board.length - 1][i].setPiece(new Piece(board[board.length - 1][i].getColor(), PLAYER_TWO));
         }
+    }
+
+    public Board(Tile[][] tiles){
+        boardColor = new int[][]{
+                {o,b,p,pk,ye,r,g,br},
+                {r,o,pk,g,b,ye,br,p},
+                {g,pk,o,r,p,br,ye,b},
+                {pk,p,b,o,br,g,r,ye},
+                {ye,r,g,br,o,b,p,pk},
+                {b,ye,br,p,r,o,pk,g},
+                {p,br,ye,b,g,pk,o,r},
+                {br,g,r,ye,pk,p,b,o}};
+
+        board = tiles;
     }
 
 
@@ -87,6 +101,24 @@ public class Board {//board object
         return board[a.x][a.y];
     }
 
+    public Tile [] [] getTiles (){
+        Tile [] [] temp = new Tile [8][8];
+        for (int i = 0; i < temp.length; i++){
+            for (int j = 0; j < temp[0].length; j++){
+                int a = board[i][j].getColor();
+                temp[i][j] = new Tile (a,i,j);
+                if (!board[i][j].isEmpty()){
+                    int pieceColor = board[i][j].getPiece().getColor();
+                    int rank = board[i][j].getPiece().getRank();
+                    int owner = board[i][j].getPiece().getOwner();
+                    Piece piece = new Piece(pieceColor, owner,rank);
+                    temp[i][j].setPiece(piece);
+                }
+            }
+        }
+
+        return temp;
+    }
     public int getColor(Point p){
         return board[p.x][p.y].getColor();
     }
@@ -164,5 +196,12 @@ public class Board {//board object
             }
         }
         board = temp;
+    }
+
+    @Override
+    public Object clone (){
+        try{
+            return super.clone();
+        }catch(Exception e){return null;}
     }
 }

@@ -151,7 +151,6 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
                 board.move(new Point(selectedPiece.getY(), selectedPiece.getX()), temp);
             counter++;
 
-
             //find next piece
             win = GameLogic.win(board);
             if (!win.equals(-1, -1)) {//if someone won:
