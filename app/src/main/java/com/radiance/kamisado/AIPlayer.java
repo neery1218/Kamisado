@@ -12,12 +12,13 @@ public class AIPlayer extends Player {//AI player
 
     private int difficulty = 0;
 
-    public Board nextMove(Board board, Point curPoint, Point movePoint){
-        board.move(curPoint, movePoint);
-        int nextPlayer = (player == PLAYER_ONE ? PLAYER_TWO : PLAYER_ONE);
-        ArrayList<Point> test = findNextMoves(board, nextPlayer, GameLogic.findPiece(board, nextPlayer, board.getColor(movePoint)));
+    public ArrayList<Point> nextMove(Board b, Point curPoint, Point movePoint){
 
-        return board;
+        Board temp = new Board(b.getTiles());
+        temp.move(curPoint, movePoint);
+        int nextPlayer = (player == PLAYER_ONE ? PLAYER_TWO : PLAYER_ONE);
+        ArrayList<Point> test = findNextMoves(temp, nextPlayer, GameLogic.findPiece(temp, nextPlayer, temp.getColor(movePoint)));
+        return test;
     }
 
     public AIPlayer(int difficulty, int id) {//basic constructor
@@ -34,18 +35,20 @@ public class AIPlayer extends Player {//AI player
 
     public Point difficulty1() {//if there is a winning move, it takes it, otherwise it returns a random move
         int distance = 0;
-        if(hasPlayerWinMove(availMoves))
-            for(int i = 0; i < availMoves.size(); i++){
-                if(super.player == PLAYER_ONE && availMoves.get(i).x == 7){
-                    return availMoves.get(i);
-                }
-                else if(super.player == PLAYER_TWO && availMoves.get(i).x == 0){
-                    return availMoves.get(i);
-                }
+        for(int i = 0; i < availMoves.size(); i++){
+            if(super.player == PLAYER_ONE && availMoves.get(i).x == 7){
+                return availMoves.get(i);
             }
+            else if(super.player == PLAYER_TWO && availMoves.get(i).x == 0){
+                return availMoves.get(i);
+            }
+        }
 
         for(int i = 0; i < availMoves.size(); i++){
-            Board temp = nextMove(board, selectedPiece.getPoint(), availMoves.get(i));
+            ArrayList<Point> p = nextMove(board, selectedPiece.getPoint(), availMoves.get(i));
+            for(int j = 0; j < p.size(); j++){
+
+            }
         }
         return difficulty0();
     }
@@ -62,20 +65,16 @@ public class AIPlayer extends Player {//AI player
         return A;
     }
 
-    public boolean hasOpponentWinMove(ArrayList<Point> p){
-        for(int i = 0; i < p.size(); i++){
-            if((p.get(i).x == 0 && this.player == PLAYER_TWO) || (p.get(i).x == 7 && this.player == PLAYER_ONE)){
-                return true;
-            }
+    public boolean hasOpponentWinMove(Point p){
+        if((p.x == 7 && this.player == PLAYER_TWO) || (p.x == 0 && this.player == PLAYER_ONE)){
+            return true;
         }
         return false;
     }
 
-    public boolean hasPlayerWinMove(ArrayList<Point> p){
-        for(int i = 0; i < p.size(); i++){
-            if((p.get(i).x == 0 && this.player == PLAYER_ONE) || (p.get(i).x == 7 && this.player == PLAYER_TWO)){
-                return true;
-            }
+    public boolean hasPlayerWinMove(Point p){
+        if((p.x == 7 && this.player == PLAYER_ONE) || (p.x == 0 && this.player == PLAYER_TWO)){
+            return true;
         }
         return false;
     }
