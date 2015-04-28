@@ -73,18 +73,19 @@ abstract class Player {//abstract class used to hold player logic and give way t
 
 
         // Log.v("GAT", "Current Distance:" + selectedPiece.getDistance() + " Rank:" + selectedPiece.getRank());
-
+        Log.v("Game", "Rank:" + selectedPiece.getRank());
         for (int i = 1; i <= selectedPiece.getDistance(); i++) {
+
             if (!forwardBlocked && valid(y - i)) { //finds moves directly forward
                 if (board.getTile(y - i, x).isEmpty()) {
                     availMoves.add(new Point(y - i, x));
-                }
+                } else if (selectedPiece.getRank() > 0 && i == 1) {//check for sumoPushes
+                    Log.v("Game", "SumoOptionTrue");
+                    Log.v("TAG", "HI");
 
-                else if (selectedPiece.getRank() > 0) {//check for sumoPushes
-                    Log.v("Game","SumoOptionTrue"); 
                     int sumoCounter = 0;
 
-                    while (valid(y - i - sumoCounter) && !board.getTile(y - i - sumoCounter, x).isEmpty() && board.getTile(y - i - sumoCounter, x).getPiece().getOwner() == PLAYER_ONE) {//checks for a chain of opponent pieces
+                    while (valid(y - i - sumoCounter) && !board.getTile(y - i - sumoCounter, x).isEmpty() && board.getTile(y - i - sumoCounter, x).getPiece().getOwner() != player) {//checks for a chain of opponent pieces
                         if (board.getTile(y - i - sumoCounter, x).getPiece().getRank() >= selectedPiece.getRank()) {
                             sumoCounter = 0;
                             break;
@@ -127,6 +128,9 @@ abstract class Player {//abstract class used to hold player logic and give way t
                 availMoves.set(i, new Point(boardDimension - 1 - orient.x, boardDimension - 1 - orient.y));
             }
             temp.flip();
+            if (!sumoPushOption.equals(-1, -1)) {
+                sumoPushOption = new Point(boardDimension - 1 - sumoPushOption.x, boardDimension - 1 - sumoPushOption.y);
+            }
         }
         Log.d("debug", availMoves.size() + " " + player + "");
         this.availMoves = availMoves;
@@ -182,6 +186,7 @@ abstract class Player {//abstract class used to hold player logic and give way t
             for(int i = 0; i < availMoves.size(); i++){
                 Point orient = availMoves.get(i);
                 availMoves.set(i, new Point(boardDimension - 1 - orient.x, boardDimension - 1 - orient.y));
+
             }
             temp.flip();
         }
