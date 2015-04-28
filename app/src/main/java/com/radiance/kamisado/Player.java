@@ -81,7 +81,7 @@ abstract class Player {//abstract class used to hold player logic and give way t
                 }
 
                 else if (selectedPiece.getRank() > 0) {//check for sumoPushes
-
+                    Log.v("Game","SumoOptionTrue"); 
                     int sumoCounter = 0;
 
                     while (valid(y - i - sumoCounter) && !board.getTile(y - i - sumoCounter, x).isEmpty() && board.getTile(y - i - sumoCounter, x).getPiece().getOwner() == PLAYER_ONE) {//checks for a chain of opponent pieces
