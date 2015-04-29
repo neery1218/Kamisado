@@ -149,8 +149,12 @@ public class GameBoardView extends View {
             initialClickY = (int)event.getY();
         }
         else if(event.getAction() == 1){
+            if (gameControl.aiWin()) {
+                onBoardEvent.onTouch(-1, -1);
+            }
             finalClickX = (int)event.getX(); finalClickY = (int)event.getY();
             if(finalClickX - initialClickX > 200 && Math.abs(finalClickY - initialClickY) < 100){
+
                 initialClickX = -1; finalClickX = -1; initialClickY = -1; finalClickY = -1;
                 onBoardEvent.onSwipeRight();
             }

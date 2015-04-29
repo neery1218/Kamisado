@@ -27,6 +27,7 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
     private int HARD = 2;
     private Point win = new Point(-1, -1);
     private int deadlockCount = 0;
+    private boolean aiWin = false;
 
     public GameControl(GameBoardView gameBoardView, int bd, int VERSUS_TYPE) {
         this.boardDimension = bd;
@@ -123,9 +124,23 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
         return win;
     }//getter method used by gameBoardView
 
+    public boolean aiWin() {
+        return aiWin;
+    }
+
     @Override
     public void onTouch(int x, int y) {//overriden method from the interface: all method calls originate from here
 
+        if (aiWin) {
+            aiWin = false;
+            Log.v("AITEST", "reset");
+            onSwipeLeft();
+            Point A = players[counter % 2].selectPiece(board);
+            selectedPiece = board.getTile(A.x, A.y).getPiece();
+            gameBoardView.setSelectedPiece(selectedPiece);
+            availMoves = players[counter % 2].calcMoves(board, selectedPiece);
+
+        }
         if (firstMove) {//first move has its own resolve method
             if(players[counter % 2] instanceof HumanPlayer && !resolveFirstMove(x, y))
                 return;
@@ -164,25 +179,12 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
             if (!win.equals(-1, -1)) {
                 Log.v("game", "somebody has won");
                 counter = board.getTile(win.x, win.y).getPiece().getOwner();
-
-                //if it's a player, just return and wait for swipe
-                //if ai,
-
                 if (players[counter % 2] instanceof AIPlayer) {
-                    onSwipeLeft();
-                    Point A = players[counter % 2].selectPiece(board);
-                    selectedPiece = board.getTile(A.x, A.y).getPiece();
-                    gameBoardView.setSelectedPiece(selectedPiece);
-                    availMoves = players[counter % 2].calcMoves(board, selectedPiece);
-                    onTouch(-1, -1);
-
-
-                } else
-                    return;
+                    aiWin = true;
+                    Log.v("AITEST", "win called");
+                }
 
             } else {
-
-
                 if (players[counter % 2] instanceof AIPlayer && win.equals(-1, -1))
                     onTouch(-1, -1);
             }
