@@ -113,6 +113,7 @@ public class GameBoardView extends View {
 
     }//initialisation of the gameboard
 
+
     public void drawBoard(Board board) {
         this.board = board;
         invalidate();
