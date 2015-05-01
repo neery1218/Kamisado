@@ -44,7 +44,8 @@ public class Board implements Cloneable{//board object
         }
     }
 
-    public Board(Tile[][] tiles){
+    public Board(Board temp){
+        Tile[][] tiles = temp.getTiles();
         boardColor = new int[][]{
                 {o,b,p,pk,ye,r,g,br},
                 {r,o,pk,g,b,ye,br,p},

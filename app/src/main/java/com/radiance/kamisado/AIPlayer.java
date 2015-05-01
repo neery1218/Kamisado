@@ -18,11 +18,8 @@ public class AIPlayer extends Player {//AI player
         this.difficulty = difficulty;
     }
 
-    public ArrayList<Point> nextMove(Board b, Point curPoint, Point movePoint) {
-
-        Board temp = new Board(b.getTiles());
-        temp.move(curPoint, movePoint);
-        this.temp = new Board(temp.getTiles());
+    public ArrayList<Point> nextMove(Point movePoint) {
+        this.temp = new Board(board);
         int nextPlayer = (player == PLAYER_ONE ? PLAYER_TWO : PLAYER_ONE);
         ArrayList<Point> test = findNextMoves(temp, nextPlayer, GameLogic.findPiece(temp, nextPlayer, temp.getColor(movePoint)));
         return test;
@@ -46,20 +43,23 @@ public class AIPlayer extends Player {//AI player
         int maxValue = -1, curValue = 0;
         for(int i = 0; i < availMoves.size(); i++){
             curValue = 0;
-            ArrayList<Point> opponentMove = nextMove(board, selectedPiece.getPoint(), availMoves.get(i));
+            temp = new Board(board);
+            temp.move(new Point(selectedPiece.getY(), selectedPiece.getX()), availMoves.get(i));
+            ArrayList<Point> opponentMove = nextMove(availMoves.get(i));
             for (int j = 0; j < opponentMove.size(); j++) {
                 if (hasOpponentWinMove(opponentMove.get(j))) {
-                    curValue -= 1;
-                    Log.v("AITEST", "???" + " " + i + " " + curValue + " " + maxValue);
+                    curValue -= 5   ;
+                    Log.d("AITEST", "???" + " " + i + " " + curValue + " " + maxValue);
                     continue;
                 }
-                /*ArrayList<Point> playerMove = nextMove(temp, availMoves.get(i), opponentMove.get(j));
+                temp.move(new Point(availMoves.get(i).y, availMoves.get(i).x), opponentMove.get(j));
+                ArrayList<Point> playerMove = nextMove(opponentMove.get(j));
                 for(int k = 0; k < playerMove.size(); k++){
                     if(hasPlayerWinMove(playerMove.get(k))){
                         Log.v("AITEST", "called");
                         curValue++;
                     }
-                }*/
+                }
             }
             if (i == 0) {
                 maxPoint = availMoves.get(i);
@@ -70,12 +70,11 @@ public class AIPlayer extends Player {//AI player
                 maxValue = curValue;
             } else if (curValue == maxValue) {
                 double random = Math.random();
-                if (random > 0.7) {
+                if (random > 0.95) {
                     maxPoint = availMoves.get(i);
                     maxValue = curValue;
                 }
             }
-            Log.v("AITEST", "" + maxValue + " " + i);
         }
 
         return maxPoint;
