@@ -30,7 +30,7 @@ public class GameBoardView extends View {
     private float borderWidth = 0;
     private float unitSize = 0;
 
-    private int[] playerColor = {Color.BLACK, Color.WHITE};
+    private int[] playerColor = {Color.parseColor("#ff34495e"), Color.parseColor("#ffecf0f1")};
 
     private int eventAction = -1;
     private int initialClickX = -1;
@@ -113,6 +113,7 @@ public class GameBoardView extends View {
 
     }//initialisation of the gameboard
 
+
     public void drawBoard(Board board) {
         this.board = board;
         invalidate();
@@ -148,8 +149,12 @@ public class GameBoardView extends View {
             initialClickY = (int)event.getY();
         }
         else if(event.getAction() == 1){
+            if (gameControl.aiWin()) {
+                onBoardEvent.onTouch(-1, -1);
+            }
             finalClickX = (int)event.getX(); finalClickY = (int)event.getY();
             if(finalClickX - initialClickX > 200 && Math.abs(finalClickY - initialClickY) < 100){
+
                 initialClickX = -1; finalClickX = -1; initialClickY = -1; finalClickY = -1;
                 onBoardEvent.onSwipeRight();
             }

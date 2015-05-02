@@ -1,43 +1,44 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" tools:context="com.radiance.kamisado.IntroFragment"
-    android:background="@drawable/introbackground2"
-    >
+    android:layout_height="match_parent"
+    android:background="#ff22313F"
+    tools:context="com.radiance.kamisado.IntroFragment">
+
 
 
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:gravity="center">
+        android:gravity="center"
+        android:orientation="vertical">
 
 
         <Button
+            android:id="@+id/playButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Play an AI"
             android:layout_gravity="center"
-            android:id="@+id/playButton" />
+            android:text="Play an AI" />
         <Button
+            android:id="@+id/playerTwoButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Two Player"
             android:layout_gravity="center"
-            android:id="@+id/playerTwoButton" />
+            android:text="Two Player" />
         <Button
+            android:id="@+id/onlineButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Online"
             android:layout_gravity="center"
-            android:id="@+id/onlineButton" />
+            android:text="Online" />
 
         <Button
+            android:id="@+id/tutorialButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Tutorial"
             android:layout_gravity="center"
-            android:id="@+id/tutorialButton" />
+            android:text="Tutorial" />
     </LinearLayout>
 
 </FrameLayout>

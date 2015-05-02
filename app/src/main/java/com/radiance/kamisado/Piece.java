@@ -3,7 +3,7 @@ package com.radiance.kamisado;
 import android.graphics.Point;
 import android.util.Log;
 
-public class Piece {
+public class Piece {//object that conducts piece logic and is used by board
 	
 	private int locX = 0, locY = 0, rank = 0, color = -1, distance;
     private int owner = 0;

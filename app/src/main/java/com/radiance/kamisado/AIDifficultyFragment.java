@@ -2,32 +2,31 @@ package com.radiance.kamisado;
 
 import android.app.Activity;
 import android.app.Fragment;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 
-public class TutorialFragment extends Fragment {
+public class AIDifficultyFragment extends Fragment {
 
-    private OnTutorialInteractionListener mListener;
 
-    public TutorialFragment() {
+    private OnDifficultyInteraction mListener;
+    private int EASY = 0;
+    private int MEDIUM = 1;
+    private int HARD = 2;
+
+    private Button easyButton;
+    private Button mediumButton;
+    private Button hardButton;
+
+    public AIDifficultyFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment TutorialFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static TutorialFragment newInstance(String param1, String param2) {
-        TutorialFragment fragment = new TutorialFragment();
+    public static AIDifficultyFragment newInstance(String param1, String param2) {
+        AIDifficultyFragment fragment = new AIDifficultyFragment();
         return fragment;
     }
 
@@ -35,6 +34,7 @@ public class TutorialFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
+
         }
     }
 
@@ -42,21 +42,38 @@ public class TutorialFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_tutorial, container, false);
+        View view = inflater.inflate(R.layout.fragment_aidifficulty, container, false);
+
+        easyButton = (Button) view.findViewById(R.id.easyButton);
+        easyButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                mListener.onDifficultyInteraction(EASY);
+            }
+        });
+
+        mediumButton = (Button) view.findViewById(R.id.mediumButton);
+        mediumButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                mListener.onDifficultyInteraction(MEDIUM);
+            }
+        });
+
+        hardButton = (Button) view.findViewById(R.id.hardButton);
+        hardButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                mListener.onDifficultyInteraction(HARD);
+            }
+        });
+
+        return view;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onTutorialInteraction(uri);
-        }
-    }
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         try {
-            mListener = (OnTutorialInteractionListener) activity;
+            mListener = (OnDifficultyInteraction) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
                     + " must implement OnDifficultyInteractionListener");
@@ -79,9 +96,9 @@ public class TutorialFragment extends Fragment {
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      */
-    public interface OnTutorialInteractionListener {
+    public interface OnDifficultyInteraction {
         // TODO: Update argument type and name
-        public void onTutorialInteraction(Uri uri);
+        public void onDifficultyInteraction(int level);
     }
 
 }

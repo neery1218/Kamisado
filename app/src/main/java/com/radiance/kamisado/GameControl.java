@@ -21,12 +21,11 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
     private Piece selectedPiece;
     private ArrayList<Point> availMoves;
     private int sumoChain = 0;
-    //Strength Variables for AI
-    private int EASY = 0;
-    private int MEDIUM = 1;
-    private int HARD = 2;
+    private int AI_DIFFICULTY = 0;
+
     private Point win = new Point(-1, -1);
     private int deadlockCount = 0;
+    private boolean aiWin = false;
 
     public GameControl(GameBoardView gameBoardView, int bd, int VERSUS_TYPE) {
         this.boardDimension = bd;
@@ -42,7 +41,9 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
                 Log.v("Game", "HumanPlayer");
                 break;
             case MainActivity.PLAY_PRESSED:
-                players[PLAYER_ONE] = new AIPlayer(EASY, PLAYER_ONE);
+                AI_DIFFICULTY = GamePlayFragment.getAiDifficulty();
+                Log.v("Game", "" + AI_DIFFICULTY);
+                players[PLAYER_ONE] = new AIPlayer(AI_DIFFICULTY, PLAYER_ONE);
                 Log.v("Game", "AIPlayer");
                 break;
         }
@@ -123,9 +124,23 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
         return win;
     }//getter method used by gameBoardView
 
+    public boolean aiWin() {
+        return aiWin;
+    }
+
     @Override
     public void onTouch(int x, int y) {//overriden method from the interface: all method calls originate from here
 
+        if (aiWin) {
+            aiWin = false;
+            Log.v("AITEST", "reset");
+            onSwipeLeft();
+            Point A = players[counter % 2].selectPiece(board);
+            selectedPiece = board.getTile(A.x, A.y).getPiece();
+            gameBoardView.setSelectedPiece(selectedPiece);
+            availMoves = players[counter % 2].calcMoves(board, selectedPiece);
+
+        }
         if (firstMove) {//first move has its own resolve method
             if(players[counter % 2] instanceof HumanPlayer && !resolveFirstMove(x, y))
                 return;
@@ -151,7 +166,6 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
                 board.move(new Point(selectedPiece.getY(), selectedPiece.getX()), temp);
             counter++;
 
-
             //find next piece
             win = GameLogic.win(board);
             if (!win.equals(-1, -1)) {//if someone won:
@@ -165,25 +179,12 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
             if (!win.equals(-1, -1)) {
                 Log.v("game", "somebody has won");
                 counter = board.getTile(win.x, win.y).getPiece().getOwner();
-
-                //if it's a player, just return and wait for swipe
-                //if ai,
-
                 if (players[counter % 2] instanceof AIPlayer) {
-                    onSwipeLeft();
-                    Point A = players[counter % 2].selectPiece(board);
-                    selectedPiece = board.getTile(A.x, A.y).getPiece();
-                    gameBoardView.setSelectedPiece(selectedPiece);
-                    availMoves = players[counter % 2].calcMoves(board, selectedPiece);
-                    onTouch(-1, -1);
-
-
-                } else
-                    return;
+                    aiWin = true;
+                    Log.v("AITEST", "win called");
+                }
 
             } else {
-
-
                 if (players[counter % 2] instanceof AIPlayer && win.equals(-1, -1))
                     onTouch(-1, -1);
             }

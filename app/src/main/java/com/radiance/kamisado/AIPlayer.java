@@ -11,19 +11,17 @@ import java.util.ArrayList;
 public class AIPlayer extends Player {//AI player
 
     private int difficulty = 0;
-
-    public ArrayList<Point> nextMove(Board b, Point curPoint, Point movePoint){
-
-        Board temp = new Board(b.getTiles());
-        temp.move(curPoint, movePoint);
-        int nextPlayer = (player == PLAYER_ONE ? PLAYER_TWO : PLAYER_ONE);
-        ArrayList<Point> test = findNextMoves(temp, nextPlayer, GameLogic.findPiece(temp, nextPlayer, temp.getColor(movePoint)));
-        return test;
-    }
+    private Board temp;
 
     public AIPlayer(int difficulty, int id) {//basic constructor
         super(id);
         this.difficulty = difficulty;
+    }
+
+    public ArrayList<Point> nextMove(Board b, Point movePoint) {
+        int nextPlayer = (player == PLAYER_ONE ? PLAYER_TWO : PLAYER_ONE);
+        ArrayList<Point> test = findNextMoves(temp, nextPlayer, GameLogic.findPiece(b, nextPlayer, b.getColor(movePoint)));
+        return test;
     }
 
     public Point difficulty0(){
@@ -36,22 +34,50 @@ public class AIPlayer extends Player {//AI player
     public Point difficulty1() {//if there is a winning move, it takes it, otherwise it returns a random move
         int distance = 0;
         for(int i = 0; i < availMoves.size(); i++){
-            if(super.player == PLAYER_ONE && availMoves.get(i).x == 7){
+            if (hasPlayerWinMove(availMoves.get(i)))
                 return availMoves.get(i);
-            }
-            else if(super.player == PLAYER_TWO && availMoves.get(i).x == 0){
-                return availMoves.get(i);
-            }
         }
 
+        Point maxPoint = new Point(-1, -1);
+        int maxValue = -1, curValue = 0;
         for(int i = 0; i < availMoves.size(); i++){
-            ArrayList<Point> p = nextMove(board, selectedPiece.getPoint(), availMoves.get(i));
-            for(int j = 0; j < p.size(); j++){
-
+            curValue = 0;
+            temp = new Board(board);
+            temp.move(new Point(selectedPiece.getY(), selectedPiece.getX()), availMoves.get(i));
+            ArrayList<Point> opponentMove = nextMove(temp, availMoves.get(i));
+            for (int j = 0; j < opponentMove.size(); j++) {
+                if (hasOpponentWinMove(opponentMove.get(j))) {
+                    curValue -= 5   ;
+                    Log.d("AITEST", "???" + " " + i + " " + curValue + " " + maxValue);
+                    continue;
+                }
+                /*Board temp2 = new Board(temp);
+                temp2.move(new Point(availMoves.get(i).y, availMoves.get(i).x), opponentMove.get(j));
+                ArrayList<Point> playerMove = nextMove(temp2, opponentMove.get(j));
+                for(int k = 0; k < playerMove.size(); k++){
+                    if(hasPlayerWinMove(playerMove.get(k))){
+                        Log.d("AITEST", "called");
+                        curValue++;
+                    }
+                }*/
+            }
+            if (i == 0) {
+                maxPoint = availMoves.get(i);
+                maxValue = curValue;
+            }
+            if (curValue > maxValue) {
+                maxPoint = availMoves.get(i);
+                maxValue = curValue;
+            } else if (curValue == maxValue) {
+                double random = Math.random();
+                if (random > 0.95) {
+                    maxPoint = availMoves.get(i);
+                    maxValue = curValue;
+                }
             }
         }
 
-        return difficulty0();
+        return maxPoint;
     }
 
     @Override

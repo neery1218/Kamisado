@@ -3,14 +3,13 @@ package com.radiance.kamisado;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.net.Uri;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
 
-public class MainActivity extends ActionBarActivity implements IntroFragment.OnIntroInteractionListener, GamePlayFragment.OnGamePlayInteractionListener, TutorialFragment.OnTutorialInteractionListener, MatchLengthFragment.OnMatchLengthInteraction {
+public class MainActivity extends ActionBarActivity implements IntroFragment.OnIntroInteractionListener, GamePlayFragment.OnGamePlayInteractionListener, TutorialFragment.OnTutorialInteractionListener, MatchLengthFragment.OnMatchLengthInteraction, AIDifficultyFragment.OnDifficultyInteraction {
 
     public static final int PLAY_PRESSED = 0;
     public static final int TUTORIAL_PRESSED = 1;
@@ -24,13 +23,18 @@ public class MainActivity extends ActionBarActivity implements IntroFragment.OnI
 
     public static final String ARG_MATCH_TYPE = "ARG_MATCH_TYPE";
     public static final String ARG_VERSUS_TYPE = "ARG_VERSUS_TYPE";
+    public static final String ARG_AI_DIFFICULTY = "ARG_AI_DIFFICULTY";
 
+    private int MATCH_TYPE = 0;
+    private int AI_DIFFICULTY = 0;
     private int VERSUS_TYPE = 0;
 
     private IntroFragment introFragment;
     private GamePlayFragment gamePlayFragment;
     private TutorialFragment tutorialFragment;
     private MatchLengthFragment matchLengthFragment;
+    private AIDifficultyFragment aiDifficultyFragment;
+
     private FragmentManager fragmentManager;
     private FragmentTransaction fragmentTransaction;
 
@@ -122,11 +126,32 @@ public class MainActivity extends ActionBarActivity implements IntroFragment.OnI
     @Override
     public void onMatchLengthInteraction(int button) {
 
-        gamePlayFragment = new GamePlayFragment();
 
+        MATCH_TYPE = button;
+        if (VERSUS_TYPE == PLAY_PRESSED) {
+            aiDifficultyFragment = new AIDifficultyFragment();
+            fragmentManager = getFragmentManager();
+            fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.replace(R.id.fragment_container, aiDifficultyFragment);
+            fragmentTransaction.commit();
+        } else {//calls the listener that sets up gamePlayFragment
+            onDifficultyInteraction(-1);
+        }
+
+
+    }
+
+    @Override
+    public void onDifficultyInteraction(int level) {
+        AI_DIFFICULTY = level;
+        gamePlayFragment = new GamePlayFragment();
         Bundle bundle = new Bundle();
-        bundle.putInt(ARG_MATCH_TYPE,button);
-        bundle.putInt(ARG_VERSUS_TYPE,VERSUS_TYPE);
+
+        bundle.putInt(ARG_MATCH_TYPE, MATCH_TYPE);
+        bundle.putInt(ARG_VERSUS_TYPE, VERSUS_TYPE);
+
+        if (AI_DIFFICULTY != -1)
+            bundle.putInt(ARG_AI_DIFFICULTY, AI_DIFFICULTY);
 
         gamePlayFragment.setArguments(bundle);
 
@@ -134,5 +159,6 @@ public class MainActivity extends ActionBarActivity implements IntroFragment.OnI
         fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.fragment_container, gamePlayFragment);
         fragmentTransaction.commit();
+
     }
 }

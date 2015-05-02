@@ -1,8 +1,9 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#ff22313F"
-    tools:context="com.radiance.kamisado.MatchLengthFragment">
+    tools:context="com.radiance.kamisado.AIDifficultyFragment">
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -13,33 +14,27 @@
 
 
         <Button
-            android:id="@+id/singleButton"
+            android:id="@+id/easyButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="Single" />
+            android:text="Easy" />
 
         <Button
-            android:id="@+id/standardButton"
+            android:id="@+id/mediumButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="Standard" />
+            android:text="Medium" />
 
         <Button
-            android:id="@+id/extendedButton"
+            android:id="@+id/hardButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="Extended" />
+            android:text="Hard" />
 
-        <Button
-            android:id="@+id/marathonButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="Marathon" />
+
     </LinearLayout>
-
 
 </FrameLayout>
