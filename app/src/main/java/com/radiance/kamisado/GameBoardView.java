@@ -131,13 +131,21 @@ public class GameBoardView extends View {
 
 
     private void drawPossibleMoves(Canvas canvas){
+        for(int i = 0; i < boardDimension; i++){
+            for(int j = 0; j < boardDimension; j++){
+                paint.setColor(Color.parseColor("#090404"));
+                paint.setStyle(Paint.Style.FILL);
+                paint.setAlpha(150);
+                canvas.drawRect(startX + j * unitSize, startY + i * unitSize, startX + (j + 1) * unitSize, startY + (i + 1) * unitSize, paint);
+            }
+        }
 
         //Draws the squares highlighting the available moves
         for(int i = 0; i < availMoves.size(); i++){
             Point p = availMoves.get(i);
-            paint.setColor(Color.WHITE);
+            paint.setColor(board.getColor(availMoves.get(i).y, availMoves.get(i).x));
             paint.setStyle(Paint.Style.FILL);
-            paint.setAlpha(150);
+            paint.setAlpha(255);
             canvas.drawRect(startX + p.y * unitSize, startY + p.x * unitSize, startX + (p.y + 1) * unitSize, startY + (p.x + 1) * unitSize, paint);
             //switch to circles eventually?
         }
