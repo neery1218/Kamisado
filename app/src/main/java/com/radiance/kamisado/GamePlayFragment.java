@@ -13,6 +13,7 @@ public class GamePlayFragment extends Fragment {
 
     private static int VERSUS_TYPE;
     private static int MATCH_TYPE;
+    private static int AI_DIFFICULTY;
     private GameBoardView gameBoardView;
 
     private OnGamePlayInteractionListener mListener;
@@ -40,7 +41,9 @@ public class GamePlayFragment extends Fragment {
         return MATCH_TYPE;
     }
 
-
+    public static int getAiDifficulty() {
+        return AI_DIFFICULTY;
+    }
 
 
     @Override
@@ -49,6 +52,8 @@ public class GamePlayFragment extends Fragment {
         if (getArguments() != null) {
             VERSUS_TYPE = getArguments().getInt(MainActivity.ARG_VERSUS_TYPE);
             MATCH_TYPE = getArguments().getInt(MainActivity.ARG_MATCH_TYPE);
+            if (VERSUS_TYPE == MainActivity.PLAY_PRESSED)
+                AI_DIFFICULTY = getArguments().getInt(MainActivity.ARG_AI_DIFFICULTY);
 
 
         }

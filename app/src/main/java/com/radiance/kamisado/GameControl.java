@@ -21,10 +21,7 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
     private Piece selectedPiece;
     private ArrayList<Point> availMoves;
     private int sumoChain = 0;
-    //Strength Variables for AI
-    private int EASY = 0;
-    private int MEDIUM = 1;
-    private int HARD = 2;
+
     private Point win = new Point(-1, -1);
     private int deadlockCount = 0;
     private boolean aiWin = false;
@@ -43,7 +40,7 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
                 Log.v("Game", "HumanPlayer");
                 break;
             case MainActivity.PLAY_PRESSED:
-                players[PLAYER_ONE] = new AIPlayer(EASY, PLAYER_ONE);
+                players[PLAYER_ONE] = new AIPlayer(GamePlayFragment.getAiDifficulty(), PLAYER_ONE);
                 Log.v("Game", "AIPlayer");
                 break;
         }
