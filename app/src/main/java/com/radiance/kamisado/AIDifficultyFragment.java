@@ -6,13 +6,20 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
+import android.widget.Button;
 
 
 public class AIDifficultyFragment extends Fragment {
 
 
     private OnDifficultyInteraction mListener;
+    private int EASY = 0;
+    private int MEDIUM = 1;
+    private int HARD = 2;
+
+    private Button easyButton;
+    private Button mediumButton;
+    private Button hardButton;
 
     public AIDifficultyFragment() {
         // Required empty public constructor
@@ -35,15 +42,32 @@ public class AIDifficultyFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_aidifficulty, container, false);
+        View view = inflater.inflate(R.layout.fragment_aidifficulty, container, false);
+
+        easyButton = (Button) view.findViewById(R.id.easyButton);
+        easyButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                mListener.onDifficultyInteraction(EASY);
+            }
+        });
+
+        mediumButton = (Button) view.findViewById(R.id.mediumButton);
+        mediumButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                mListener.onDifficultyInteraction(MEDIUM);
+            }
+        });
+
+        hardButton = (Button) view.findViewById(R.id.hardButton);
+        hardButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                mListener.onDifficultyInteraction(HARD);
+            }
+        });
+
+        return view;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(int level) {
-        if (mListener != null) {
-            mListener.onDifficultyInteraction(level);
-        }
-    }
 
     @Override
     public void onAttach(Activity activity) {
