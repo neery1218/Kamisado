@@ -9,7 +9,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 
-public class MainActivity extends ActionBarActivity implements IntroFragment.OnIntroInteractionListener, GamePlayFragment.OnGamePlayInteractionListener, TutorialFragment.OnTutorialInteractionListener, MatchLengthFragment.OnMatchLengthInteraction {
+public class MainActivity extends ActionBarActivity implements IntroFragment.OnIntroInteractionListener, GamePlayFragment.OnGamePlayInteractionListener, TutorialFragment.OnTutorialInteractionListener, MatchLengthFragment.OnMatchLengthInteraction, AIDifficultyFragment.OnDifficultyInteraction {
 
     public static final int PLAY_PRESSED = 0;
     public static final int TUTORIAL_PRESSED = 1;
@@ -32,6 +32,8 @@ public class MainActivity extends ActionBarActivity implements IntroFragment.OnI
     private GamePlayFragment gamePlayFragment;
     private TutorialFragment tutorialFragment;
     private MatchLengthFragment matchLengthFragment;
+    private AIDifficultyFragment aiDifficultyFragment;
+
     private FragmentManager fragmentManager;
     private FragmentTransaction fragmentTransaction;
 
@@ -123,11 +125,27 @@ public class MainActivity extends ActionBarActivity implements IntroFragment.OnI
     @Override
     public void onMatchLengthInteraction(int button) {
 
-        gamePlayFragment = new GamePlayFragment();
+
         MATCH_TYPE = button;
+        if (VERSUS_TYPE == PLAY_PRESSED) {
+            aiDifficultyFragment = new AIDifficultyFragment();
+            fragmentManager = getFragmentManager();
+            fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.replace(R.id.fragment_container, gamePlayFragment);
+            fragmentTransaction.commit();
+        } else {//calls the listener that sets up gamePlayFragment
+            onDifficultyInteraction(-1);
+        }
+
+
+    }
+
+    @Override
+    public void onDifficultyInteraction(int level) {
+        gamePlayFragment = new GamePlayFragment();
         Bundle bundle = new Bundle();
         bundle.putInt(ARG_MATCH_TYPE, MATCH_TYPE);
-        bundle.putInt(ARG_VERSUS_TYPE,VERSUS_TYPE);
+        bundle.putInt(ARG_VERSUS_TYPE, VERSUS_TYPE);
 
         gamePlayFragment.setArguments(bundle);
 
@@ -135,5 +153,6 @@ public class MainActivity extends ActionBarActivity implements IntroFragment.OnI
         fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.fragment_container, gamePlayFragment);
         fragmentTransaction.commit();
+
     }
 }

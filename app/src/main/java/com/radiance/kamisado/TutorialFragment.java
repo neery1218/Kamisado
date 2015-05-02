@@ -1,9 +1,9 @@
 package com.radiance.kamisado;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.net.Uri;
 import android.os.Bundle;
-import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +12,10 @@ import android.view.ViewGroup;
 public class TutorialFragment extends Fragment {
 
     private OnTutorialInteractionListener mListener;
+
+    public TutorialFragment() {
+        // Required empty public constructor
+    }
 
     /**
      * Use this factory method to create a new instance of
@@ -25,10 +29,6 @@ public class TutorialFragment extends Fragment {
     public static TutorialFragment newInstance(String param1, String param2) {
         TutorialFragment fragment = new TutorialFragment();
         return fragment;
-    }
-
-    public TutorialFragment() {
-        // Required empty public constructor
     }
 
     @Override
@@ -59,7 +59,7 @@ public class TutorialFragment extends Fragment {
             mListener = (OnTutorialInteractionListener) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
-                    + " must implement OnFragmentInteractionListener");
+                    + " must implement OnDifficultyInteractionListener");
         }
     }
 
