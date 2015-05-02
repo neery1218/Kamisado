@@ -3,9 +3,8 @@ package com.radiance.kamisado;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.net.Uri;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -25,6 +24,8 @@ public class MainActivity extends ActionBarActivity implements IntroFragment.OnI
     public static final String ARG_MATCH_TYPE = "ARG_MATCH_TYPE";
     public static final String ARG_VERSUS_TYPE = "ARG_VERSUS_TYPE";
 
+    private int MATCH_TYPE = 0;
+    private int AI_DIFFICULTY = 0;
     private int VERSUS_TYPE = 0;
 
     private IntroFragment introFragment;
@@ -123,9 +124,9 @@ public class MainActivity extends ActionBarActivity implements IntroFragment.OnI
     public void onMatchLengthInteraction(int button) {
 
         gamePlayFragment = new GamePlayFragment();
-
+        MATCH_TYPE = button;
         Bundle bundle = new Bundle();
-        bundle.putInt(ARG_MATCH_TYPE,button);
+        bundle.putInt(ARG_MATCH_TYPE, MATCH_TYPE);
         bundle.putInt(ARG_VERSUS_TYPE,VERSUS_TYPE);
 
         gamePlayFragment.setArguments(bundle);
