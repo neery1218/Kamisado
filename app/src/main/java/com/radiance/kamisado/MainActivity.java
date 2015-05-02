@@ -23,6 +23,7 @@ public class MainActivity extends ActionBarActivity implements IntroFragment.OnI
 
     public static final String ARG_MATCH_TYPE = "ARG_MATCH_TYPE";
     public static final String ARG_VERSUS_TYPE = "ARG_VERSUS_TYPE";
+    public static final String ARG_AI_DIFFICULTY = "ARG_AI_DIFFICULTY";
 
     private int MATCH_TYPE = 0;
     private int AI_DIFFICULTY = 0;
@@ -131,7 +132,7 @@ public class MainActivity extends ActionBarActivity implements IntroFragment.OnI
             aiDifficultyFragment = new AIDifficultyFragment();
             fragmentManager = getFragmentManager();
             fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentTransaction.replace(R.id.fragment_container, gamePlayFragment);
+            fragmentTransaction.replace(R.id.fragment_container, aiDifficultyFragment);
             fragmentTransaction.commit();
         } else {//calls the listener that sets up gamePlayFragment
             onDifficultyInteraction(-1);
@@ -142,10 +143,15 @@ public class MainActivity extends ActionBarActivity implements IntroFragment.OnI
 
     @Override
     public void onDifficultyInteraction(int level) {
+        AI_DIFFICULTY = level;
         gamePlayFragment = new GamePlayFragment();
         Bundle bundle = new Bundle();
+
         bundle.putInt(ARG_MATCH_TYPE, MATCH_TYPE);
         bundle.putInt(ARG_VERSUS_TYPE, VERSUS_TYPE);
+
+        if (AI_DIFFICULTY != -1)
+            bundle.putInt(ARG_AI_DIFFICULTY, AI_DIFFICULTY);
 
         gamePlayFragment.setArguments(bundle);
 
