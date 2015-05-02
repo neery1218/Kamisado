@@ -30,7 +30,7 @@ public class GameBoardView extends View {
     private float borderWidth = 0;
     private float unitSize = 0;
 
-    private int[] playerColor = {Color.BLACK, Color.WHITE};
+    private int[] playerColor = {Color.parseColor("#ff34495e"), Color.parseColor("#ffecf0f1")};
 
     private int eventAction = -1;
     private int initialClickX = -1;

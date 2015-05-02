@@ -13,8 +13,15 @@ public class Board implements Cloneable{//board object
     private int boardDimension = 8;
     private Point[][] collected = new Point[2][boardDimension];
     private int PLAYER_TWO = GameControl.PLAYER_TWO, PLAYER_ONE = GameControl.PLAYER_ONE;
-    private int[] colors = {Color.RED, Color.parseColor("#ED872D"), Color.YELLOW,
-            Color.GREEN, Color.BLUE, Color.parseColor("#69359C"), Color.parseColor("#FFB7C5"),
+
+    //red,orange,yellow,green,blue,
+    private int[] colors = {Color.parseColor("#ffe74c3c"), //red
+            Color.parseColor("#fff39c12"), //orange
+            Color.parseColor("#F7CA18"),//yellow
+            Color.parseColor("#ff2ecc71"),//green
+            Color.parseColor("#ff3498db"),//blue
+            Color.parseColor("#ff8e44ad"),//purple
+            Color.parseColor("#D2527F"),//pink
             Color.parseColor("#964B00")};
     private int r = colors[0], o = colors[1], ye = colors[2], g = colors[3], b = colors[4], p = colors[5], pk = colors[6], br = colors[7];
 
