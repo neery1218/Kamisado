@@ -143,7 +143,7 @@ public class GameBoardView extends View {
         //Draws the squares highlighting the available moves
         for(int i = 0; i < availMoves.size(); i++){
             Point p = availMoves.get(i);
-            paint.setColor(board.getColor(availMoves.get(i).y, availMoves.get(i).x));
+            paint.setColor(board.getColor(availMoves.get(i).x, availMoves.get(i).y));
             paint.setStyle(Paint.Style.FILL);
             paint.setAlpha(255);
             canvas.drawRect(startX + p.y * unitSize, startY + p.x * unitSize, startX + (p.y + 1) * unitSize, startY + (p.x + 1) * unitSize, paint);

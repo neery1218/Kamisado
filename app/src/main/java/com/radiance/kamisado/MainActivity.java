@@ -1,12 +1,10 @@
 package com.radiance.kamisado;
 
-import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -49,11 +47,10 @@ public class MainActivity extends ActionBarActivity implements IntroFragment.OnI
         introFragment = new IntroFragment();//initializing first fragment being used
 
         //initialize transaction and add to viewgroup
-        getFragmentManager()
-                .beginTransaction()
-                .add(R.id.fragment_container, introFragment)
-                .addToBackStack(null)
-                .commit();
+        fragmentManager = getFragmentManager();
+        fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.add(R.id.fragment_container, introFragment);
+        fragmentTransaction.commit();
 
     }
 
@@ -81,25 +78,6 @@ public class MainActivity extends ActionBarActivity implements IntroFragment.OnI
     }
 
     @Override
-    public void onBackPressed() {
-        fragmentManager = getFragmentManager();
-        Fragment f = fragmentManager.findFragmentById(R.id.fragment_container);
-        if (f instanceof GamePlayFragment) {
-            getFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.fragment_container, introFragment)
-
-                    .commit();
-        } else {
-
-            if (fragmentManager.getBackStackEntryCount() > 0)
-                fragmentManager.popBackStack();
-        }
-        Log.v("Back", "number:" + fragmentManager.getBackStackEntryCount());
-
-
-    }
-    @Override
     public void onIntroInteraction(int button) {
 
         Bundle bundle = new Bundle();
@@ -114,7 +92,6 @@ public class MainActivity extends ActionBarActivity implements IntroFragment.OnI
                 fragmentManager = getFragmentManager();
                 fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.replace(R.id.fragment_container, tutorialFragment);
-                fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
                 tutorialPressed = true;
                 break;
@@ -128,13 +105,9 @@ public class MainActivity extends ActionBarActivity implements IntroFragment.OnI
         if (!tutorialPressed){
             matchLengthFragment = new MatchLengthFragment();
             fragmentManager = getFragmentManager();
-            fragmentManager.beginTransaction()
-                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                    .replace(R.id.fragment_container, matchLengthFragment)
-                    .addToBackStack(null)
-                    .commit();
-            // fragmentTransaction.replace(R.id.fragment_container, matchLengthFragment);
-            // fragmentTransaction.commit();
+            fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.replace(R.id.fragment_container, matchLengthFragment);
+            fragmentTransaction.commit();
         }
 
 
@@ -160,7 +133,6 @@ public class MainActivity extends ActionBarActivity implements IntroFragment.OnI
             fragmentManager = getFragmentManager();
             fragmentTransaction = fragmentManager.beginTransaction();
             fragmentTransaction.replace(R.id.fragment_container, aiDifficultyFragment);
-            fragmentTransaction.addToBackStack(null);
             fragmentTransaction.commit();
         } else {//calls the listener that sets up gamePlayFragment
             onDifficultyInteraction(-1);
@@ -186,7 +158,6 @@ public class MainActivity extends ActionBarActivity implements IntroFragment.OnI
         fragmentManager = getFragmentManager();
         fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.fragment_container, gamePlayFragment);
-        fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
 
     }
