@@ -137,9 +137,9 @@ abstract class Player {//abstract class used to hold player logic and give way t
         return availMoves;
     }//Finds available moves of each player
 
-    public ArrayList<Point> findNextMoves(Board temp, int player, Piece selectedPiece){
+    public ArrayList<Point> findNextMoves(Board board, int player, Piece selectedPiece){
         if(player == PLAYER_ONE)
-            temp.flip();
+            board.flip();
 
         ArrayList<Point> availMoves = new ArrayList<>();
 
@@ -188,7 +188,7 @@ abstract class Player {//abstract class used to hold player logic and give way t
                 availMoves.set(i, new Point(boardDimension - 1 - orient.x, boardDimension - 1 - orient.y));
 
             }
-            temp.flip();
+            board.flip();
         }
         return availMoves;
     }
