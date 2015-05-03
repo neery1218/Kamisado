@@ -130,7 +130,6 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
 
     @Override
     public void onTouch(int x, int y) {//overriden method from the interface: all method calls originate from here
-
         if (aiWin) {
             aiWin = false;
             Log.v("AITEST", "reset");
