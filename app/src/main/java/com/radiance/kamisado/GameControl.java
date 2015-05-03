@@ -15,7 +15,6 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
     private GameBoardView gameBoardView;
     private int[] scores = {1, 3, 7, 15};
     private int boardDimension = 8;
-
     private int counter = 1;
     private int[] score = new int[2];
     private int currColor = -1;
