@@ -15,6 +15,7 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
     private GameBoardView gameBoardView;
     private int[] scores = {1, 3, 7, 15};
     private int boardDimension = 8;
+
     private int counter = 1;
     private int[] score = new int[2];
     private int currColor = -1;
@@ -53,6 +54,8 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
 
         selectedPiece = null;
         availMoves = new ArrayList<>();
+        firstMove = true;
+        counter = 1;
         gameBoardView.setAvailMoves(availMoves);
         gameBoardView.drawBoard(board);
 
@@ -130,10 +133,10 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
 
     @Override
     public void onTouch(int x, int y) {//overriden method from the interface: all method calls originate from here
+        Log.v("temp", "counter" + counter + " ai win " + aiWin + " first move " + firstMove);
 
         if (aiWin) {
             aiWin = false;
-            Log.v("AITEST", "reset");
             onSwipeLeft();
             Point A = players[counter % 2].selectPiece(board);
             selectedPiece = board.getTile(A.x, A.y).getPiece();
@@ -149,7 +152,6 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
 
 
         Point temp = players[counter % 2].resolveMove(new Point(y, x));//returns the point that the piece should be moved to
-        Log.v("temp", temp.x + " " + temp.y);
         if (!temp.equals(inValid)) {//check validity
             if (selectedPiece.getRank() > 0 && temp.equals(players[counter % 2].getSumoPushPoint())) {//if it's sumo:
                 sumoChain = players[counter % 2].getSumoChain();

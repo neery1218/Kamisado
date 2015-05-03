@@ -50,7 +50,6 @@ public class MainActivity extends ActionBarActivity implements IntroFragment.OnI
         fragmentManager = getFragmentManager();
         fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.add(R.id.fragment_container, introFragment);
-        fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
 
     }
