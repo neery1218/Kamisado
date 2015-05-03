@@ -44,18 +44,6 @@ public class AIPlayer extends Player {//AI player
             curValue = 0;
             temp = new Board(board);
             temp.move(new Point(selectedPiece.getY(), selectedPiece.getX()), availMoves.get(i));
-            /*for(int k = 0; k < 8; k++){
-                String s = "";
-                for(int j = 0; j < 8; j++){
-                    if(temp.getTile(k, j).isEmpty()){
-                        s += 0;
-                    }
-                    else
-                        s += 1;
-                }
-                Log.d("AITEST", s + " " + k);
-            }
-            Log.d("AITEST", "");*/
             ArrayList<Point> opponentMove = nextMove(temp, availMoves.get(i));
             for (int j = 0; j < opponentMove.size(); j++) {
                 if (hasOpponentWinMove(opponentMove.get(j))) {
