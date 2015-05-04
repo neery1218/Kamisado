@@ -24,8 +24,7 @@ public class IntroFragment extends Fragment {
         // Required empty public constructor
     }
 
-    p
-    ublic
+    public
 
     static IntroFragment newInstance(String param1, String param2) {
         IntroFragment fragment = new IntroFragment();
