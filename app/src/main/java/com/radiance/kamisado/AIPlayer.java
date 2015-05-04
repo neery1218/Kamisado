@@ -20,7 +20,7 @@ public class AIPlayer extends Player {//AI player
 
     public ArrayList<Point> nextMove(Board b, Point movePoint) {
         int nextPlayer = (player == PLAYER_ONE ? PLAYER_TWO : PLAYER_ONE);
-        ArrayList<Point> test = findNextMoves(temp, nextPlayer, GameLogic.findPiece(b, nextPlayer, b.getColor(movePoint)));
+        ArrayList<Point> test = findNextMoves(b, nextPlayer, GameLogic.findPiece(b, nextPlayer, b.getColor(movePoint)));
         return test;
     }
 
@@ -48,7 +48,7 @@ public class AIPlayer extends Player {//AI player
             for (int j = 0; j < opponentMove.size(); j++) {
                 if (hasOpponentWinMove(opponentMove.get(j))) {
                     curValue -= 5   ;
-                    Log.d("AITEST", "???" + " " + i + " " + curValue + " " + maxValue);
+                    Log.d("AITEST", "win detected" + " " + opponentMove.get(j).x + " " + opponentMove.get(j).y);
                     continue;
                 }
                 /*Board temp2 = new Board(temp);

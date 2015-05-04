@@ -1,13 +1,13 @@
 package com.radiance.kamisado;
 
 import android.app.Activity;
-import android.net.Uri;
-import android.os.Bundle;
 import android.app.Fragment;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 
 public class IntroFragment extends Fragment {
@@ -18,16 +18,21 @@ public class IntroFragment extends Fragment {
     private Button playerTwoButton;
     private Button onlineButton;
 
-    public static IntroFragment newInstance(String param1, String param2) {
-        IntroFragment fragment = new IntroFragment();
-        return fragment;
-    }
+    private TextView titleTextView;
 
     public IntroFragment() {
         // Required empty public constructor
     }
 
-    @Override
+    public
+
+    static IntroFragment newInstance(String param1, String param2) {
+        IntroFragment fragment = new IntroFragment();
+        return fragment;
+    }
+
+    @
+            Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
@@ -39,25 +44,36 @@ public class IntroFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_intro, container, false);
+
+        titleTextView = (TextView) view.findViewById(R.id.titleTextView);
+        titleTextView.setTypeface(MainActivity.typefaceHeader);
+        titleTextView.setTextSize(48f);
+
         playButton = (Button)view.findViewById(R.id.playButton);
         playButton.setText("Play an AI!");
+        playButton.setTypeface(MainActivity.typefaceHeader);
+        //playButton.getBackground().setColorFilter(R.color.white, PorterDuff.Mode.MULTIPLY);
+        //playButton.setAlpha(1f);
+
 
         playButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 mListener.onIntroInteraction(MainActivity.PLAY_PRESSED);
             }
         });
+        playButton.setTextSize(24f);
 
         playerTwoButton = (Button)view.findViewById(R.id.playerTwoButton);
-
+        playerTwoButton.setTextSize(24f);
         playerTwoButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 mListener.onIntroInteraction(MainActivity.TWO_PLAY_PRESSED);
             }
         });
-
+        playerTwoButton.setTypeface(MainActivity.typefaceHeader);
         onlineButton = (Button)view.findViewById(R.id.onlineButton);
-
+        onlineButton.setTypeface(MainActivity.typefaceHeader);
+        playButton.setTextSize(24f);
         onlineButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 mListener.onIntroInteraction(MainActivity.ONLINE_PLAY_PRESSED);
@@ -66,7 +82,8 @@ public class IntroFragment extends Fragment {
 
         tutorialButton = (Button)view.findViewById(R.id.tutorialButton);
         tutorialButton.setText("tutorial!");
-
+        tutorialButton.setTypeface(MainActivity.typefaceHeader);
+        tutorialButton.setTextSize(24f);
         tutorialButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 mListener.onIntroInteraction(MainActivity.TUTORIAL_PRESSED);

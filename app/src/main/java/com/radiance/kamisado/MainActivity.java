@@ -1,10 +1,13 @@
 package com.radiance.kamisado;
 
+import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -24,17 +27,15 @@ public class MainActivity extends ActionBarActivity implements IntroFragment.OnI
     public static final String ARG_MATCH_TYPE = "ARG_MATCH_TYPE";
     public static final String ARG_VERSUS_TYPE = "ARG_VERSUS_TYPE";
     public static final String ARG_AI_DIFFICULTY = "ARG_AI_DIFFICULTY";
-
+    public static Typeface typefaceHeader;
     private int MATCH_TYPE = 0;
     private int AI_DIFFICULTY = 0;
     private int VERSUS_TYPE = 0;
-
     private IntroFragment introFragment;
     private GamePlayFragment gamePlayFragment;
     private TutorialFragment tutorialFragment;
     private MatchLengthFragment matchLengthFragment;
     private AIDifficultyFragment aiDifficultyFragment;
-
     private FragmentManager fragmentManager;
     private FragmentTransaction fragmentTransaction;
 
@@ -45,12 +46,13 @@ public class MainActivity extends ActionBarActivity implements IntroFragment.OnI
 
         setContentView(R.layout.activity_main);
         introFragment = new IntroFragment();//initializing first fragment being used
-
+        typefaceHeader = Typeface.createFromAsset(getAssets(), "NanumGothic-Regular.ttf");
         //initialize transaction and add to viewgroup
-        fragmentManager = getFragmentManager();
-        fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.add(R.id.fragment_container, introFragment);
-        fragmentTransaction.commit();
+        getFragmentManager()
+                .beginTransaction()
+                .add(R.id.fragment_container, introFragment)
+                .addToBackStack(null)
+                .commit();
 
     }
 
@@ -78,6 +80,25 @@ public class MainActivity extends ActionBarActivity implements IntroFragment.OnI
     }
 
     @Override
+    public void onBackPressed() {
+        fragmentManager = getFragmentManager();
+        Fragment f = fragmentManager.findFragmentById(R.id.fragment_container);
+        if (f instanceof GamePlayFragment) {
+            getFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.fragment_container, introFragment)
+
+                    .commit();
+        } else {
+
+            if (fragmentManager.getBackStackEntryCount() > 0)
+                fragmentManager.popBackStack();
+        }
+        Log.v("Back", "number:" + fragmentManager.getBackStackEntryCount());
+
+
+    }
+    @Override
     public void onIntroInteraction(int button) {
 
         Bundle bundle = new Bundle();
@@ -92,6 +113,7 @@ public class MainActivity extends ActionBarActivity implements IntroFragment.OnI
                 fragmentManager = getFragmentManager();
                 fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.replace(R.id.fragment_container, tutorialFragment);
+                fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
                 tutorialPressed = true;
                 break;
@@ -105,9 +127,13 @@ public class MainActivity extends ActionBarActivity implements IntroFragment.OnI
         if (!tutorialPressed){
             matchLengthFragment = new MatchLengthFragment();
             fragmentManager = getFragmentManager();
-            fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentTransaction.replace(R.id.fragment_container, matchLengthFragment);
-            fragmentTransaction.commit();
+            fragmentManager.beginTransaction()
+                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                    .replace(R.id.fragment_container, matchLengthFragment)
+                    .addToBackStack(null)
+                    .commit();
+            // fragmentTransaction.replace(R.id.fragment_container, matchLengthFragment);
+            // fragmentTransaction.commit();
         }
 
 
@@ -133,6 +159,7 @@ public class MainActivity extends ActionBarActivity implements IntroFragment.OnI
             fragmentManager = getFragmentManager();
             fragmentTransaction = fragmentManager.beginTransaction();
             fragmentTransaction.replace(R.id.fragment_container, aiDifficultyFragment);
+            fragmentTransaction.addToBackStack(null);
             fragmentTransaction.commit();
         } else {//calls the listener that sets up gamePlayFragment
             onDifficultyInteraction(-1);
@@ -158,6 +185,7 @@ public class MainActivity extends ActionBarActivity implements IntroFragment.OnI
         fragmentManager = getFragmentManager();
         fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.fragment_container, gamePlayFragment);
+        fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
 
     }
