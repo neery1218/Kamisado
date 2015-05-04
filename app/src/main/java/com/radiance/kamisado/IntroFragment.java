@@ -44,6 +44,11 @@ public class IntroFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_intro, container, false);
+
+        titleTextView = (TextView) view.findViewById(R.id.titleTextView);
+        titleTextView.setTypeface(MainActivity.typeFace);
+        titleTextView.setTextSize(48f);
+
         playButton = (Button)view.findViewById(R.id.playButton);
         playButton.setText("Play an AI!");
 
