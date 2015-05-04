@@ -1,7 +1,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ff22313F"
+    android:background="@color/background"
     tools:context="com.radiance.kamisado.MatchLengthFragment">
 
     <LinearLayout
