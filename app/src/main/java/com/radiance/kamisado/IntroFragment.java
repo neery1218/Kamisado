@@ -1,13 +1,13 @@
 package com.radiance.kamisado;
 
 import android.app.Activity;
-import android.net.Uri;
-import android.os.Bundle;
 import android.app.Fragment;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 
 public class IntroFragment extends Fragment {
@@ -18,16 +18,22 @@ public class IntroFragment extends Fragment {
     private Button playerTwoButton;
     private Button onlineButton;
 
-    public static IntroFragment newInstance(String param1, String param2) {
-        IntroFragment fragment = new IntroFragment();
-        return fragment;
-    }
+    private TextView titleTextView;
 
     public IntroFragment() {
         // Required empty public constructor
     }
 
-    @Override
+    p
+    ublic
+
+    static IntroFragment newInstance(String param1, String param2) {
+        IntroFragment fragment = new IntroFragment();
+        return fragment;
+    }
+
+    @
+            Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
