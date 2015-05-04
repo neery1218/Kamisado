@@ -27,7 +27,7 @@ public class MainActivity extends ActionBarActivity implements IntroFragment.OnI
     public static final String ARG_MATCH_TYPE = "ARG_MATCH_TYPE";
     public static final String ARG_VERSUS_TYPE = "ARG_VERSUS_TYPE";
     public static final String ARG_AI_DIFFICULTY = "ARG_AI_DIFFICULTY";
-    public static Typeface typeFace;
+    public static Typeface typefaceHeader;
     private int MATCH_TYPE = 0;
     private int AI_DIFFICULTY = 0;
     private int VERSUS_TYPE = 0;
@@ -46,7 +46,7 @@ public class MainActivity extends ActionBarActivity implements IntroFragment.OnI
 
         setContentView(R.layout.activity_main);
         introFragment = new IntroFragment();//initializing first fragment being used
-        typeFace = Typeface.createFromAsset(getAssets(), "NanumGothic-Regular.ttf");
+        typefaceHeader = Typeface.createFromAsset(getAssets(), "NanumGothic-Regular.ttf");
         //initialize transaction and add to viewgroup
         getFragmentManager()
                 .beginTransaction()
