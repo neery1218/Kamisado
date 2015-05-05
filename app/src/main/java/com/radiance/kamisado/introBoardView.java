@@ -23,14 +23,14 @@ public class introBoardView extends View {
     private float unitSize = 0;
     private boolean firstTime = true;
     private int boardDimension = 8;
-    private int[] colors = {Color.parseColor("#ffe74c3c"), //red
-            Color.parseColor("#d35400"), //orange
-            Color.parseColor("#F7CA18"),//yellow
-            Color.parseColor("#ff2ecc71"),//green
-            Color.parseColor("#ff3498db"),//blue
-            Color.parseColor("#ff8e44ad"),//purple
-            Color.parseColor("#D2527F"),//pink
-            Color.parseColor("#964B00")};
+    private int[] colors = {getResources().getColor(R.color.red), //red
+            getResources().getColor(R.color.orange), //orange
+            getResources().getColor(R.color.yellow),//yellow
+            getResources().getColor(R.color.green),//green
+            getResources().getColor(R.color.blue),//blue
+            getResources().getColor(R.color.purple),//purple
+            getResources().getColor(R.color.pink),//pink
+            getResources().getColor(R.color.brown)};
     private int r = colors[0], o = colors[1], ye = colors[2], g = colors[3], b = colors[4], p = colors[5], pk = colors[6], br = colors[7];
     private int[][] boardColor = new int[][]{
             {o, b, p, pk, ye, r, g, br},

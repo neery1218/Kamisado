@@ -51,6 +51,7 @@ public class IntroFragment extends Fragment {
         titleTextView.setTextSize(48f);
 
         introBoardView = (introBoardView) view.findViewById(R.id.introBoardView);
+        introBoardView.setRotation(30f);
         introBoardView.invalidate();
 
         playButton = (Button)view.findViewById(R.id.playButton);
