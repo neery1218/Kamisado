@@ -48,14 +48,13 @@ public class IntroFragment extends Fragment {
 
         titleTextView = (TextView) view.findViewById(R.id.titleTextView);
         titleTextView.setTypeface(MainActivity.typefaceHeader);
-        titleTextView.setTextSize(48f);
+        titleTextView.setTextSize(64f);
 
         introBoardView = (introBoardView) view.findViewById(R.id.introBoardView);
         introBoardView.setRotation(30f);
         introBoardView.invalidate();
 
         playButton = (Button)view.findViewById(R.id.playButton);
-        playButton.setText("Play an AI!");
         playButton.setTypeface(MainActivity.typefaceHeader);
         //playButton.getBackground().setColorFilter(R.color.white, PorterDuff.Mode.MULTIPLY);
         //playButton.setAlpha(1f);
@@ -86,7 +85,6 @@ public class IntroFragment extends Fragment {
         });
 
         tutorialButton = (Button)view.findViewById(R.id.tutorialButton);
-        tutorialButton.setText("tutorial!");
         tutorialButton.setTypeface(MainActivity.typefaceHeader);
         tutorialButton.setTextSize(24f);
         tutorialButton.setOnClickListener(new View.OnClickListener() {

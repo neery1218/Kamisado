@@ -44,45 +44,56 @@
 
             <Button
                 android:id="@+id/playButton"
-                android:layout_width="wrap_content"
+                android:layout_width="150dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:background="@color/white"
-                android:text="Play an AI"
+                android:text="1 Player"
                 android:textColor="@color/text"
                 android:textSize="24dp" />
+
+            <Space
+                android:layout_width="20px"
+                android:layout_height="10dp" />
 
             <Button
                 android:id="@+id/playerTwoButton"
-                android:layout_width="wrap_content"
+                android:layout_width="150dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:background="@color/white"
-                android:text="Two Player"
-                android:textColor="@color/text" />
-
-            <Button
-                android:id="@+id/onlineButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:background="@color/white"
-                android:text="Online"
-                android:textColor="@color/text"
-                android:textSize="24dp" />
-
-            <Button
-                android:id="@+id/tutorialButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:background="@color/white"
-                android:text="Tutorial"
+                android:text="2 Player"
                 android:textColor="@color/text" />
 
             <Space
                 android:layout_width="20px"
-                android:layout_height="20dp" />
+                android:layout_height="10dp" />
+
+            <Button
+                android:id="@+id/onlineButton"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@color/white"
+                android:text="Play Online"
+                android:textColor="@color/text"
+                android:textSize="24dp" />
+
+            <Space
+                android:layout_width="20px"
+                android:layout_height="10dp" />
+            <Button
+                android:id="@+id/tutorialButton"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@color/text"
+                android:text="Instructions"
+                android:textColor="@color/white" />
+
+            <Space
+                android:layout_width="20px"
+                android:layout_height="15dp" />
         </LinearLayout>
 
     </LinearLayout>
