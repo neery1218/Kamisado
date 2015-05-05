@@ -83,7 +83,9 @@ public class MainActivity extends ActionBarActivity implements IntroFragment.OnI
     public void onBackPressed() {
         fragmentManager = getFragmentManager();
         Fragment f = fragmentManager.findFragmentById(R.id.fragment_container);
-        if (f instanceof GamePlayFragment) {
+        if (f instanceof IntroFragment) {
+            finish();
+        } else if (f instanceof GamePlayFragment) {
             getFragmentManager()
                     .beginTransaction()
                     .replace(R.id.fragment_container, introFragment)
