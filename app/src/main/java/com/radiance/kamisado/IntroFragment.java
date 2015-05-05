@@ -19,6 +19,7 @@ public class IntroFragment extends Fragment {
     private Button onlineButton;
 
     private TextView titleTextView;
+    private introBoardView introBoardView;
 
     public IntroFragment() {
         // Required empty public constructor
@@ -48,6 +49,9 @@ public class IntroFragment extends Fragment {
         titleTextView = (TextView) view.findViewById(R.id.titleTextView);
         titleTextView.setTypeface(MainActivity.typefaceHeader);
         titleTextView.setTextSize(48f);
+
+        introBoardView = (introBoardView) view.findViewById(R.id.introBoardView);
+        introBoardView.invalidate();
 
         playButton = (Button)view.findViewById(R.id.playButton);
         playButton.setText("Play an AI!");
