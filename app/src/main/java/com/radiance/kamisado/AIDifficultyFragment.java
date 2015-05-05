@@ -21,6 +21,8 @@ public class AIDifficultyFragment extends Fragment {
     private Button mediumButton;
     private Button hardButton;
 
+    private introBoardView introBoardView;
+
     public AIDifficultyFragment() {
         // Required empty public constructor
     }
@@ -43,6 +45,10 @@ public class AIDifficultyFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_aidifficulty, container, false);
+
+        introBoardView = (introBoardView) view.findViewById(R.id.introBoardView);
+        introBoardView.setRotation(30f);
+        introBoardView.invalidate();
 
         easyButton = (Button) view.findViewById(R.id.easyButton);
         easyButton.setOnClickListener(new View.OnClickListener() {
