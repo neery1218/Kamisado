@@ -39,6 +39,8 @@ public class GameBoardView extends View {
     private int finalClickX = -1;
     private int finalClickY = -1;
 
+    private int NUM_FRAMES = 255;
+    private int frameCounter = 0;
     private boolean firstTime = true;
     //score array
     private int boardDimension = 8;
@@ -54,6 +56,7 @@ public class GameBoardView extends View {
     private Piece selectedPiece;
     private Point init, fin;
     private boolean animateMove = false;
+
 
     //TODO: Eventually all these constant integers should be switched to enums for typesafety/readability
 
@@ -122,7 +125,8 @@ public class GameBoardView extends View {
         this.init = init;
         this.fin = fin;
         animateMove = true;
-        invalidate();
+        new Thread(new AnimateMove()).start();
+        // invalidate();
         Log.d("Animate", "called");
         //TODO Animate
     }//Draws the board
@@ -139,7 +143,6 @@ public class GameBoardView extends View {
     public void setAvailMoves(ArrayList<Point> list){
         this.availMoves = list;
     }
-
 
     private void drawPossibleMoves(Canvas canvas){
         for(int i = 0; i < boardDimension; i++){
@@ -177,14 +180,14 @@ public class GameBoardView extends View {
                 initialClickX = -1; finalClickX = -1; initialClickY = -1; finalClickY = -1;
                 onBoardEvent.onSwipeRight();
             }
-            if(initialClickX - finalClickX > 200 && Math.abs(finalClickY - initialClickY) < 100){
+            if (initialClickX - finalClickX > 200 && Math.abs(finalClickY - initialClickY) < 100) {
                 onBoardEvent.onSwipeLeft();
             }
         }
     }
 
     @Override
-    public void onDraw (Canvas canvas){
+    public void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         setup();
         //Draws the board according to color
@@ -208,7 +211,7 @@ public class GameBoardView extends View {
         }
 
         //Displays the available moves
-        if(selectedPiece != null)
+        if (selectedPiece != null)
             drawPossibleMoves(canvas);
     }//Draws on the fragment
 
@@ -236,5 +239,28 @@ public class GameBoardView extends View {
         public void onSwipeRight();
 
         public void onSwipeLeft();
+    }
+
+    private class AnimateMove implements Runnable {
+
+        public AnimateMove() {
+
+        }
+
+        @Override
+        public void run() {
+            for (frameCounter = 0; frameCounter < NUM_FRAMES; frameCounter++) {
+                postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        //fade in fade out animation via paint.setAlpha() method
+                        //original point piece has to be faded out
+                        //new piece has to be faded in
+                        invalidate();
+                    }
+                }, 50);
+            }
+
+        }
     }
 }
