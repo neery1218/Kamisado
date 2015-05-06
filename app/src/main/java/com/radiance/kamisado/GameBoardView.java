@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
+import android.os.Handler;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -17,6 +18,7 @@ import java.util.ArrayList;
  * Created by neerajen on 31/03/15.
  */
 public class GameBoardView extends View {
+    private final Handler animationHandler = new Handler();
     //gameBoardVariables
     private Paint paint;//make these variables easier to read
     private Board board;
@@ -29,7 +31,6 @@ public class GameBoardView extends View {
     private float height = -1;
     private float borderWidth = 0;
     private float unitSize = 0;
-
     private int[] playerColor = {Color.parseColor("#ff34495e"), Color.parseColor("#ffecf0f1")};
 
     private int eventAction = -1;
