@@ -51,6 +51,8 @@ public class GameBoardView extends View {
     private int VERSUS_TYPE;
     private ArrayList<Point> availMoves = new ArrayList<>();
     private Piece selectedPiece;
+    private Point init, fin;
+    private boolean animateMove = false;
 
     //TODO: Eventually all these constant integers should be switched to enums for typesafety/readability
 
@@ -114,12 +116,20 @@ public class GameBoardView extends View {
     }//initialisation of the gameboard
 
 
+    public void drawBoard(Board board, Point init, Point fin) {
+        this.board = board;
+        this.init = init;
+        this.fin = fin;
+        animateMove = true;
+        invalidate();
+        Log.d("Animate", "called");
+        //TODO Animate
+    }//Draws the board
+
     public void drawBoard(Board board) {
         this.board = board;
         invalidate();
     }//Draws the board
-
-
 
     public void setSelectedPiece(Piece p){
         this.selectedPiece = p;
