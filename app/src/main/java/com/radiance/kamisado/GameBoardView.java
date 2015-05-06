@@ -61,8 +61,8 @@ public class GameBoardView extends View {
     //hexagon hard-coded coordinates
     private double[] x = {0, 1, 1, 0, -1, -1};
     private double[] y = {1, 0.7, -0.7, -1, -0.7, 0.7};
-    private double outerEdge = 0.9; //space between outer and inner edge is the player color piece
-    private double innerEdge = 0.7;
+    private float outerEdge = 0.9f; //space between outer and inner edge is the player color piece
+    private float innerEdge = 0.7f;
 
 
 
@@ -236,8 +236,17 @@ public class GameBoardView extends View {
                 canvas.drawRect(startX + j * unitSize, startY + i * unitSize, startX + (j + 1) * unitSize, startY + (i + 1) * unitSize, paint);
 
                 if (!board.getTile(i, j).isEmpty()) {
+                    // Piece temp = board.getTile(i, j).getPiece();
                     Piece temp = board.getTile(i, j).getPiece();
-                    drawPiece(canvas, i, j, temp.getOwner());
+                    paint.setAntiAlias(true);
+                    paint.setColor(playerColor[temp.getOwner()]);//put in array
+                    canvas.drawCircle(startX + j * unitSize + unitSize / 2, startY + unitSize * i + unitSize / 2, (unitSize / 2) * outerEdge, paint);
+                    paint.setColor(temp.getColor());
+                    canvas.drawCircle(startX + j * unitSize + unitSize / 2, startY + unitSize * i + unitSize / 2, (unitSize / 2) * innerEdge, paint);
+                    paint.setColor(playerColor[temp.getOwner() == PLAYER_TWO ? PLAYER_ONE : PLAYER_TWO]);
+                    // canvas.drawText("" + temp.getRank(), startX + j * unitSize + unitSize / 2 - 25, startY + unitSize * i + unitSize / 2 + 30, paint);
+
+                    //drawPiece(canvas, i, j, temp.getOwner());
                    /* paint.setColor(playerColor[temp.getOwner()]);
                     canvas.drawText("" + temp.getRank(), startX + j * unitSize + unitSize / 2 - 25, startY + unitSize * i + unitSize / 2 + 30, paint);
 */
