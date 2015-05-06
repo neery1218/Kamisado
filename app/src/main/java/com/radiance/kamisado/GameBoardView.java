@@ -59,10 +59,15 @@ public class GameBoardView extends View {
     private boolean animateMove = false;
 
     //hexagon hard-coded coordinates
-    private double[] x = {0, 1, 1, 0, -1, -1};
-    private double[] y = {1, 0.7, -0.7, -1, -0.7, 0.7};
+    private double[] x = {-0.7, 0.7, 1, 0.7, -0.7, -1};
+    private double[] y = {0.9, 0.9, 0, -0.9, -0.9, 0};
     private float outerEdge = 0.9f; //space between outer and inner edge is the player color piece
     private float innerEdge = 0.7f;
+
+    private float rankEdge = 0.3f;
+    private float[] rankX = {-1, 0, 1};
+    private float[] rankY = {-1, 1, -1};
+    //private float rankRadius =
 
 
 
@@ -83,8 +88,16 @@ public class GameBoardView extends View {
 
     }//Calls the super constructor and creates a new paint object
 
+    private void drawRank(Canvas canvas, int r, int c, int player, int rank) {
+        //first one
+        if (rank >= 1) {
+
+
+            //bottom right, new edge variable
+        }
+    }
     //TODO: Eventually all these constant integers should be switched to enums for typesafety/readability
-    private void drawPiece(Canvas canvas, int r, int c, int player) {
+    private void drawPiece(Canvas canvas, int r, int c, int player, int rank) {
         Paint playerPaint = new Paint();
         playerPaint.setColor(playerColor[player]);
         playerPaint.setStyle(Paint.Style.FILL);
@@ -110,8 +123,13 @@ public class GameBoardView extends View {
         //  playerPaint.setColor(Color.BLACK);
         playerPaint.setAntiAlias(true);
         piecePaint.setAntiAlias(true);
-        canvas.drawPath(outerPath, playerPaint);
-        canvas.drawPath(innerPath, piecePaint);
+        // canvas.drawPath(outerPath, playerPaint);
+        // canvas.drawPath(innerPath, piecePaint);
+        playerPaint.setColor(Color.WHITE);
+        //draw rank
+        for (int i = 0; i < rank - 1; i++) {
+            canvas.drawCircle((float) xCenter + rankEdge * rankX[i], (float) yCenter + rankEdge * rankY[i], unitSize / 2 * rankEdge, playerPaint);
+        }
 
 
     }
@@ -245,8 +263,8 @@ public class GameBoardView extends View {
                     canvas.drawCircle(startX + j * unitSize + unitSize / 2, startY + unitSize * i + unitSize / 2, (unitSize / 2) * innerEdge, paint);
                     paint.setColor(playerColor[temp.getOwner() == PLAYER_TWO ? PLAYER_ONE : PLAYER_TWO]);
                     // canvas.drawText("" + temp.getRank(), startX + j * unitSize + unitSize / 2 - 25, startY + unitSize * i + unitSize / 2 + 30, paint);
-
-                    //drawPiece(canvas, i, j, temp.getOwner());
+                    //TODO: find a way to represent rank, circles? tallies?
+                    drawPiece(canvas, i, j, temp.getOwner(), temp.getRank());
                    /* paint.setColor(playerColor[temp.getOwner()]);
                     canvas.drawText("" + temp.getRank(), startX + j * unitSize + unitSize / 2 - 25, startY + unitSize * i + unitSize / 2 + 30, paint);
 */
