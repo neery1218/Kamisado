@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Path;
 import android.graphics.Point;
 import android.os.Handler;
 import android.util.AttributeSet;
@@ -57,8 +58,12 @@ public class GameBoardView extends View {
     private Point init, fin;
     private boolean animateMove = false;
 
+    //hexagon hard-coded coordinates
+    private double[] x = {0, 0.5, 0.5, 0, -0.5, -0.5};
+    private double[] y = {1, 0.867, -0.867, -1, -0.867, 0.867};
+    private double outerEdge = 0.9; //space between outer and inner edge is the player color piece
+    private double innerEdge = 0.7;
 
-    //TODO: Eventually all these constant integers should be switched to enums for typesafety/readability
 
     public GameBoardView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -76,6 +81,36 @@ public class GameBoardView extends View {
         Log.v("Game", "matchType:" + MATCH_TYPE);
 
     }//Calls the super constructor and creates a new paint object
+
+    //TODO: Eventually all these constant integers should be switched to enums for typesafety/readability
+    private void drawPiece(Canvas canvas, int r, int c, int player) {
+        Paint playerPaint = new Paint();
+        playerPaint.setColor(player);
+        playerPaint.setStyle(Paint.Style.FILL);
+
+        Paint piecePaint = new Paint();
+        piecePaint.setColor(board.getTile(r, c).getColor());
+        piecePaint.setStyle(Paint.Style.FILL);
+
+        Path outerPath = new Path();
+        Path innerPath = new Path();
+        //find center
+        double xCenter = startX + c * unitSize + (unitSize / 2), yCenter = startY + r * unitSize + (unitSize / 2);
+
+        outerPath.reset(); // only needed when reusing this path for a new build
+        innerPath.reset();
+
+        outerPath.moveTo(Math.round(xCenter + x[0] * outerEdge), Math.round(yCenter + y[0] * outerEdge)); // used for first point
+        innerPath.moveTo(Math.round(xCenter + x[0] * innerEdge), Math.round(yCenter + y[0] * innerEdge));
+        for (int i = 1; i < x.length; i++) {
+            outerPath.lineTo(Math.round(xCenter + x[i] * outerEdge), Math.round(yCenter + y[i] * outerEdge));
+            innerPath.lineTo(Math.round(xCenter + x[i] * innerEdge), Math.round(yCenter + y[i] * innerEdge));
+        }
+        canvas.drawPath(outerPath, playerPaint);
+        canvas.drawPath(innerPath, piecePaint);
+
+
+    }
 
     public void setScoreView(TextView textView) {
         scoreView = textView;
