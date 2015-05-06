@@ -22,6 +22,7 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
     private ArrayList<Point> availMoves;
     private int sumoChain = 0;
     private int AI_DIFFICULTY = 0;
+    private Point init, fin;
 
     private Point win = new Point(-1, -1);
     private int deadlockCount = 0;
@@ -163,8 +164,11 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
                         break;
                 }
                 counter++;
-            } else
+            } else {
                 board.move(new Point(selectedPiece.getY(), selectedPiece.getX()), temp);
+                init = selectedPiece.getPoint();
+                fin = temp;
+            }
             counter++;
 
             //find next piece
@@ -179,7 +183,7 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
             resolveNormalMove(temp.y, temp.x);
 
             gameBoardView.setAvailMoves(availMoves);
-            gameBoardView.drawBoard(board, selectedPiece.getPoint(), temp);
+            gameBoardView.drawBoard(board, init, fin);
             if (!win.equals(-1, -1)) {
                 Log.v("game", "somebody has won");
                 counter = board.getTile(win.x, win.y).getPiece().getOwner();
