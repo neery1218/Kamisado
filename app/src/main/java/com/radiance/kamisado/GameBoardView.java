@@ -65,8 +65,8 @@ public class GameBoardView extends View {
     private float innerEdge = 0.7f;
 
     private float rankEdge = 0.3f;
-    private float[] rankX = {-1, 0, 1};
-    private float[] rankY = {-1, 1, -1};
+    private float[] rankX = {-0.7071067f, 0, 0.7071067f};
+    private float[] rankY = {-0.7071067f, 0.7f, -0.7071067f};
     //private float rankRadius =
 
 
@@ -125,10 +125,11 @@ public class GameBoardView extends View {
         piecePaint.setAntiAlias(true);
         // canvas.drawPath(outerPath, playerPaint);
         // canvas.drawPath(innerPath, piecePaint);
-        playerPaint.setColor(Color.WHITE);
+        // playerPaint.setColor(Color.WHITE);
         //draw rank
-        for (int i = 0; i < rank - 1; i++) {
-            canvas.drawCircle((float) xCenter + rankEdge * rankX[i], (float) yCenter + rankEdge * rankY[i], unitSize / 2 * rankEdge, playerPaint);
+        for (int i = 0; i < rank; i++) {
+            Log.v("Rank", "eyy");
+            canvas.drawCircle((float) (xCenter + rankEdge * radius * rankX[i]), (float) (yCenter + rankEdge * radius * rankY[i]), unitSize / 2 * rankEdge * 0.7f, playerPaint);
         }
 
 
@@ -262,6 +263,7 @@ public class GameBoardView extends View {
                     paint.setColor(temp.getColor());
                     canvas.drawCircle(startX + j * unitSize + unitSize / 2, startY + unitSize * i + unitSize / 2, (unitSize / 2) * innerEdge, paint);
                     paint.setColor(playerColor[temp.getOwner() == PLAYER_TWO ? PLAYER_ONE : PLAYER_TWO]);
+
                     // canvas.drawText("" + temp.getRank(), startX + j * unitSize + unitSize / 2 - 25, startY + unitSize * i + unitSize / 2 + 30, paint);
                     //TODO: find a way to represent rank, circles? tallies?
                     drawPiece(canvas, i, j, temp.getOwner(), temp.getRank());
