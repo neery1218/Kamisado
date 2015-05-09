@@ -112,8 +112,8 @@ public class Piece {//object that conducts piece logic and is used by board
 
     private void drawRank(Canvas canvas, float startX, float startY, float unitSize, int alpha) {
         Paint playerPaint = new Paint();
-        playerPaint.setAlpha(alpha);
         playerPaint.setColor(playerColor[getOwner()]);
+        playerPaint.setAlpha(alpha);
         playerPaint.setStyle(Paint.Style.FILL);
 
         Paint piecePaint = new Paint();

@@ -139,6 +139,8 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
     public void drawBoard(Board board, Piece piece) {
         this.board = board;
         this.selectedPiece = piece;
+        init = null;
+        fin = null;
         invalidate();
     }//Draws the board
 
