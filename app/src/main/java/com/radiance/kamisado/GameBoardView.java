@@ -46,9 +46,8 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
     /* private Piece[][] pieces = new Piece[2][boardDimension];*/
     private GameControl gameControl;
     private GameBoardView.OnBoardEvent onBoardEvent;
-    private int PLAYER_ONE = gameControl.PLAYER_ONE;
-    private int PLAYER_TWO = gameControl.PLAYER_TWO;
-    private int EMPTY = -1;
+    private int PLAYER_ONE = GameControl.PLAYER_ONE;
+    private int PLAYER_TWO = GameControl.PLAYER_TWO;
     private int MATCH_TYPE;
     private int VERSUS_TYPE;
     private ArrayList<Point> availMoves = new ArrayList<>();
@@ -70,7 +69,7 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
         MATCH_TYPE = GamePlayFragment.getMATCH_TYPE();
         VERSUS_TYPE = GamePlayFragment.getVERSUS_TYPE();
         gameControl = new GameControl(this, boardDimension, VERSUS_TYPE);
-        onBoardEvent = (GameBoardView.OnBoardEvent) gameControl;
+        onBoardEvent = gameControl;
         Log.v("Game", "versustype:" + VERSUS_TYPE);
         Log.v("Game", "matchType:" + MATCH_TYPE);
         animator = new ValueAnimator();
@@ -243,10 +242,10 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
     }
 
     public interface OnBoardEvent{
-        public void onTouch(int x, int y);
+        void onTouch(int x, int y);
 
-        public void onSwipeRight();
+        void onSwipeRight();
 
-        public void onSwipeLeft();
+        void onSwipeLeft();
     }
 }
