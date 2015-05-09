@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Path;
 import android.graphics.Point;
 import android.os.Handler;
 import android.util.AttributeSet;
@@ -55,21 +54,11 @@ public class GameBoardView extends View {
     private int VERSUS_TYPE;
     private ArrayList<Point> availMoves = new ArrayList<>();
     private Piece selectedPiece;
-    private Point init, fin;
+    private Piece init, fin;
     private boolean animateMove = false;
 
-    //hexagon hard-coded coordinates
-    private double[] x = {-0.7, 0.7, 1, 0.7, -0.7, -1};
-    private double[] y = {0.9, 0.9, 0, -0.9, -0.9, 0};
-    private float outerEdge = 0.9f; //space between outer and inner edge is the player color piece
-    private float innerEdge = 0.7f;
 
-    private float rankEdge = 0.3f;
-    private float[] rankX = {-0.7071067f, 0, 0.7071067f};
-    private float[] rankY = {-0.7071067f, 0.7f, -0.7071067f};
-    //private float rankRadius =
-
-
+    //TODO: Eventually all these constant integers should be switched to enums for typesafety/readability
 
     public GameBoardView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -87,53 +76,6 @@ public class GameBoardView extends View {
         Log.v("Game", "matchType:" + MATCH_TYPE);
 
     }//Calls the super constructor and creates a new paint object
-
-    private void drawRank(Canvas canvas, int r, int c, int player, int rank) {
-        //first one
-        if (rank >= 1) {
-
-
-            //bottom right, new edge variable
-        }
-    }
-    //TODO: Eventually all these constant integers should be switched to enums for typesafety/readability
-    private void drawPiece(Canvas canvas, int r, int c, int player, int rank) {
-        Paint playerPaint = new Paint();
-        playerPaint.setColor(playerColor[player]);
-        playerPaint.setStyle(Paint.Style.FILL);
-
-        Paint piecePaint = new Paint();
-        piecePaint.setColor(board.getTile(r, c).getPiece().getColor());
-        piecePaint.setStyle(Paint.Style.FILL);
-
-        Path outerPath = new Path();
-        Path innerPath = new Path();
-        //find center
-        double xCenter = startX + c * unitSize + (unitSize / 2), yCenter = startY + r * unitSize + (unitSize / 2);
-
-        outerPath.reset(); // only needed when reusing this path for a new build
-        innerPath.reset();
-        double radius = unitSize / 2;
-        outerPath.moveTo(Math.round(xCenter + x[0] * outerEdge * radius), Math.round(yCenter + y[0] * outerEdge * radius)); // used for first point
-        innerPath.moveTo(Math.round(xCenter + x[0] * innerEdge * radius), Math.round(yCenter + y[0] * innerEdge * radius));
-        for (int i = 1; i < x.length; i++) {
-            outerPath.lineTo(Math.round(xCenter + x[i] * outerEdge * radius), Math.round(yCenter + y[i] * outerEdge * radius));
-            innerPath.lineTo(Math.round(xCenter + x[i] * innerEdge * radius), Math.round(yCenter + y[i] * innerEdge * radius));
-        }
-        //  playerPaint.setColor(Color.BLACK);
-        playerPaint.setAntiAlias(true);
-        piecePaint.setAntiAlias(true);
-        // canvas.drawPath(outerPath, playerPaint);
-        // canvas.drawPath(innerPath, piecePaint);
-        // playerPaint.setColor(Color.WHITE);
-        //draw rank
-        for (int i = 0; i < rank; i++) {
-            Log.v("Rank", "eyy");
-            canvas.drawCircle((float) (xCenter + rankEdge * radius * rankX[i]), (float) (yCenter + rankEdge * radius * rankY[i]), unitSize / 2 * rankEdge * 0.7f, playerPaint);
-        }
-
-
-    }
 
     public void setScoreView(TextView textView) {
         scoreView = textView;
@@ -178,19 +120,17 @@ public class GameBoardView extends View {
     }//initialisation of the gameboard
 
 
-    public void drawBoard(Board board, Point init, Point fin) {
+    public void drawBoard(Board board, Piece init, Piece fin, Piece selectedPiece) {
+        this.selectedPiece = selectedPiece;
         this.board = board;
         this.init = init;
         this.fin = fin;
         animateMove = true;
-        new Thread(new AnimateMove()).start();
-        // invalidate();
-        Log.d("Animate", "called");
-        //TODO Animate
     }//Draws the board
 
-    public void drawBoard(Board board) {
+    public void drawBoard(Board board, Piece piece) {
         this.board = board;
+        this.selectedPiece = piece;
         invalidate();
     }//Draws the board
 
@@ -221,6 +161,13 @@ public class GameBoardView extends View {
             canvas.drawRect(startX + p.y * unitSize, startY + p.x * unitSize, startX + (p.y + 1) * unitSize, startY + (p.x + 1) * unitSize, paint);
             //switch to circles eventually?
         }
+        Log.d("ASDF", "called");
+        int i = selectedPiece.getY(), j = selectedPiece.getX();
+        paint.setColor(board.getColor(i, j));
+        paint.setStyle(Paint.Style.FILL);
+        paint.setAlpha(0);
+        canvas.drawRect(startX + j * unitSize, startY + i * unitSize, startX + (j + 1) * unitSize, startY + (i + 1) * unitSize, paint);
+
     }
 
     public void resolveSwipe(MotionEvent event){
@@ -251,27 +198,22 @@ public class GameBoardView extends View {
         //Draws the board according to color
         for (int i = 0; i < board.getHeight(); i++) {
             for (int j = 0; j < board.getWidth(); j++) {
-                paint.setColor(board.getColor(i, j));
-                canvas.drawRect(startX + j * unitSize, startY + i * unitSize, startX + (j + 1) * unitSize, startY + (i + 1) * unitSize, paint);
+                if (selectedPiece == null || (i != selectedPiece.getY() && j != selectedPiece.getX())) {
+                    paint.setColor(board.getColor(i, j));
+                    canvas.drawRect(startX + j * unitSize, startY + i * unitSize, startX + (j + 1) * unitSize, startY + (i + 1) * unitSize, paint);
 
-                if (!board.getTile(i, j).isEmpty()) {
-                    // Piece temp = board.getTile(i, j).getPiece();
-                    Piece temp = board.getTile(i, j).getPiece();
-                    paint.setAntiAlias(true);
-                    paint.setColor(playerColor[temp.getOwner()]);//put in array
-                    canvas.drawCircle(startX + j * unitSize + unitSize / 2, startY + unitSize * i + unitSize / 2, (unitSize / 2) * outerEdge, paint);
-                    paint.setColor(temp.getColor());
-                    canvas.drawCircle(startX + j * unitSize + unitSize / 2, startY + unitSize * i + unitSize / 2, (unitSize / 2) * innerEdge, paint);
-                    paint.setColor(playerColor[temp.getOwner() == PLAYER_TWO ? PLAYER_ONE : PLAYER_TWO]);
 
-                    // canvas.drawText("" + temp.getRank(), startX + j * unitSize + unitSize / 2 - 25, startY + unitSize * i + unitSize / 2 + 30, paint);
-                    //TODO: find a way to represent rank, circles? tallies?
-                    drawPiece(canvas, i, j, temp.getOwner(), temp.getRank());
-                   /* paint.setColor(playerColor[temp.getOwner()]);
-                    canvas.drawText("" + temp.getRank(), startX + j * unitSize + unitSize / 2 - 25, startY + unitSize * i + unitSize / 2 + 30, paint);
-*/
+                    if (!board.getTile(i, j).isEmpty()) {
+                        Piece temp = board.getTile(i, j).getPiece();
+                        paint.setColor(playerColor[temp.getOwner()]);//put in array
+                        canvas.drawCircle(startX + j * unitSize + unitSize / 2, startY + unitSize * i + unitSize / 2, unitSize / 2, paint);
+                        paint.setColor(temp.getColor());
+                        canvas.drawCircle(startX + j * unitSize + unitSize / 2, startY + unitSize * i + unitSize / 2, unitSize / 3, paint);
+                        paint.setColor(playerColor[temp.getOwner() == PLAYER_TWO ? PLAYER_ONE : PLAYER_TWO]);
+                        canvas.drawText("" + temp.getRank(), startX + j * unitSize + unitSize / 2 - 25, startY + unitSize * i + unitSize / 2 + 30, paint);
+
+                    }
                 }
-
             }
         }
 

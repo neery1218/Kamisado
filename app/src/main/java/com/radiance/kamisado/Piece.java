@@ -8,6 +8,14 @@ public class Piece {//object that conducts piece logic and is used by board
 	private int locX = 0, locY = 0, rank = 0, color = -1, distance;
     private int owner = 0;
 
+    public Piece(Piece p){
+        locX = p.getX();
+        locY = p.getY();
+        rank = p.getRank();
+        color = p.getColor();
+        owner = p.getOwner();
+    }
+
     public Piece(int x, int y, int color, int rank){
         this.rank = rank;
 		locX = x;

@@ -22,7 +22,8 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
     private ArrayList<Point> availMoves;
     private int sumoChain = 0;
     private int AI_DIFFICULTY = 0;
-    private Point init, fin;
+    private Piece init;
+    private Piece fin;
 
     private Point win = new Point(-1, -1);
     private int deadlockCount = 0;
@@ -57,7 +58,7 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
         firstMove = true;
         counter = 1;
         gameBoardView.setAvailMoves(availMoves);
-        gameBoardView.drawBoard(board);
+        gameBoardView.drawBoard(board, selectedPiece);
 
     }
 
@@ -87,7 +88,7 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
             availMoves = players[counter % 2].calcMoves(board, selectedPiece);
             gameBoardView.setSelectedPiece(selectedPiece);
             gameBoardView.setAvailMoves(availMoves);
-            gameBoardView.drawBoard(board);
+            gameBoardView.drawBoard(board, selectedPiece);
             return false;
         } else if (selectedPiece == null)
             return false;
@@ -165,9 +166,9 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
                 }
                 counter++;
             } else {
+                init = new Piece(board.getTile(selectedPiece.getY(), selectedPiece.getX()).getPiece());
                 board.move(new Point(selectedPiece.getY(), selectedPiece.getX()), temp);
-                init = selectedPiece.getPoint();
-                fin = temp;
+                fin = new Piece(board.getTile(temp.x, temp.y).getPiece());
             }
             counter++;
 
@@ -183,7 +184,8 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
             resolveNormalMove(temp.y, temp.x);
 
             gameBoardView.setAvailMoves(availMoves);
-            gameBoardView.drawBoard(board, init, fin);
+            gameBoardView.drawBoard(board, init, fin, selectedPiece);
+            Log.d("Animate", fin.toString());
             if (!win.equals(-1, -1)) {
                 Log.v("game", "somebody has won");
                 counter = board.getTile(win.x, win.y).getPiece().getOwner();
@@ -207,7 +209,7 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
         firstMove = true;
         selectedPiece = null;
         gameBoardView.setSelectedPiece(null);
-        gameBoardView.drawBoard(board);
+        gameBoardView.drawBoard(board, selectedPiece);
     }
 
     @Override
