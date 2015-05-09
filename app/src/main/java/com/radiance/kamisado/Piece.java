@@ -3,6 +3,7 @@ package com.radiance.kamisado;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Path;
 import android.graphics.Point;
 import android.util.Log;
 
@@ -11,10 +12,15 @@ public class Piece {//object that conducts piece logic and is used by board
 	private int locX = 0, locY = 0, rank = 0, color = -1, distance;
     private int owner = 0;
     private int[] playerColor = {Color.parseColor("#090404"), Color.parseColor("#ffecf0f1")};
+
     private double[] x = {0, 1, 1, 0, -1, -1};
     private double[] y = {1, 0.7, -0.7, -1, -0.7, 0.7};
     private float outerEdge = 0.9f; //space between outer and inner edge is the player color piece
     private float innerEdge = 0.7f;
+
+    private float rankEdge = 0.3f;
+    private float[] rankX = {-0.7071067f, 0, 0.7071067f};
+    private float[] rankY = {-0.7071067f, 0.7f, -0.7071067f};
 
     public Piece(Piece p){
         locX = p.getX();
@@ -101,6 +107,42 @@ public class Piece {//object that conducts piece logic and is used by board
         canvas.drawCircle(startX + locX * unitSize + unitSize / 2, startY + unitSize * locY + unitSize / 2, (unitSize / 2) * outerEdge, paint);
         paint.setColor(this.getColor());
         canvas.drawCircle(startX + locX * unitSize + unitSize / 2, startY + unitSize * locY + unitSize / 2, (unitSize / 2) * innerEdge, paint);
+        drawRank(canvas, startX, startY, unitSize);
+    }
+
+    private void drawRank(Canvas canvas, float startX, float startY, float unitSize) {
+        Paint playerPaint = new Paint();
+        playerPaint.setColor(playerColor[getOwner()]);
+        playerPaint.setStyle(Paint.Style.FILL);
+
+        Paint piecePaint = new Paint();
+        piecePaint.setColor(this.getColor());
+        piecePaint.setStyle(Paint.Style.FILL);
+
+        Path outerPath = new Path();
+        Path innerPath = new Path();
+        //find center
+        double xCenter = startX + locX * unitSize + (unitSize / 2), yCenter = startY + locY
+                * unitSize + (unitSize / 2);
+
+        outerPath.reset(); // only needed when reusing this path for a new build
+        innerPath.reset();
+        double radius = unitSize / 2;
+        outerPath.moveTo(Math.round(xCenter + x[0] * outerEdge * radius), Math.round(yCenter + y[0] * outerEdge * radius)); // used for first point
+        innerPath.moveTo(Math.round(xCenter + x[0] * innerEdge * radius), Math.round(yCenter + y[0] * innerEdge * radius));
+        for (int i = 1; i < x.length; i++) {
+            outerPath.lineTo(Math.round(xCenter + x[i] * outerEdge * radius), Math.round(yCenter + y[i] * outerEdge * radius));
+            innerPath.lineTo(Math.round(xCenter + x[i] * innerEdge * radius), Math.round(yCenter + y[i] * innerEdge * radius));
+        }
+        //  playerPaint.setColor(Color.BLACK);
+        playerPaint.setAntiAlias(true);
+        piecePaint.setAntiAlias(true);
+        /*canvas.drawPath(outerPath, playerPaint);
+        canvas.drawPath(innerPath, piecePaint);*/
+        for (int i = 0; i < rank; i++) {
+            canvas.drawCircle((float) xCenter + rankEdge * (float)radius * rankX[i], (float) yCenter + rankEdge * (float)radius* rankY[i], unitSize / 2 * rankEdge, playerPaint);
+        }
+
     }
 
 }
