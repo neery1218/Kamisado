@@ -1,5 +1,8 @@
 package com.radiance.kamisado;
 
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.Point;
 import android.util.Log;
 
@@ -7,6 +10,7 @@ public class Piece {//object that conducts piece logic and is used by board
 	
 	private int locX = 0, locY = 0, rank = 0, color = -1, distance;
     private int owner = 0;
+    private int[] playerColor = {Color.parseColor("#090404"), Color.parseColor("#ffecf0f1")};
 
     public Piece(Piece p){
         locX = p.getX();
@@ -87,5 +91,14 @@ public class Piece {//object that conducts piece logic and is used by board
         Log.v("GAT", "Rankup");
     }
     public String toString(){return "Piece X=" + locX + " Y=" + locY + " Rank=" + rank + " Color=" + color;}
+
+    public void draw(Canvas canvas, Paint paint, float startX, float startY, float unitSize, int PLAYER_TWO, int PLAYER_ONE){
+        paint.setColor(playerColor[this.getOwner()]);//put in array
+        canvas.drawCircle(startX + locX * unitSize + unitSize / 2, startY + unitSize * locY + unitSize / 2, unitSize / 2, paint);
+        paint.setColor(this.getColor());
+        canvas.drawCircle(startX + locX * unitSize + unitSize / 2, startY + unitSize * locY + unitSize / 2, unitSize / 3, paint);
+        paint.setColor(playerColor[this.getOwner() == PLAYER_TWO ? PLAYER_ONE : PLAYER_TWO]);
+        canvas.drawText("" + this.getRank(), startX + locX * unitSize + unitSize / 2 - 25, startY + unitSize * locY + unitSize / 2 + 30, paint);
+    }
 
 }

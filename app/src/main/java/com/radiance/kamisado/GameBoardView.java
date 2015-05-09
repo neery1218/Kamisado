@@ -1,5 +1,6 @@
 package com.radiance.kamisado;
 
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -10,6 +11,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.Animation;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -17,8 +19,7 @@ import java.util.ArrayList;
 /**
  * Created by neerajen on 31/03/15.
  */
-public class GameBoardView extends View {
-    private final Handler animationHandler = new Handler();
+public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateListener{
     //gameBoardVariables
     private Paint paint;//make these variables easier to read
     private Board board;
@@ -39,8 +40,6 @@ public class GameBoardView extends View {
     private int finalClickX = -1;
     private int finalClickY = -1;
 
-    private int NUM_FRAMES = 255;
-    private int frameCounter = 0;
     private boolean firstTime = true;
     //score array
     private int boardDimension = 8;
@@ -55,6 +54,7 @@ public class GameBoardView extends View {
     private ArrayList<Point> availMoves = new ArrayList<>();
     private Piece selectedPiece;
     private Piece init, fin;
+    private ValueAnimator animator;
 
 
     //TODO: Eventually all these constant integers should be switched to enums for typesafety/readability
@@ -73,6 +73,8 @@ public class GameBoardView extends View {
         onBoardEvent = (GameBoardView.OnBoardEvent) gameControl;
         Log.v("Game", "versustype:" + VERSUS_TYPE);
         Log.v("Game", "matchType:" + MATCH_TYPE);
+        animator = new ValueAnimator();
+        animator.addUpdateListener(this);
 
     }//Calls the super constructor and creates a new paint object
 
@@ -206,12 +208,7 @@ public class GameBoardView extends View {
 
                     paint.setAlpha(255);
                     Piece temp = board.getTile(i, j).getPiece();
-                    paint.setColor(playerColor[temp.getOwner()]);//put in array
-                    canvas.drawCircle(startX + j * unitSize + unitSize / 2, startY + unitSize * i + unitSize / 2, unitSize / 2, paint);
-                    paint.setColor(temp.getColor());
-                    canvas.drawCircle(startX + j * unitSize + unitSize / 2, startY + unitSize * i + unitSize / 2, unitSize / 3, paint);
-                    paint.setColor(playerColor[temp.getOwner() == PLAYER_TWO ? PLAYER_ONE : PLAYER_TWO]);
-                    canvas.drawText("" + temp.getRank(), startX + j * unitSize + unitSize / 2 - 25, startY + unitSize * i + unitSize / 2 + 30, paint);
+                    temp.draw(canvas, paint, startX, startY, unitSize, PLAYER_TWO, PLAYER_ONE);
 
                 }
             }
@@ -239,6 +236,11 @@ public class GameBoardView extends View {
     private boolean valid(int a) {
         return (a >= 0 && a < boardDimension);
     }//Finds available moves of each player
+
+    @Override
+    public void onAnimationUpdate(ValueAnimator animation) {
+
+    }
 
     public interface OnBoardEvent{
         public void onTouch(int x, int y);
