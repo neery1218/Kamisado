@@ -102,21 +102,23 @@ public class Piece {//object that conducts piece logic and is used by board
     }
     public String toString(){return "Piece X=" + locX + " Y=" + locY + " Rank=" + rank + " Color=" + color;}
 
-    public void draw(Canvas canvas, Paint paint, float startX, float startY, float unitSize, int PLAYER_TWO, int PLAYER_ONE){
-        paint.setColor(playerColor[this.getOwner()]);//put in array
+    public void draw(Canvas canvas, Paint paint, float startX, float startY, float unitSize, int PLAYER_TWO, int PLAYER_ONE, int animateAlpha){
+        paint.setColor(Color.argb(animateAlpha, Color.red(playerColor[this.getOwner()]), Color.green(playerColor[this.getOwner()]), Color.blue(playerColor[this.getOwner()])));//put in array
         canvas.drawCircle(startX + locX * unitSize + unitSize / 2, startY + unitSize * locY + unitSize / 2, (unitSize / 2) * outerEdge, paint);
-        paint.setColor(this.getColor());
+        paint.setColor(Color.argb(animateAlpha, Color.red(this.getColor()), Color.green(this.getColor()), Color.blue(this.getColor())));
         canvas.drawCircle(startX + locX * unitSize + unitSize / 2, startY + unitSize * locY + unitSize / 2, (unitSize / 2) * innerEdge, paint);
-        drawRank(canvas, startX, startY, unitSize);
+        drawRank(canvas, startX, startY, unitSize, animateAlpha);
     }
 
-    private void drawRank(Canvas canvas, float startX, float startY, float unitSize) {
+    private void drawRank(Canvas canvas, float startX, float startY, float unitSize, int alpha) {
         Paint playerPaint = new Paint();
+        playerPaint.setAlpha(alpha);
         playerPaint.setColor(playerColor[getOwner()]);
         playerPaint.setStyle(Paint.Style.FILL);
 
         Paint piecePaint = new Paint();
         piecePaint.setColor(this.getColor());
+        piecePaint.setAlpha(alpha);
         piecePaint.setStyle(Paint.Style.FILL);
 
         Path outerPath = new Path();

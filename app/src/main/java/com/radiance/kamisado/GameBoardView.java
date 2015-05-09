@@ -1,5 +1,6 @@
 package com.radiance.kamisado;
 
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -17,7 +18,7 @@ import java.util.ArrayList;
 /**
  * Created by neerajen on 31/03/15.
  */
-public class GameBoardView extends View {
+public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateListener{
     //gameBoardVariables
     private Paint paint;//make these variables easier to read
     private Board board;
@@ -30,8 +31,7 @@ public class GameBoardView extends View {
     private float height = -1;
     private float borderWidth = 0;
     private float unitSize = 0;
-
-    private int[] playerColor = {Color.parseColor("#34495e"), Color.parseColor("#ecf0f1")};
+    private int[] playerColor = {Color.parseColor("#090404"), Color.parseColor("#ffecf0f1")};
 
     private int eventAction = -1;
     private int initialClickX = -1;
@@ -45,19 +45,16 @@ public class GameBoardView extends View {
     /* private Piece[][] pieces = new Piece[2][boardDimension];*/
     private GameControl gameControl;
     private GameBoardView.OnBoardEvent onBoardEvent;
-    private int PLAYER_ONE = gameControl.PLAYER_ONE;
-    private int PLAYER_TWO = gameControl.PLAYER_TWO;
-    private int EMPTY = -1;
+    private int PLAYER_ONE = GameControl.PLAYER_ONE;
+    private int PLAYER_TWO = GameControl.PLAYER_TWO;
     private int MATCH_TYPE;
     private int VERSUS_TYPE;
     private ArrayList<Point> availMoves = new ArrayList<>();
     private Piece selectedPiece;
+    private Piece init, fin;
+    private ValueAnimator animator;
+    private int animateAlpha = 255;
 
-    //hexagon hard-coded coordinates
-    private double[] x = {0, 1, 1, 0, -1, -1};
-    private double[] y = {1, 0.7, -0.7, -1, -0.7, 0.7};
-    private double outerEdge = 0.9; //space between outer and inner edge is the player color piece
-    private double innerEdge = 0.7;
 
     //TODO: Eventually all these constant integers should be switched to enums for typesafety/readability
 
@@ -72,47 +69,17 @@ public class GameBoardView extends View {
         MATCH_TYPE = GamePlayFragment.getMATCH_TYPE();
         VERSUS_TYPE = GamePlayFragment.getVERSUS_TYPE();
         gameControl = new GameControl(this, boardDimension, VERSUS_TYPE);
-        onBoardEvent = (GameBoardView.OnBoardEvent) gameControl;
+        onBoardEvent = gameControl;
         Log.v("Game", "versustype:" + VERSUS_TYPE);
         Log.v("Game", "matchType:" + MATCH_TYPE);
+        animator = new ValueAnimator();
+        animator.addUpdateListener(this);
 
     }//Calls the super constructor and creates a new paint object
 
     public void setScoreView(TextView textView) {
         scoreView = textView;
         updateScore(new int[]{0, 0});
-
-    }
-
-    private void drawPiece(Canvas canvas, int r, int c, int player) {
-        Paint playerPaint = new Paint();
-        playerPaint.setColor(playerColor[player]);
-        playerPaint.setStyle(Paint.Style.FILL);
-
-        Paint piecePaint = new Paint();
-        piecePaint.setColor(board.getTile(r, c).getPiece().getColor());
-        piecePaint.setStyle(Paint.Style.FILL);
-
-        Path outerPath = new Path();
-        Path innerPath = new Path();
-        //find center
-        double xCenter = startX + c * unitSize + (unitSize / 2), yCenter = startY + r * unitSize + (unitSize / 2);
-
-        outerPath.reset(); // only needed when reusing this path for a new build
-        innerPath.reset();
-        double radius = unitSize / 2;
-        outerPath.moveTo(Math.round(xCenter + x[0] * outerEdge * radius), Math.round(yCenter + y[0] * outerEdge * radius)); // used for first point
-        innerPath.moveTo(Math.round(xCenter + x[0] * innerEdge * radius), Math.round(yCenter + y[0] * innerEdge * radius));
-        for (int i = 1; i < x.length; i++) {
-            outerPath.lineTo(Math.round(xCenter + x[i] * outerEdge * radius), Math.round(yCenter + y[i] * outerEdge * radius));
-            innerPath.lineTo(Math.round(xCenter + x[i] * innerEdge * radius), Math.round(yCenter + y[i] * innerEdge * radius));
-        }
-        //  playerPaint.setColor(Color.BLACK);
-        playerPaint.setAntiAlias(true);
-        piecePaint.setAntiAlias(true);
-        canvas.drawPath(outerPath, playerPaint);
-        canvas.drawPath(innerPath, piecePaint);
-
 
     }
 
@@ -139,6 +106,8 @@ public class GameBoardView extends View {
         startX = borderWidth;
         endX = width - borderWidth;
 
+        Log.d("", "");
+
         //The size of each individual square on the gameControl
         unitSize = (endX - startX) / boardDimension;
 
@@ -153,12 +122,25 @@ public class GameBoardView extends View {
     }//initialisation of the gameboard
 
 
-    public void drawBoard(Board board) {
+    public void drawBoard(Board board, Piece init, Piece fin, Piece selectedPiece) {
+        this.selectedPiece = selectedPiece;
         this.board = board;
+        this.init = init;
+        this.fin = fin;
+
+        animator = ValueAnimator.ofInt(0, 255);
+        animator.setDuration(1000);
+        animator.addUpdateListener(this);
+
+        animator.start();
         invalidate();
     }//Draws the board
 
-
+    public void drawBoard(Board board, Piece piece) {
+        this.board = board;
+        this.selectedPiece = piece;
+        invalidate();
+    }//Draws the board
 
     public void setSelectedPiece(Piece p){
         this.selectedPiece = p;
@@ -168,16 +150,7 @@ public class GameBoardView extends View {
         this.availMoves = list;
     }
 
-
     private void drawPossibleMoves(Canvas canvas){
-        for(int i = 0; i < boardDimension; i++){
-            for(int j = 0; j < boardDimension; j++){
-                paint.setColor(Color.parseColor("#090404"));
-                paint.setStyle(Paint.Style.FILL);
-                paint.setAlpha(150);
-                canvas.drawRect(startX + j * unitSize, startY + i * unitSize, startX + (j + 1) * unitSize, startY + (i + 1) * unitSize, paint);
-            }
-        }
 
         //Draws the squares highlighting the available moves
         for(int i = 0; i < availMoves.size(); i++){
@@ -188,7 +161,10 @@ public class GameBoardView extends View {
             canvas.drawRect(startX + p.y * unitSize, startY + p.x * unitSize, startX + (p.y + 1) * unitSize, startY + (p.x + 1) * unitSize, paint);
             //switch to circles eventually?
         }
+
     }
+
+
 
     public void resolveSwipe(MotionEvent event){
         if(event.getAction() == 0){
@@ -205,36 +181,62 @@ public class GameBoardView extends View {
                 initialClickX = -1; finalClickX = -1; initialClickY = -1; finalClickY = -1;
                 onBoardEvent.onSwipeRight();
             }
-            if(initialClickX - finalClickX > 200 && Math.abs(finalClickY - initialClickY) < 100){
+            if (initialClickX - finalClickX > 200 && Math.abs(finalClickY - initialClickY) < 100) {
                 onBoardEvent.onSwipeLeft();
             }
         }
     }
 
     @Override
-    public void onDraw (Canvas canvas){
+    public void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+        paint.setAntiAlias(true);
         setup();
+        Log.d("ASDF", "called");
         //Draws the board according to color
         for (int i = 0; i < board.getHeight(); i++) {
             for (int j = 0; j < board.getWidth(); j++) {
                 paint.setColor(board.getColor(i, j));
                 canvas.drawRect(startX + j * unitSize, startY + i * unitSize, startX + (j + 1) * unitSize, startY + (i + 1) * unitSize, paint);
 
-                if (!board.getTile(i, j).isEmpty()) {
-                    Piece temp = board.getTile(i, j).getPiece();
-                    drawPiece(canvas, i, j, temp.getOwner());
-                   /* paint.setColor(playerColor[temp.getOwner()]);
-                    canvas.drawText("" + temp.getRank(), startX + j * unitSize + unitSize / 2 - 25, startY + unitSize * i + unitSize / 2 + 30, paint);
-*/
+                if(selectedPiece != null) {
+                    paint.setColor(Color.parseColor("#090404"));
+                    paint.setStyle(Paint.Style.FILL);
+                    paint.setAlpha(150);
+                    canvas.drawRect(startX + j * unitSize, startY + i * unitSize, startX + (j + 1) * unitSize, startY + (i + 1) * unitSize, paint);
                 }
 
+                if (!board.getTile(i, j).isEmpty()) {
+                    if(selectedPiece != null && i == selectedPiece.getY() && j == selectedPiece.getX()) {
+                        Log.d("ASDF", selectedPiece.toString());
+                        paint.setColor(board.getColor(i, j));
+                        paint.setStyle(Paint.Style.FILL);
+                        paint.setAlpha(255);
+                        canvas.drawRect(startX + j * unitSize, startY + i * unitSize, startX + (j + 1) * unitSize, startY + (i + 1) * unitSize, paint);
+                    }
+
+
+                    paint.setAlpha(255);
+                    Piece temp = board.getTile(i, j).getPiece();
+                    if(fin == null || (temp.getX() != fin.getX() || temp.getY() != fin.getY()))
+                    temp.draw(canvas, paint, startX, startY, unitSize, PLAYER_TWO, PLAYER_ONE, 255);
+                    else{
+                        Log.d("Animate", "wtf " + temp.toString() + " " + fin.toString());
+                    }
+                }
             }
         }
 
         //Displays the available moves
-        if(selectedPiece != null)
+        if (selectedPiece != null)
             drawPossibleMoves(canvas);
+
+        if(init != null) {
+            init.draw(canvas, paint, startX, startY, unitSize, PLAYER_TWO, PLAYER_ONE, animateAlpha);
+        }
+        if(fin != null) {
+            fin.draw(canvas, paint, startX, startY, unitSize, PLAYER_TWO, PLAYER_ONE, 255 - animateAlpha);
+        }
     }//Draws on the fragment
 
     @Override
@@ -255,11 +257,18 @@ public class GameBoardView extends View {
         return (a >= 0 && a < boardDimension);
     }//Finds available moves of each player
 
+    @Override
+    public void onAnimationUpdate(ValueAnimator animation) {
+        Log.d("Animate", animation.getAnimatedValue() + "");
+        animateAlpha = 255 - (Integer)animation.getAnimatedValue();
+        invalidate();
+    }
+
     public interface OnBoardEvent{
-        public void onTouch(int x, int y);
+        void onTouch(int x, int y);
 
-        public void onSwipeRight();
+        void onSwipeRight();
 
-        public void onSwipeLeft();
+        void onSwipeLeft();
     }
 }
