@@ -65,10 +65,8 @@ public class IntroFragment extends Fragment {
                 mListener.onIntroInteraction(MainActivity.PLAY_PRESSED);
             }
         });
-        playButton.setTextSize(24f);
 
         playerTwoButton = (Button)view.findViewById(R.id.playerTwoButton);
-        playerTwoButton.setTextSize(24f);
         playerTwoButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 mListener.onIntroInteraction(MainActivity.TWO_PLAY_PRESSED);
@@ -77,7 +75,6 @@ public class IntroFragment extends Fragment {
         playerTwoButton.setTypeface(MainActivity.typefaceHeader);
         onlineButton = (Button)view.findViewById(R.id.onlineButton);
         onlineButton.setTypeface(MainActivity.typefaceHeader);
-        playButton.setTextSize(24f);
         onlineButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 mListener.onIntroInteraction(MainActivity.ONLINE_PLAY_PRESSED);
@@ -86,7 +83,6 @@ public class IntroFragment extends Fragment {
 
         tutorialButton = (Button)view.findViewById(R.id.tutorialButton);
         tutorialButton.setTypeface(MainActivity.typefaceHeader);
-        tutorialButton.setTextSize(24f);
         tutorialButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 mListener.onIntroInteraction(MainActivity.TUTORIAL_PRESSED);
