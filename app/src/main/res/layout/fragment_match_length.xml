@@ -21,32 +21,43 @@
 
         <Button
             android:id="@+id/singleButton"
-            android:layout_width="wrap_content"
+            android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:background="@drawable/button_custom"
-            android:text="Single" />
+            android:text="Single"
+            android:textColor="@color/text"
+            android:textSize="24sp" />
 
         <Button
             android:id="@+id/standardButton"
-            android:layout_width="wrap_content"
+            android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="Standard" />
+            android:background="@drawable/button_custom"
+            android:text="Standard"
+            android:textColor="@color/text"
+            android:textSize="24sp" />
 
         <Button
             android:id="@+id/extendedButton"
-            android:layout_width="wrap_content"
+            android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="Extended" />
+            android:background="@drawable/button_custom"
+            android:text="Extended"
+            android:textColor="@color/text"
+            android:textSize="24sp" />
 
         <Button
             android:id="@+id/marathonButton"
-            android:layout_width="wrap_content"
+            android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="Marathon" />
+            android:background="@drawable/button_custom"
+            android:text="Marathon"
+            android:textColor="@color/text"
+            android:textSize="24sp" />
     </LinearLayout>
 
 
