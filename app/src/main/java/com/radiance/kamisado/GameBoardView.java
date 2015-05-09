@@ -187,10 +187,12 @@ public class GameBoardView extends View {
                 paint.setColor(board.getColor(i, j));
                 canvas.drawRect(startX + j * unitSize, startY + i * unitSize, startX + (j + 1) * unitSize, startY + (i + 1) * unitSize, paint);
 
-                paint.setColor(Color.parseColor("#090404"));
-                paint.setStyle(Paint.Style.FILL);
-                paint.setAlpha(150);
-                canvas.drawRect(startX + j * unitSize, startY + i * unitSize, startX + (j + 1) * unitSize, startY + (i + 1) * unitSize, paint);
+                if(selectedPiece != null) {
+                    paint.setColor(Color.parseColor("#090404"));
+                    paint.setStyle(Paint.Style.FILL);
+                    paint.setAlpha(150);
+                    canvas.drawRect(startX + j * unitSize, startY + i * unitSize, startX + (j + 1) * unitSize, startY + (i + 1) * unitSize, paint);
+                }
 
                 if (!board.getTile(i, j).isEmpty()) {
                     if(selectedPiece != null && i == selectedPiece.getY() && j == selectedPiece.getX()) {
