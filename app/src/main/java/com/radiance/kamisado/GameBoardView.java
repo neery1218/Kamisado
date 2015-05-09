@@ -1,11 +1,11 @@
 package com.radiance.kamisado;
 
+import android.animation.Animator;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Path;
 import android.graphics.Point;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -18,7 +18,7 @@ import java.util.ArrayList;
 /**
  * Created by neerajen on 31/03/15.
  */
-public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateListener{
+public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateListener, Animator.AnimatorListener{
     //gameBoardVariables
     private Paint paint;//make these variables easier to read
     private Board board;
@@ -54,6 +54,8 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
     private Piece init, fin;
     private ValueAnimator animator;
     private int animateAlpha = 255;
+
+    public boolean animationRunning = false;
 
 
     //TODO: Eventually all these constant integers should be switched to enums for typesafety/readability
@@ -127,10 +129,12 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
         this.board = board;
         this.init = init;
         this.fin = fin;
+        animationRunning = true;
 
         animator = ValueAnimator.ofInt(0, 255);
         animator.setDuration(500);
         animator.addUpdateListener(this);
+        animator.addListener(this);
 
         animator.start();
         invalidate();
@@ -264,6 +268,27 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
         Log.d("Animate", animation.getAnimatedValue() + "");
         animateAlpha = 255 - (Integer)animation.getAnimatedValue();
         invalidate();
+    }
+
+    @Override
+    public void onAnimationStart(Animator animation) {
+
+    }
+
+    @Override
+    public void onAnimationEnd(Animator animation) {
+        animationRunning = false;
+        onBoardEvent.onTouch(-1,-1);
+    }
+
+    @Override
+    public void onAnimationCancel(Animator animation) {
+
+    }
+
+    @Override
+    public void onAnimationRepeat(Animator animation) {
+
     }
 
     public interface OnBoardEvent{

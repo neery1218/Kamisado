@@ -140,7 +140,7 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
 
     @Override
     public void onTouch(int x, int y) {//overriden method from the interface: all method calls originate from here
-        Log.v("temp", "counter" + counter + " ai win " + aiWin + " first move " + firstMove);
+        if(gameBoardView.animationRunning){return;}
 
         if (aiWin) {
             resolveAiWin();
@@ -200,7 +200,6 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
                 if (players[counter % 2] instanceof AIPlayer && win.equals(-1, -1))
                     onTouch(-1, -1);
             }
-
 
         }
     }
