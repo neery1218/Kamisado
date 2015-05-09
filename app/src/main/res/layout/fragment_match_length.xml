@@ -29,6 +29,9 @@
             android:textColor="@color/text"
             android:textSize="24sp" />
 
+        <Space
+            android:layout_width="20px"
+            android:layout_height="10dp" />
         <Button
             android:id="@+id/standardButton"
             android:layout_width="150dp"
@@ -39,6 +42,9 @@
             android:textColor="@color/text"
             android:textSize="24sp" />
 
+        <Space
+            android:layout_width="20px"
+            android:layout_height="10dp" />
         <Button
             android:id="@+id/extendedButton"
             android:layout_width="150dp"
@@ -49,6 +55,9 @@
             android:textColor="@color/text"
             android:textSize="24sp" />
 
+        <Space
+            android:layout_width="20px"
+            android:layout_height="10dp" />
         <Button
             android:id="@+id/marathonButton"
             android:layout_width="150dp"
@@ -58,6 +67,8 @@
             android:text="Marathon"
             android:textColor="@color/text"
             android:textSize="24sp" />
+
+
     </LinearLayout>
 
 

@@ -56,6 +56,7 @@ public class MatchLengthFragment extends Fragment {
         introBoardView.invalidate();
 
         singleButton = (Button)view.findViewById(R.id.singleButton);
+        singleButton.setTypeface(MainActivity.typefaceHeader);
         singleButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 mListener.onMatchLengthInteraction(MainActivity.MATCH_SINGLE);
@@ -63,6 +64,7 @@ public class MatchLengthFragment extends Fragment {
         });
 
         standardButton = (Button)view.findViewById(R.id.standardButton);
+        standardButton.setTypeface(MainActivity.typefaceHeader);
         standardButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 mListener.onMatchLengthInteraction(MainActivity.MATCH_STANDARD);
@@ -70,6 +72,7 @@ public class MatchLengthFragment extends Fragment {
         });
 
         extendedButton = (Button)view.findViewById(R.id.extendedButton);
+        extendedButton.setTypeface(MainActivity.typefaceHeader);
         extendedButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 mListener.onMatchLengthInteraction(MainActivity.MATCH_EXTENDED);
@@ -77,6 +80,7 @@ public class MatchLengthFragment extends Fragment {
         });
 
         marathonButton = (Button)view.findViewById(R.id.marathonButton);
+        marathonButton.setTypeface(MainActivity.typefaceHeader);
         marathonButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 mListener.onMatchLengthInteraction(MainActivity.MATCH_MARATHON);

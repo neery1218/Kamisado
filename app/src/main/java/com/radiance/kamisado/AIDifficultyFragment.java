@@ -51,6 +51,7 @@ public class AIDifficultyFragment extends Fragment {
         introBoardView.invalidate();
 
         easyButton = (Button) view.findViewById(R.id.easyButton);
+        easyButton.setTypeface(MainActivity.typefaceHeader);
         easyButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 mListener.onDifficultyInteraction(EASY);
@@ -58,6 +59,7 @@ public class AIDifficultyFragment extends Fragment {
         });
 
         mediumButton = (Button) view.findViewById(R.id.mediumButton);
+        mediumButton.setTypeface(MainActivity.typefaceHeader);
         mediumButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 mListener.onDifficultyInteraction(MEDIUM);
@@ -65,6 +67,7 @@ public class AIDifficultyFragment extends Fragment {
         });
 
         hardButton = (Button) view.findViewById(R.id.hardButton);
+        hardButton.setTypeface(MainActivity.typefaceHeader);
         hardButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 mListener.onDifficultyInteraction(HARD);

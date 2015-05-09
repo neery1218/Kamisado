@@ -224,4 +224,8 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
         reset();
 
     }
+
+    public Piece getSelectedPiece() {
+        return selectedPiece;
+    }
 }
