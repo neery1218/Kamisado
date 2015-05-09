@@ -105,6 +105,8 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
         startX = borderWidth;
         endX = width - borderWidth;
 
+        Log.d("","");
+
         //The size of each individual square on the gameControl
         unitSize = (endX - startX) / boardDimension;
 
