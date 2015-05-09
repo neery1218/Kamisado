@@ -129,7 +129,7 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
         this.fin = fin;
 
         animator = ValueAnimator.ofInt(0, 255);
-        animator.setDuration(1000);
+        animator.setDuration(500);
         animator.addUpdateListener(this);
 
         animator.start();
