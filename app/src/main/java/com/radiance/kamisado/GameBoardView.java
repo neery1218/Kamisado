@@ -31,7 +31,7 @@ public class GameBoardView extends View {
     private float height = -1;
     private float borderWidth = 0;
     private float unitSize = 0;
-    private int[] playerColor = {Color.parseColor("#ff34495e"), Color.parseColor("#ffecf0f1")};
+    private int[] playerColor = {Color.parseColor("#090404"), Color.parseColor("#ffecf0f1")};
 
     private int eventAction = -1;
     private int initialClickX = -1;
@@ -55,7 +55,6 @@ public class GameBoardView extends View {
     private ArrayList<Point> availMoves = new ArrayList<>();
     private Piece selectedPiece;
     private Piece init, fin;
-    private boolean animateMove = false;
 
 
     //TODO: Eventually all these constant integers should be switched to enums for typesafety/readability
@@ -125,7 +124,7 @@ public class GameBoardView extends View {
         this.board = board;
         this.init = init;
         this.fin = fin;
-        animateMove = true;
+        invalidate();
     }//Draws the board
 
     public void drawBoard(Board board, Piece piece) {
@@ -143,14 +142,6 @@ public class GameBoardView extends View {
     }
 
     private void drawPossibleMoves(Canvas canvas){
-        for(int i = 0; i < boardDimension; i++){
-            for(int j = 0; j < boardDimension; j++){
-                paint.setColor(Color.parseColor("#090404"));
-                paint.setStyle(Paint.Style.FILL);
-                paint.setAlpha(150);
-                canvas.drawRect(startX + j * unitSize, startY + i * unitSize, startX + (j + 1) * unitSize, startY + (i + 1) * unitSize, paint);
-            }
-        }
 
         //Draws the squares highlighting the available moves
         for(int i = 0; i < availMoves.size(); i++){
@@ -161,12 +152,6 @@ public class GameBoardView extends View {
             canvas.drawRect(startX + p.y * unitSize, startY + p.x * unitSize, startX + (p.y + 1) * unitSize, startY + (p.x + 1) * unitSize, paint);
             //switch to circles eventually?
         }
-        Log.d("ASDF", "called");
-        int i = selectedPiece.getY(), j = selectedPiece.getX();
-        paint.setColor(board.getColor(i, j));
-        paint.setStyle(Paint.Style.FILL);
-        paint.setAlpha(0);
-        canvas.drawRect(startX + j * unitSize, startY + i * unitSize, startX + (j + 1) * unitSize, startY + (i + 1) * unitSize, paint);
 
     }
 
@@ -195,24 +180,37 @@ public class GameBoardView extends View {
     public void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         setup();
+        Log.d("ASDF", "called");
         //Draws the board according to color
         for (int i = 0; i < board.getHeight(); i++) {
             for (int j = 0; j < board.getWidth(); j++) {
-                if (selectedPiece == null || (i != selectedPiece.getY() && j != selectedPiece.getX())) {
-                    paint.setColor(board.getColor(i, j));
-                    canvas.drawRect(startX + j * unitSize, startY + i * unitSize, startX + (j + 1) * unitSize, startY + (i + 1) * unitSize, paint);
+                paint.setColor(board.getColor(i, j));
+                canvas.drawRect(startX + j * unitSize, startY + i * unitSize, startX + (j + 1) * unitSize, startY + (i + 1) * unitSize, paint);
 
+                paint.setColor(Color.parseColor("#090404"));
+                paint.setStyle(Paint.Style.FILL);
+                paint.setAlpha(150);
+                canvas.drawRect(startX + j * unitSize, startY + i * unitSize, startX + (j + 1) * unitSize, startY + (i + 1) * unitSize, paint);
 
-                    if (!board.getTile(i, j).isEmpty()) {
-                        Piece temp = board.getTile(i, j).getPiece();
-                        paint.setColor(playerColor[temp.getOwner()]);//put in array
-                        canvas.drawCircle(startX + j * unitSize + unitSize / 2, startY + unitSize * i + unitSize / 2, unitSize / 2, paint);
-                        paint.setColor(temp.getColor());
-                        canvas.drawCircle(startX + j * unitSize + unitSize / 2, startY + unitSize * i + unitSize / 2, unitSize / 3, paint);
-                        paint.setColor(playerColor[temp.getOwner() == PLAYER_TWO ? PLAYER_ONE : PLAYER_TWO]);
-                        canvas.drawText("" + temp.getRank(), startX + j * unitSize + unitSize / 2 - 25, startY + unitSize * i + unitSize / 2 + 30, paint);
-
+                if (!board.getTile(i, j).isEmpty()) {
+                    if(selectedPiece != null && i == selectedPiece.getY() && j == selectedPiece.getX()) {
+                        Log.d("ASDF", selectedPiece.toString());
+                        paint.setColor(board.getColor(i, j));
+                        paint.setStyle(Paint.Style.FILL);
+                        paint.setAlpha(255);
+                        canvas.drawRect(startX + j * unitSize, startY + i * unitSize, startX + (j + 1) * unitSize, startY + (i + 1) * unitSize, paint);
                     }
+
+
+                    paint.setAlpha(255);
+                    Piece temp = board.getTile(i, j).getPiece();
+                    paint.setColor(playerColor[temp.getOwner()]);//put in array
+                    canvas.drawCircle(startX + j * unitSize + unitSize / 2, startY + unitSize * i + unitSize / 2, unitSize / 2, paint);
+                    paint.setColor(temp.getColor());
+                    canvas.drawCircle(startX + j * unitSize + unitSize / 2, startY + unitSize * i + unitSize / 2, unitSize / 3, paint);
+                    paint.setColor(playerColor[temp.getOwner() == PLAYER_TWO ? PLAYER_ONE : PLAYER_TWO]);
+                    canvas.drawText("" + temp.getRank(), startX + j * unitSize + unitSize / 2 - 25, startY + unitSize * i + unitSize / 2 + 30, paint);
+
                 }
             }
         }
@@ -246,28 +244,5 @@ public class GameBoardView extends View {
         public void onSwipeRight();
 
         public void onSwipeLeft();
-    }
-
-    private class AnimateMove implements Runnable {
-
-        public AnimateMove() {
-
-        }
-
-        @Override
-        public void run() {
-            for (frameCounter = 0; frameCounter < NUM_FRAMES; frameCounter++) {
-                postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        //fade in fade out animation via paint.setAlpha() method
-                        //original point piece has to be faded out
-                        //new piece has to be faded in
-                        invalidate();
-                    }
-                }, 50);
-            }
-
-        }
     }
 }
