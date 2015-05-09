@@ -11,6 +11,10 @@ public class Piece {//object that conducts piece logic and is used by board
 	private int locX = 0, locY = 0, rank = 0, color = -1, distance;
     private int owner = 0;
     private int[] playerColor = {Color.parseColor("#090404"), Color.parseColor("#ffecf0f1")};
+    private double[] x = {0, 1, 1, 0, -1, -1};
+    private double[] y = {1, 0.7, -0.7, -1, -0.7, 0.7};
+    private float outerEdge = 0.9f; //space between outer and inner edge is the player color piece
+    private float innerEdge = 0.7f;
 
     public Piece(Piece p){
         locX = p.getX();
@@ -94,11 +98,9 @@ public class Piece {//object that conducts piece logic and is used by board
 
     public void draw(Canvas canvas, Paint paint, float startX, float startY, float unitSize, int PLAYER_TWO, int PLAYER_ONE){
         paint.setColor(playerColor[this.getOwner()]);//put in array
-        canvas.drawCircle(startX + locX * unitSize + unitSize / 2, startY + unitSize * locY + unitSize / 2, unitSize / 2, paint);
+        canvas.drawCircle(startX + locX * unitSize + unitSize / 2, startY + unitSize * locY + unitSize / 2, (unitSize / 2) * outerEdge, paint);
         paint.setColor(this.getColor());
-        canvas.drawCircle(startX + locX * unitSize + unitSize / 2, startY + unitSize * locY + unitSize / 2, unitSize / 3, paint);
-        paint.setColor(playerColor[this.getOwner() == PLAYER_TWO ? PLAYER_ONE : PLAYER_TWO]);
-        canvas.drawText("" + this.getRank(), startX + locX * unitSize + unitSize / 2 - 25, startY + unitSize * locY + unitSize / 2 + 30, paint);
+        canvas.drawCircle(startX + locX * unitSize + unitSize / 2, startY + unitSize * locY + unitSize / 2, (unitSize / 2) * innerEdge, paint);
     }
 
 }
