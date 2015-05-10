@@ -147,6 +147,7 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
         if (aiWin) {
             resolveAiWin();
         }
+
         if (firstMove) {//first move has its own resolve method
             Log.d("test", x + " " + y);
             if(x == -1 || y == -1)
