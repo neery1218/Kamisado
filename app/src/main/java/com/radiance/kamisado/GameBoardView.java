@@ -147,6 +147,15 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
         init = null;
         fin = null;
         resetBoard = reset;
+        if(resetBoard == true){
+            animationRunning = true;
+            animator = ValueAnimator.ofInt(0, 255);
+            animator.setDuration(500);
+            animator.addUpdateListener(this);
+            animator.addListener(this);
+
+            animator.start();
+        }
         invalidate();
     }//Draws the board
 
@@ -208,6 +217,15 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
                     canvas.drawRect(startX + j * unitSize, startY + i * unitSize, startX + (j + 1) * unitSize, startY + (i + 1) * unitSize, paint);
                 }
 
+
+            }
+        }
+    }
+
+    private void drawPiece(Canvas canvas){
+
+        for(int i = 0; i < boardDimension;i++)
+            for(int j = 0; j < boardDimension; j++) {
                 if (!board.getTile(i, j).isEmpty()) {
                     if(selectedPiece != null && i == selectedPiece.getY() && j == selectedPiece.getX() && !animationRunning) {
                         Log.d("ASDF", selectedPiece.toString());
@@ -216,22 +234,31 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
                         paint.setAlpha(255);
                         canvas.drawRect(startX + j * unitSize, startY + i * unitSize, startX + (j + 1) * unitSize, startY + (i + 1) * unitSize, paint);
                     }
-
-
                     paint.setAlpha(255);
                     Piece temp = board.getTile(i, j).getPiece();
-                    if(fin == null || (temp.getX() != fin.getX() || temp.getY() != fin.getY()))
+                    if (fin == null || (temp.getX() != fin.getX() || temp.getY() != fin.getY()))
                         temp.draw(canvas, paint, startX, startY, unitSize, PLAYER_TWO, PLAYER_ONE, 255);
-                    else{
-                        Log.d("Animate", "wtf " + temp.toString() + " " + fin.toString());
-                    }
                 }
             }
-        }
     }
 
     private void resetBoard(Canvas canvas){
-
+        for(int i = 0; i < boardDimension;i++)
+            for(int j = 0; j < boardDimension; j++) {
+                if (!board.getTile(i, j).isEmpty()) {
+                    if(selectedPiece != null && i == selectedPiece.getY() && j == selectedPiece.getX() && !animationRunning) {
+                        Log.d("ASDF", selectedPiece.toString());
+                        paint.setColor(board.getColor(i, j));
+                        paint.setStyle(Paint.Style.FILL);
+                        paint.setAlpha(255);
+                        canvas.drawRect(startX + j * unitSize, startY + i * unitSize, startX + (j + 1) * unitSize, startY + (i + 1) * unitSize, paint);
+                    }
+                    paint.setAlpha(255 - animateAlpha);
+                    Piece temp = board.getTile(i, j).getPiece();
+                    if (fin == null || (temp.getX() != fin.getX() || temp.getY() != fin.getY()))
+                        temp.draw(canvas, paint, startX, startY, unitSize, PLAYER_TWO, PLAYER_ONE, 255 - animateAlpha);
+                }
+            }
     }
 
     @Override
@@ -240,8 +267,9 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
         paint.setAntiAlias(true);
         setup();
 
+        drawBoard(canvas);
         if(!resetBoard)
-            drawBoard(canvas);
+            drawPiece(canvas);
         else{
             resetBoard(canvas);
         }

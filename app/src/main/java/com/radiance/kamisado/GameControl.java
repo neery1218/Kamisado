@@ -146,7 +146,7 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
             resolveAiWin();
         }
         if (firstMove) {//first move has its own resolve method
-            if(players[counter % 2] instanceof HumanPlayer && !resolveFirstMove(x, y))
+            if(x != -1 && y != -1 && players[counter % 2] instanceof HumanPlayer && !resolveFirstMove(x, y))
                 return;
         }
         firstMove = false;
