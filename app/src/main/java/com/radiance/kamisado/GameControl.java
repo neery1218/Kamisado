@@ -30,6 +30,8 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
     private boolean aiWin = false;
     private boolean deadlock = false;
 
+    private Board resetBoard = null;
+
     public GameControl(GameBoardView gameBoardView, int bd, int VERSUS_TYPE) {
         this.boardDimension = bd;
         this.gameBoardView = gameBoardView;
@@ -59,7 +61,7 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
         firstMove = true;
         counter = 1;
         gameBoardView.setAvailMoves(availMoves);
-        gameBoardView.drawBoard(board, selectedPiece);
+        gameBoardView.drawBoard(board, selectedPiece, false);
 
     }
 
@@ -89,7 +91,7 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
             availMoves = players[counter % 2].calcMoves(board, selectedPiece);
             gameBoardView.setSelectedPiece(selectedPiece);
             gameBoardView.setAvailMoves(availMoves);
-            gameBoardView.drawBoard(board, selectedPiece);
+            gameBoardView.drawBoard(board, selectedPiece, false);
             return false;
         } else if (selectedPiece == null)
             return false;
@@ -151,7 +153,7 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
             resolveAiWin();
         }
         if (firstMove) {//first move has its own resolve method
-            if(players[counter % 2] instanceof HumanPlayer && !resolveFirstMove(x, y))
+            if(x != -1 && y != -1 && players[counter % 2] instanceof HumanPlayer && !resolveFirstMove(x, y))
                 return;
         }
         firstMove = false;
@@ -215,11 +217,13 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
         firstMove = true;
         selectedPiece = null;
         gameBoardView.setSelectedPiece(null);
-        gameBoardView.drawBoard(board, selectedPiece);
+        gameBoardView.setResetBoard(resetBoard);
+        gameBoardView.drawBoard(board, selectedPiece, true);
     }
 
     @Override
     public void onSwipeRight() {
+        resetBoard = new Board(board);
         board.search();
         board.fillRight();
         reset();
@@ -227,6 +231,7 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
 
     @Override
     public void onSwipeLeft() {
+        resetBoard = new Board(board);
         board.search();
         board.fillLeft();
         reset();
