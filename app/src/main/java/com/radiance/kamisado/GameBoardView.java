@@ -213,7 +213,7 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
                 }
 
                 if (!board.getTile(i, j).isEmpty()) {
-                    if(selectedPiece != null && i == selectedPiece.getY() && j == selectedPiece.getX()) {
+                    if(selectedPiece != null && i == selectedPiece.getY() && j == selectedPiece.getX() && !animationRunning) {
                         Log.d("ASDF", selectedPiece.toString());
                         paint.setColor(board.getColor(i, j));
                         paint.setStyle(Paint.Style.FILL);
@@ -234,7 +234,7 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
         }
 
         //Displays the available moves
-        if (selectedPiece != null)
+        if (selectedPiece != null && !animationRunning)
             drawPossibleMoves(canvas);
 
         if(init != null) {
@@ -279,6 +279,7 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
     public void onAnimationEnd(Animator animation) {
         animationRunning = false;
         onBoardEvent.onTouch(-1,-1);
+        invalidate();
     }
 
     @Override
