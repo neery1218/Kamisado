@@ -54,6 +54,7 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
     private Piece init, fin;
     private ValueAnimator animator;
     private int animateAlpha = 255;
+    private boolean resetBoard = false;
 
     public boolean animationRunning = false;
 
@@ -140,11 +141,12 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
         invalidate();
     }//Draws the board
 
-    public void drawBoard(Board board, Piece piece) {
+    public void drawBoard(Board board, Piece piece, boolean reset) {
         this.board = board;
         this.selectedPiece = piece;
         init = null;
         fin = null;
+        resetBoard = reset;
         invalidate();
     }//Draws the board
 
@@ -172,7 +174,7 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
 
 
 
-    public void resolveSwipe(MotionEvent event){
+    private void resolveSwipe(MotionEvent event){
         if(event.getAction() == 0){
             initialClickX = (int)event.getX();
             initialClickY = (int)event.getY();
@@ -193,13 +195,7 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
         }
     }
 
-    @Override
-    public void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
-        paint.setAntiAlias(true);
-        setup();
-        Log.d("ASDF", "called");
-        //Draws the board according to color
+    private void drawBoard(Canvas canvas){
         for (int i = 0; i < board.getHeight(); i++) {
             for (int j = 0; j < board.getWidth(); j++) {
                 paint.setColor(board.getColor(i, j));
@@ -225,13 +221,32 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
                     paint.setAlpha(255);
                     Piece temp = board.getTile(i, j).getPiece();
                     if(fin == null || (temp.getX() != fin.getX() || temp.getY() != fin.getY()))
-                    temp.draw(canvas, paint, startX, startY, unitSize, PLAYER_TWO, PLAYER_ONE, 255);
+                        temp.draw(canvas, paint, startX, startY, unitSize, PLAYER_TWO, PLAYER_ONE, 255);
                     else{
                         Log.d("Animate", "wtf " + temp.toString() + " " + fin.toString());
                     }
                 }
             }
         }
+    }
+
+    private void resetBoard(Canvas canvas){
+
+    }
+
+    @Override
+    public void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
+        paint.setAntiAlias(true);
+        setup();
+
+        if(!resetBoard)
+            drawBoard(canvas);
+        else{
+            resetBoard(canvas);
+        }
+        //Draws the board according to color
+
 
         //Displays the available moves
         if (selectedPiece != null && !animationRunning)

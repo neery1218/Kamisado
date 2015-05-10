@@ -58,7 +58,7 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
         firstMove = true;
         counter = 1;
         gameBoardView.setAvailMoves(availMoves);
-        gameBoardView.drawBoard(board, selectedPiece);
+        gameBoardView.drawBoard(board, selectedPiece, false);
 
     }
 
@@ -88,7 +88,7 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
             availMoves = players[counter % 2].calcMoves(board, selectedPiece);
             gameBoardView.setSelectedPiece(selectedPiece);
             gameBoardView.setAvailMoves(availMoves);
-            gameBoardView.drawBoard(board, selectedPiece);
+            gameBoardView.drawBoard(board, selectedPiece, false);
             return false;
         } else if (selectedPiece == null)
             return false;
@@ -210,7 +210,7 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
         firstMove = true;
         selectedPiece = null;
         gameBoardView.setSelectedPiece(null);
-        gameBoardView.drawBoard(board, selectedPiece);
+        gameBoardView.drawBoard(board, selectedPiece, true);
     }
 
     @Override
