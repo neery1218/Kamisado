@@ -28,6 +28,7 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
     private Point win = new Point(-1, -1);
     private int deadlockCount = 0;
     private boolean aiWin = false;
+    private boolean deadlock = false;
 
     public GameControl(GameBoardView gameBoardView, int bd, int VERSUS_TYPE) {
         this.boardDimension = bd;
@@ -103,7 +104,11 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
         if (availMoves.size() == 0 && win.equals(-1, -1)) {//if there are no available moves, it skips the player's turn
             deadlockCount++;
             if (deadlockCount == 2) {//this means that both players can't move
-                //win = counter % 2;
+                win = new Point(selectedPiece.getY(), selectedPiece.getX());
+                score[selectedPiece.getOwner()] += 1;
+                gameBoardView.updateScore(score);
+                deadlock = true;
+                reset();
                 //new rules: if deadlock, it's a tie
                 //TODO: make deadlock screen
 
