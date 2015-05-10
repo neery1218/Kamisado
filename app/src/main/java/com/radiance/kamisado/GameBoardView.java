@@ -33,7 +33,6 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
     private float unitSize = 0;
     private int[] playerColor = {Color.parseColor("#090404"), Color.parseColor("#ffecf0f1")};
 
-    private int eventAction = -1;
     private int initialClickX = -1;
     private int initialClickY = -1;
     private int finalClickX = -1;
