@@ -315,7 +315,6 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
 
     @Override
     public void onAnimationUpdate(ValueAnimator animation) {
-        Log.d("Animate", animation.getAnimatedValue() + "");
         animateAlpha = 255 - (Integer)animation.getAnimatedValue();
         invalidate();
     }
@@ -328,6 +327,7 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
     @Override
     public void onAnimationEnd(Animator animation) {
         animationRunning = false;
+        boardReset = false;
         onBoardEvent.onTouch(-1,-1);
         invalidate();
     }

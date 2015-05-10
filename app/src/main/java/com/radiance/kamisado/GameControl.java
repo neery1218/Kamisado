@@ -8,7 +8,7 @@ import java.util.ArrayList;
 public class GameControl implements GameBoardView.OnBoardEvent {//runs the game counter and controls gameBoardView calls
     public static final int PLAYER_ONE = 0;
     public static final int PLAYER_TWO = 1;
-    private static boolean firstMove = true;
+    private boolean firstMove = true;
     Board board = new Board();
     private Point inValid = new Point(-1, -1);
     private Player[] players;
@@ -148,10 +148,14 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
             resolveAiWin();
         }
         if (firstMove) {//first move has its own resolve method
-            if(x != -1 && y != -1 && players[counter % 2] instanceof HumanPlayer && !resolveFirstMove(x, y))
+            Log.d("test", x + " " + y);
+            if(x == -1 || y == -1)
+                return;
+            if(players[counter % 2] instanceof HumanPlayer && !resolveFirstMove(x, y))
                 return;
         }
         firstMove = false;
+        Log.d("test",  "" + firstMove);
 
 
         Point temp = players[counter % 2].resolveMove(new Point(y, x));//returns the point that the piece should be moved to
