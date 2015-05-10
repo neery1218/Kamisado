@@ -29,6 +29,8 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
     private int deadlockCount = 0;
     private boolean aiWin = false;
 
+    private Board resetBoard = null;
+
     public GameControl(GameBoardView gameBoardView, int bd, int VERSUS_TYPE) {
         this.boardDimension = bd;
         this.gameBoardView = gameBoardView;
@@ -210,11 +212,13 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
         firstMove = true;
         selectedPiece = null;
         gameBoardView.setSelectedPiece(null);
+        gameBoardView.setResetBoard(resetBoard);
         gameBoardView.drawBoard(board, selectedPiece, true);
     }
 
     @Override
     public void onSwipeRight() {
+        resetBoard = new Board(board);
         board.search();
         board.fillRight();
         reset();
@@ -222,6 +226,7 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
 
     @Override
     public void onSwipeLeft() {
+        resetBoard = new Board(board);
         board.search();
         board.fillLeft();
         reset();

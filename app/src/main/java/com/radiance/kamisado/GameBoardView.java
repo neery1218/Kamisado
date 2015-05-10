@@ -54,9 +54,11 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
     private Piece init, fin;
     private ValueAnimator animator;
     private int animateAlpha = 255;
-    private boolean resetBoard = false;
+    private boolean boardReset = false;
 
     public boolean animationRunning = false;
+
+    private Board resetBoard;
 
 
     //TODO: Eventually all these constant integers should be switched to enums for typesafety/readability
@@ -146,8 +148,8 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
         this.selectedPiece = piece;
         init = null;
         fin = null;
-        resetBoard = reset;
-        if(resetBoard == true){
+        boardReset = reset;
+        if(boardReset == true){
             animationRunning = true;
             animator = ValueAnimator.ofInt(0, 255);
             animator.setDuration(500);
@@ -165,6 +167,10 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
 
     public void setAvailMoves(ArrayList<Point> list){
         this.availMoves = list;
+    }
+
+    public void setResetBoard(Board b){
+        this.resetBoard = b;
     }
 
     private void drawPossibleMoves(Canvas canvas){
@@ -246,17 +252,18 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
         for(int i = 0; i < boardDimension;i++)
             for(int j = 0; j < boardDimension; j++) {
                 if (!board.getTile(i, j).isEmpty()) {
-                    if(selectedPiece != null && i == selectedPiece.getY() && j == selectedPiece.getX() && !animationRunning) {
-                        Log.d("ASDF", selectedPiece.toString());
-                        paint.setColor(board.getColor(i, j));
-                        paint.setStyle(Paint.Style.FILL);
-                        paint.setAlpha(255);
-                        canvas.drawRect(startX + j * unitSize, startY + i * unitSize, startX + (j + 1) * unitSize, startY + (i + 1) * unitSize, paint);
-                    }
                     paint.setAlpha(255 - animateAlpha);
                     Piece temp = board.getTile(i, j).getPiece();
                     if (fin == null || (temp.getX() != fin.getX() || temp.getY() != fin.getY()))
                         temp.draw(canvas, paint, startX, startY, unitSize, PLAYER_TWO, PLAYER_ONE, 255 - animateAlpha);
+
+                }
+
+                if(!resetBoard.getTile(i, j).isEmpty()){
+                    paint.setAlpha(animateAlpha);
+                    Piece temp = resetBoard.getTile(i, j).getPiece();
+                    if (fin == null || (temp.getX() != fin.getX() || temp.getY() != fin.getY()))
+                        temp.draw(canvas, paint, startX, startY, unitSize, PLAYER_TWO, PLAYER_ONE, animateAlpha);
                 }
             }
     }
@@ -268,7 +275,7 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
         setup();
 
         drawBoard(canvas);
-        if(!resetBoard)
+        if(!boardReset)
             drawPiece(canvas);
         else{
             resetBoard(canvas);
