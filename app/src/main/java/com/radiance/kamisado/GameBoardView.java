@@ -33,7 +33,6 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
     private float unitSize = 0;
     private int[] playerColor = {Color.parseColor("#090404"), Color.parseColor("#ffecf0f1")};
 
-    private int eventAction = -1;
     private int initialClickX = -1;
     private int initialClickY = -1;
     private int finalClickX = -1;
@@ -51,17 +50,13 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
     private int VERSUS_TYPE;
     private ArrayList<Point> availMoves = new ArrayList<>();
     private Piece selectedPiece;
+
     private Piece init, fin;
     private ValueAnimator animator;
     private int animateAlpha = 255;
     private boolean boardReset = false;
-
     public boolean animationRunning = false;
-
     private Board resetBoard;
-
-
-    //TODO: Eventually all these constant integers should be switched to enums for typesafety/readability
 
     public GameBoardView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -315,7 +310,6 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
 
     @Override
     public void onAnimationUpdate(ValueAnimator animation) {
-        Log.d("Animate", animation.getAnimatedValue() + "");
         animateAlpha = 255 - (Integer)animation.getAnimatedValue();
         invalidate();
     }
@@ -328,6 +322,7 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
     @Override
     public void onAnimationEnd(Animator animation) {
         animationRunning = false;
+        boardReset = false;
         onBoardEvent.onTouch(-1,-1);
         invalidate();
     }
