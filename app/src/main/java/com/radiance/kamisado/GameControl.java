@@ -32,6 +32,7 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
 
     private Board resetBoard = null;
 
+
     public GameControl(GameBoardView gameBoardView, int bd, int VERSUS_TYPE) {
         this.boardDimension = bd;
         this.gameBoardView = gameBoardView;
@@ -244,9 +245,10 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
     }
 
     public void undo() {
+
         Move undo = board.undo();
         if (!undo.equals(new Move(new Point(-1, -1), new Point(-1, -1)))) {
-            counter--;
+            counter = (counter + 1) % 2;
             resolveNormalMove(undo.fin.y, undo.fin.x);
             gameBoardView.setAvailMoves(availMoves);
             init = new Piece(board.getTile(undo.fin.x, undo.fin.y).getPiece());

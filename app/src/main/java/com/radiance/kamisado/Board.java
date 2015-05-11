@@ -16,6 +16,7 @@ public class Board implements Cloneable{//board object
     private Point[][] collected = new Point[2][boardDimension];
     private int PLAYER_TWO = GameControl.PLAYER_TWO, PLAYER_ONE = GameControl.PLAYER_ONE;
     private Stack<Move> moveStack;
+    private int undoCount; //this is so that reverted moves don't get added to the stack again
 
     //red,orange,yellow,green,blue,
     private int[] colors = {Color.parseColor("#ffe74c3c"), //red
@@ -29,6 +30,7 @@ public class Board implements Cloneable{//board object
     private int r = colors[0], o = colors[1], ye = colors[2], g = colors[3], b = colors[4], p = colors[5], pk = colors[6], br = colors[7];
 
     public Board() {
+        undoCount = 0;
         moveStack = new Stack<Move>();
         boardColor = new int[][]{
                 {o,b,p,pk,ye,r,g,br},
@@ -56,6 +58,7 @@ public class Board implements Cloneable{//board object
     }
 
     public Board(Board temp){
+        undoCount = 0;
         moveStack = new Stack<Move>();
         Tile[][] tiles = temp.getTiles();
         boardColor = new int[][]{
@@ -85,7 +88,10 @@ public class Board implements Cloneable{//board object
             Piece temp = board[a.x][a.y].getPiece();
             board[a.x][a.y].pop();
             board[b.x][b.y].setPiece(temp);
-            moveStack.add(new Move(a, b));
+            if (undoCount == 0)
+                moveStack.add(new Move(a, b));
+            else
+                undoCount--;
 
         }
 
@@ -94,7 +100,7 @@ public class Board implements Cloneable{//board object
     public Move undo() {//return move that has to be executed
         Move undo = new Move(new Point(-1, -1), new Point(-1, -1));
         if (!moveStack.empty()) {
-
+            undoCount++;
             undo = moveStack.pop().reverse();
             move(undo.init, undo.fin);
             return undo;
@@ -183,6 +189,7 @@ public class Board implements Cloneable{//board object
     }
 
     public void fillLeft() {
+        undoCount = 0;
         moveStack = new Stack<Move>();
 
         Board temp = new Board();
@@ -200,6 +207,7 @@ public class Board implements Cloneable{//board object
     }
 
     public void fillRight() {
+        undoCount = 0;
         moveStack = new Stack<Move>();
         Board temp = new Board();
         temp.clear();
