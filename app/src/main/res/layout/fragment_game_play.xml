@@ -18,4 +18,11 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom" />
 
+    <Button
+        android:id="@+id/undoButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|right"
+        android:text="New Button" />
+
 </FrameLayout>
