@@ -19,6 +19,7 @@ import java.util.ArrayList;
  * Created by neerajen on 31/03/15.
  */
 public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateListener, Animator.AnimatorListener{
+    public boolean animationRunning = false;
     //gameBoardVariables
     private Paint paint;//make these variables easier to read
     private Board board;
@@ -32,12 +33,10 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
     private float borderWidth = 0;
     private float unitSize = 0;
     private int[] playerColor = {Color.parseColor("#090404"), Color.parseColor("#ffecf0f1")};
-
     private int initialClickX = -1;
     private int initialClickY = -1;
     private int finalClickX = -1;
     private int finalClickY = -1;
-
     private boolean firstTime = true;
     //score array
     private int boardDimension = 8;
@@ -50,12 +49,10 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
     private int VERSUS_TYPE;
     private ArrayList<Point> availMoves = new ArrayList<>();
     private Piece selectedPiece;
-
     private Piece init, fin;
     private ValueAnimator animator;
     private int animateAlpha = 255;
     private boolean boardReset = false;
-    public boolean animationRunning = false;
     private Board resetBoard;
 
     public GameBoardView(Context context, AttributeSet attrs) {
@@ -335,6 +332,10 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
     @Override
     public void onAnimationRepeat(Animator animation) {
 
+    }
+
+    public void undo() {
+        gameControl.undo();
     }
 
     public interface OnBoardEvent{

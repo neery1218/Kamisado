@@ -8,8 +8,8 @@ import java.util.ArrayList;
 public class GameControl implements GameBoardView.OnBoardEvent {//runs the game counter and controls gameBoardView calls
     public static final int PLAYER_ONE = 0;
     public static final int PLAYER_TWO = 1;
-    private boolean firstMove = true;
     Board board = new Board();
+    private boolean firstMove = true;
     private Point inValid = new Point(-1, -1);
     private Player[] players;
     private GameBoardView gameBoardView;
@@ -241,6 +241,21 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
         board.fillLeft();
         reset();
 
+    }
+
+    public void undo() {
+        Move undo = board.undo();
+        if (!undo.equals(new Move(new Point(-1, -1), new Point(-1, -1)))) {
+            counter--;
+            resolveNormalMove(undo.fin.y, undo.fin.x);
+            gameBoardView.setAvailMoves(availMoves);
+            init = new Piece(board.getTile(undo.fin.x, undo.fin.y).getPiece());
+            fin = new Piece(board.getTile(undo.fin.x, undo.fin.y).getPiece());
+            gameBoardView.drawBoard(board, init, fin, selectedPiece);
+
+        }
+
+        Log.v("Game", "undo");
     }
 
     public Piece getSelectedPiece() {

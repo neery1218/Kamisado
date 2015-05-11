@@ -94,6 +94,7 @@ public class Board implements Cloneable{//board object
     public Move undo() {//return move that has to be executed
         Move undo = new Move(new Point(-1, -1), new Point(-1, -1));
         if (!moveStack.empty()) {
+
             undo = moveStack.pop().reverse();
             move(undo.init, undo.fin);
             return undo;

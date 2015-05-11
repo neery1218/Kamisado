@@ -17,4 +17,8 @@ public class Move {
     public Move reverse() {
         return new Move(fin, init);
     }
+
+    public boolean equals(Move b) {
+        return (init.equals(b.init) && fin.equals(b.fin));
+    }
 }
