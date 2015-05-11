@@ -6,19 +6,19 @@ import android.graphics.Point;
  * Created by neerajen on 10/05/15.
  */
 public class Move {
-    Point init;
-    Point fin;
+    Point start;
+    Point finish;
 
     public Move(Point init, Point fin) {
-        this.init = init;
-        this.fin = fin;
+        this.start = init;
+        this.finish = fin;
     }
 
     public Move reverse() {
-        return new Move(fin, init);
+        return new Move(finish, start);
     }
 
     public boolean equals(Move b) {
-        return (init.equals(b.init) && fin.equals(b.fin));
+        return (start.equals(b.start) && finish.equals(b.finish));
     }
 }

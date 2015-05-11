@@ -251,17 +251,18 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
             counter = (counter + 1) % 2;
 
 
-            //resolveNormalMove(undo.fin.y, undo.fin.x);
-            currColor = board.getTile(undo.fin.x, undo.fin.y).getPiece().getColor();
+            //resolveNormalMove(undo.finish.y, undo.finish.x);
+            currColor = board.getTile(undo.finish.x, undo.finish.y).getPiece().getColor();
             selectedPiece = GameLogic.findPiece(board, counter % 2, currColor);
             availMoves = players[counter % 2].calcMoves(board, selectedPiece);
 
             gameBoardView.setAvailMoves(availMoves);
-            init = new Piece(board.getTile(undo.fin.x, undo.fin.y).getPiece());
-            fin = new Piece(board.getTile(undo.fin.x, undo.fin.y).getPiece());
+            init = new Piece(board.getTile(undo.finish.x, undo.finish.y).getPiece());
+            fin = new Piece(board.getTile(undo.finish.x, undo.finish.y).getPiece());
             gameBoardView.drawBoard(board, init, fin, selectedPiece);
 
-        }
+        } else
+            firstMove = true;
 
         Log.v("Game", "undo");
     }

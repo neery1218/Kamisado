@@ -102,7 +102,7 @@ public class Board implements Cloneable{//board object
         if (!moveStack.empty()) {
             undoCount++;
             undo = moveStack.pop().reverse();
-            move(undo.init, undo.fin);
+            move(undo.start, undo.finish);
             return undo;
         }
         return undo;
