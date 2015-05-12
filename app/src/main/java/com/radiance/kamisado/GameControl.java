@@ -4,6 +4,7 @@ import android.graphics.Point;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Stack;
 
 public class GameControl implements GameBoardView.OnBoardEvent {//runs the game counter and controls gameBoardView calls
     public static final int PLAYER_ONE = 0;
@@ -31,6 +32,9 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
     private boolean deadlock = false;
 
     private Board resetBoard = null;
+
+    private Stack<MoveGroup> moveStack;
+    private int undoCount;
 
 
     public GameControl(GameBoardView gameBoardView, int bd, int VERSUS_TYPE) {
@@ -61,6 +65,11 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
         availMoves = new ArrayList<>();
         firstMove = true;
         counter = 1;
+
+        undoCount = 0;
+        moveStack = new Stack<MoveGroup>();
+
+
         gameBoardView.setAvailMoves(availMoves);
         gameBoardView.drawBoard(board, selectedPiece, false);
 
@@ -69,21 +78,31 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
 
     public void resolveSumoPushP1() {//moves the pieces from a player one sumopush
         //find pieces that are gonna get sumo pushed
-        for (int j = sumoChain; j >= 1; j--)
-            board.move(new Point(selectedPiece.getY() - j, selectedPiece.getX()), new Point(selectedPiece.getY() - j - 1, selectedPiece.getX()));
+        MoveGroup sumoMove = new MoveGroup();
+        for (int j = sumoChain; j >= 1; j--) {
+            sumoMove.add(new Move(new Point(selectedPiece.getY() - j, selectedPiece.getX()), new Point(selectedPiece.getY() - j - 1, selectedPiece.getX())));
+        }
+        //board.move(new Point(selectedPiece.getY() - j, selectedPiece.getX()), new Point(selectedPiece.getY() - j - 1, selectedPiece.getX()));
 
-        board.move(new Point(selectedPiece.getY(), selectedPiece.getX()), new Point(selectedPiece.getY() - 1, selectedPiece.getX()));
+        sumoMove.add(new Move(new Point(selectedPiece.getY(), selectedPiece.getX()), new Point(selectedPiece.getY() - 1, selectedPiece.getX())));
+        // board.move(new Point(selectedPiece.getY(), selectedPiece.getX()), new Point(selectedPiece.getY() - 1, selectedPiece.getX()));
+        board.move(sumoMove);
+        moveStack.push(sumoMove);
     }
 
     public void resolveSumoPushP2() {//moves the pieces from a player two sumopush
-
+        MoveGroup sumoMove = new MoveGroup();
         //Pushing from the other end so it doesn't get overwritten
-        for (int j = sumoChain; j >= 1; j--)
-            board.move(new Point(selectedPiece.getY() + j, selectedPiece.getX()), new Point(selectedPiece.getY() + j + 1, selectedPiece.getX()));
+        for (int j = sumoChain; j >= 1; j--) {
+            sumoMove.add(new Move(new Point(selectedPiece.getY() + j, selectedPiece.getX()), new Point(selectedPiece.getY() + j + 1, selectedPiece.getX())));
+        }
+        // board.move(new Point(selectedPiece.getY() + j, selectedPiece.getX()), new Point(selectedPiece.getY() + j + 1, selectedPiece.getX()));
 
 
-        board.move(new Point(selectedPiece.getY(), selectedPiece.getX()), new Point(selectedPiece.getY() + 1, selectedPiece.getX()));
-
+        //board.move(new Point(selectedPiece.getY(), selectedPiece.getX()), new Point(selectedPiece.getY() + 1, selectedPiece.getX()));
+        sumoMove.add(new Move(new Point(selectedPiece.getY(), selectedPiece.getX()), new Point(selectedPiece.getY() + 1, selectedPiece.getX())));
+        board.move(sumoMove);
+        moveStack.push(sumoMove);
     }
 
     public boolean resolveFirstMove(int x, int y) {//used to display moves when it's the first move of a game
@@ -162,7 +181,7 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
                 return;
         }
         firstMove = false;
-        Log.d("test",  "" + firstMove);
+        Log.d("test", "" + firstMove);
 
 
         Point temp = players[counter % 2].resolveMove(new Point(y, x));//returns the point that the piece should be moved to
@@ -170,6 +189,8 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
             if (selectedPiece.getRank() > 0 && temp.equals(players[counter % 2].getSumoPushPoint())) {//if it's sumo:
                 init = new Piece(board.getTile(selectedPiece.getY(), selectedPiece.getX()).getPiece());
                 sumoChain = players[counter % 2].getSumoChain();
+                if (undoCount > 0)
+                    undoCount--;
                 switch (counter % 2) {
                     case PLAYER_TWO:
                         resolveSumoPushP1();
@@ -182,7 +203,11 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
                 fin = new Piece(board.getTile(temp.x, temp.y).getPiece());
             } else {
                 init = new Piece(board.getTile(selectedPiece.getY(), selectedPiece.getX()).getPiece());
-                board.move(new Point(selectedPiece.getY(), selectedPiece.getX()), temp);
+                Move move = new Move(new Point(selectedPiece.getY(), selectedPiece.getX()), temp);
+                moveStack.push(new MoveGroup(move));
+                board.move(move);
+                if (undoCount > 0)
+                    undoCount--;
                 fin = new Piece(board.getTile(temp.x, temp.y).getPiece());
             }
             counter++;
@@ -225,6 +250,8 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
         gameBoardView.setSelectedPiece(null);
         gameBoardView.setResetBoard(resetBoard);
         gameBoardView.drawBoard(board, selectedPiece, true);
+        undoCount = 0;
+        moveStack = new Stack<MoveGroup>();
     }
 
     @Override
@@ -246,23 +273,27 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
 
     public void undo() {
 
-        Move undo = board.undo();
-        if (!undo.equals(new Move(new Point(-1, -1), new Point(-1, -1)))) {
-            counter = (counter + 1) % 2;
-
-
-            //resolveNormalMove(undo.finish.y, undo.finish.x);
-            currColor = board.getTile(undo.finish.x, undo.finish.y).getPiece().getColor();
-            selectedPiece = GameLogic.findPiece(board, counter % 2, currColor);
-            availMoves = players[counter % 2].calcMoves(board, selectedPiece);
-
-            gameBoardView.setAvailMoves(availMoves);
-            init = new Piece(board.getTile(undo.finish.x, undo.finish.y).getPiece());
-            fin = new Piece(board.getTile(undo.finish.x, undo.finish.y).getPiece());
-            gameBoardView.drawBoard(board, init, fin, selectedPiece);
-
-        } else
+        if (moveStack.isEmpty()) {
             firstMove = true;
+            return;
+        }
+        undoCount++;
+        MoveGroup undo = moveStack.pop().reverse();
+        counter = (counter + 1) % 2;
+
+
+        //resolveNormalMove(undo.finish.y, undo.finish.x);
+        Log.v("Game", "undoSize: " + undo.get(0).toString());
+        board.move(undo);
+        currColor = board.getTile(undo.get(0).finish.x, undo.get(0).finish.y).getPiece().getColor();
+        selectedPiece = GameLogic.findPiece(board, counter % 2, currColor);
+        availMoves = players[counter % 2].calcMoves(board, selectedPiece);
+
+        gameBoardView.setAvailMoves(availMoves);
+        init = new Piece(board.getTile(undo.get(0).finish.x, undo.get(0).finish.y).getPiece());
+        fin = new Piece(board.getTile(undo.get(0).finish.x, undo.get(0).finish.y).getPiece());
+        gameBoardView.drawBoard(board, init, fin, selectedPiece);
+
 
         Log.v("Game", "undo");
     }
