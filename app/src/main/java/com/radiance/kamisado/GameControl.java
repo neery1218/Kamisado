@@ -231,7 +231,7 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
     public void onSwipeRight() {
         resetBoard = new Board(board);
         board.search();
-        board.fillRight();
+        board.fillLeft();
         reset();
     }
 
