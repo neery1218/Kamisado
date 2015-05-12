@@ -97,6 +97,26 @@ public class Board implements Cloneable{//board object
 
     }
 
+    public void move(Move move) {//overloaded method
+        Point a = move.start;
+        Point b = move.finish;
+        if (!getTile(a).isEmpty()) {
+            Piece temp = board[a.x][a.y].getPiece();
+            board[a.x][a.y].pop();
+            board[b.x][b.y].setPiece(temp);
+            if (undoCount == 0)
+                moveStack.add(new Move(a, b));
+            else
+                undoCount--;
+
+        }
+    }
+
+    public void move(MoveGroup moveGroup) {
+        for (int i = 0; i < moveGroup.size(); i++) {
+            move(moveGroup.get(i));
+        }
+    }
     public Move undo() {//return move that has to be executed
         Move undo = new Move(new Point(-1, -1), new Point(-1, -1));
         if (!moveStack.empty()) {
