@@ -50,6 +50,7 @@ public class MainActivity extends ActionBarActivity implements IntroFragment.OnI
         //initialize transaction and add to viewgroup
         getFragmentManager()
                 .beginTransaction()
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                 .add(R.id.fragment_container, introFragment)
                 .addToBackStack(null)
                 .commit();
@@ -60,7 +61,7 @@ public class MainActivity extends ActionBarActivity implements IntroFragment.OnI
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        //getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
@@ -88,6 +89,7 @@ public class MainActivity extends ActionBarActivity implements IntroFragment.OnI
         } else if (f instanceof GamePlayFragment) {
             getFragmentManager()
                     .beginTransaction()
+                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                     .replace(R.id.fragment_container, introFragment)
 
                     .commit();
@@ -115,6 +117,7 @@ public class MainActivity extends ActionBarActivity implements IntroFragment.OnI
                 fragmentManager = getFragmentManager();
                 fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.replace(R.id.fragment_container, tutorialFragment);
+                fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
                 fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
                 tutorialPressed = true;
@@ -132,6 +135,7 @@ public class MainActivity extends ActionBarActivity implements IntroFragment.OnI
             fragmentManager.beginTransaction()
                     .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                     .replace(R.id.fragment_container, matchLengthFragment)
+                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                     .addToBackStack(null)
                     .commit();
             // fragmentTransaction.replace(R.id.fragment_container, matchLengthFragment);
@@ -161,6 +165,7 @@ public class MainActivity extends ActionBarActivity implements IntroFragment.OnI
             fragmentManager = getFragmentManager();
             fragmentTransaction = fragmentManager.beginTransaction();
             fragmentTransaction.replace(R.id.fragment_container, aiDifficultyFragment);
+            fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
             fragmentTransaction.addToBackStack(null);
             fragmentTransaction.commit();
         } else {//calls the listener that sets up gamePlayFragment
@@ -187,6 +192,7 @@ public class MainActivity extends ActionBarActivity implements IntroFragment.OnI
         fragmentManager = getFragmentManager();
         fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.fragment_container, gamePlayFragment);
+        fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
 
