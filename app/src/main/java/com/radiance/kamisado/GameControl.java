@@ -212,6 +212,7 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
             }
             counter++;
 
+
             //find next piece
             win = GameLogic.win(board);
             if (!win.equals(-1, -1)) {//if someone won:
