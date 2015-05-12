@@ -279,7 +279,9 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
         }
         undoCount++;
         MoveGroup undo = moveStack.pop().reverse();
-        counter = (counter + 1) % 2;
+
+        if (undo.size() == 1)
+            counter = (counter + 1) % 2;
 
 
         //resolveNormalMove(undo.finish.y, undo.finish.x);
@@ -293,7 +295,9 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
         init = new Piece(board.getTile(undo.get(0).finish.x, undo.get(0).finish.y).getPiece());
         fin = new Piece(board.getTile(undo.get(0).finish.x, undo.get(0).finish.y).getPiece());
         gameBoardView.drawBoard(board, init, fin, selectedPiece);
-
+        if (moveStack.isEmpty()) {
+            firstMove = true;
+        }
 
         Log.v("Game", "undo");
     }
