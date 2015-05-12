@@ -225,7 +225,7 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
             resolveNormalMove(temp.y, temp.x);
 
             gameBoardView.setAvailMoves(availMoves);
-            gameBoardView.drawBoard(board, init, fin, selectedPiece);
+            gameBoardView.drawBoard(board, init.getPoint(), fin.getPoint(), selectedPiece);
             Log.d("Animate", fin.toString());
             if (!win.equals(-1, -1)) {
                 Log.v("game", "somebody has won");
@@ -295,7 +295,7 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
 
         fin = new Piece(board.getTile(undo.get(0).finish.x, undo.get(0).finish.y).getPiece());
         gameBoardView.setAvailMoves(availMoves);
-        gameBoardView.drawBoard(board, init, fin, selectedPiece);
+        gameBoardView.drawBoard(board, init.getPoint(), fin.getPoint(), selectedPiece);
         if (moveStack.isEmpty()) {
             firstMove = true;
         }

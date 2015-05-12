@@ -119,11 +119,13 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
     }//initialisation of the gameboard
 
 
-    public void drawBoard(Board board, Piece init, Piece fin, Piece selectedPiece) {
+    public void drawBoard(Board board, Point init, Point fin, Piece selectedPiece) {
         this.selectedPiece = selectedPiece;
         this.board = board;
-        this.init = init;
-        this.fin = fin;
+        Piece finPiece = board.getTile(fin.y, fin.x).getPiece();
+        this.fin = finPiece;
+        Piece initPiece = new Piece(init.x, init.y, this.fin.getColor(), this.fin.getRank(), this.fin.getOwner());
+        this.init = initPiece;
         animationRunning = true;
 
         animator = ValueAnimator.ofInt(0, 255);

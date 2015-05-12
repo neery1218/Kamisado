@@ -30,11 +30,12 @@ public class Piece {//object that conducts piece logic and is used by board
         owner = p.getOwner();
     }
 
-    public Piece(int x, int y, int color, int rank){
+    public Piece(int x, int y, int color, int rank, int owner){
         this.rank = rank;
 		locX = x;
 		locY = y;
         this.color = color;
+        this.owner = owner;
         distance = 7 - 2 * rank;
 	}
 
