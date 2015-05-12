@@ -210,6 +210,7 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
                     undoCount--;
                 fin = new Piece(board.getTile(temp.x, temp.y).getPiece());
             }
+
             counter++;
 
             //find next piece
