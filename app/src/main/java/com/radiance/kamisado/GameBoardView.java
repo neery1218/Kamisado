@@ -321,6 +321,9 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
         animationRunning = false;
         boardReset = false;
         onBoardEvent.onTouch(-1,-1);
+        if(gameControl.getWin().x != -1 && gameControl.getWin().y != -1){
+            selectedPiece = null;
+        }
         invalidate();
     }
 

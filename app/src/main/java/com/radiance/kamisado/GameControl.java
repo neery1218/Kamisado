@@ -87,7 +87,7 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
     }
 
     public boolean resolveFirstMove(int x, int y) {//used to display moves when it's the first move of a game
-        if (!board.getTile(y, x).isEmpty()) {
+        if (!board.getTile(y, x).isEmpty() && board.getTile(y, x).getPiece().getOwner() == counter % 2) {
             selectedPiece = board.getTile(y, x).getPiece();
             availMoves = players[counter % 2].calcMoves(board, selectedPiece);
             gameBoardView.setSelectedPiece(selectedPiece);
@@ -195,6 +195,7 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
                 score[winPlayer] += scores[winPiece.getRank()];
                 gameBoardView.updateScore(score);
                 board.rankUp(winPiece.getY(), winPiece.getX());
+                Log.d("TEST", "win");
             }
             resolveNormalMove(temp.y, temp.x);
 
