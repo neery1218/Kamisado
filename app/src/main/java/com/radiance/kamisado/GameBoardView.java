@@ -340,7 +340,11 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
     }
 
     public void undo() {
+
+
         gameControl.undo();
+        gameControl.undo();
+
     }
 
     public interface OnBoardEvent{
