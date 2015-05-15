@@ -30,8 +30,11 @@ public class GamePlayFragment extends Fragment {
     private LinearLayout topUserLayout;
     private LinearLayout bottomUserLayout;
 
+    private LinearLayout[] userLayouts;
+
     private int height;
     private int width;
+
 
 
     public GamePlayFragment() {
@@ -62,6 +65,8 @@ public class GamePlayFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        userLayouts = new LinearLayout[2];
+
         if (getArguments() != null) {
             VERSUS_TYPE = getArguments().getInt(MainActivity.ARG_VERSUS_TYPE);
             MATCH_TYPE = getArguments().getInt(MainActivity.ARG_MATCH_TYPE);
@@ -82,22 +87,32 @@ public class GamePlayFragment extends Fragment {
         View content = getActivity().getWindow().findViewById(Window.ID_ANDROID_CONTENT);//finds alloted screen size. this will save a lot of time.
         Log.v("UI", "Content: " + content.getWidth() + " " + content.getHeight());
 
+        userLayouts[GameControl.PLAYER_ONE] = (LinearLayout) view.findViewById(R.id.bottomUserLayout);
+        userLayouts[GameControl.PLAYER_TWO] = (LinearLayout) view.findViewById(R.id.topUserLayout);
+
+
+        //compute layout sizes
         height = content.getHeight();
         width = content.getWidth();
 
+        int layoutHeight = (height - width) / 2;
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, layoutHeight);
+        LinearLayout.LayoutParams gameParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, width);
+
         if (VERSUS_TYPE == MainActivity.PLAY_PRESSED) {//vs AI
             //set top linearlayout to contain textview
+            titleTextView = new TextView(getActivity());
+            titleTextView.setText("Kamisado");
+            titleTextView.setTypeface(MainActivity.typefaceHeader);
+            titleTextView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
+            userLayouts[GameControl.PLAYER_TWO].addView(titleTextView);
+
         } else if (VERSUS_TYPE == MainActivity.TWO_PLAY_PRESSED) {//vs two player
             //both layouts are the same, but rotated
             //add onclick listener to call the undoPressed() method
         }
 
-        topUserLayout = (LinearLayout) view.findViewById(R.id.topUserLayout);
-        bottomUserLayout = (LinearLayout) view.findViewById(R.id.bottomUserLayout);
 
-        int layoutHeight = (height - width) / 2;
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, layoutHeight);
-        LinearLayout.LayoutParams gameParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, width);
 
 
         // scoreTextView = (TextView) view.findViewById(R.id.scoreTextView);
