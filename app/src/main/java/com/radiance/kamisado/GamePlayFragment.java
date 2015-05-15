@@ -30,6 +30,9 @@ public class GamePlayFragment extends Fragment {
     private LinearLayout topUserLayout;
     private LinearLayout bottomUserLayout;
 
+    private int height;
+    private int width;
+
 
     public GamePlayFragment() {
         // Required empty public constructor
@@ -79,7 +82,15 @@ public class GamePlayFragment extends Fragment {
         View content = getActivity().getWindow().findViewById(Window.ID_ANDROID_CONTENT);//finds alloted screen size. this will save a lot of time.
         Log.v("UI", "Content: " + content.getWidth() + " " + content.getHeight());
 
-        int height = content.getHeight(), width = content.getWidth();
+        height = content.getHeight();
+        width = content.getWidth();
+
+        if (VERSUS_TYPE == MainActivity.PLAY_PRESSED) {//vs AI
+            //set top linearlayout to contain textview
+        } else if (VERSUS_TYPE == MainActivity.TWO_PLAY_PRESSED) {//vs two player
+            //both layouts are the same, but rotated
+            //add onclick listener to call the undoPressed() method
+        }
 
         topUserLayout = (LinearLayout) view.findViewById(R.id.topUserLayout);
         bottomUserLayout = (LinearLayout) view.findViewById(R.id.bottomUserLayout);
@@ -126,6 +137,16 @@ public class GamePlayFragment extends Fragment {
         }
     }
 
+    private void undoPressed(int player) {
+        if (VERSUS_TYPE == MainActivity.TWO_PLAY_PRESSED) {
+            //pending sign on player's layout
+            //check for confirmation by replacing layout of (player + 1)%2 with a textview and 2 y/n boxes
+            //add listener to call gameBoardView.undo() if yes is pressed
+            //go back to original view
+        } else if (VERSUS_TYPE == MainActivity.PLAY_PRESSED) {
+            gameBoardView.undo();
+        }
+    }
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
