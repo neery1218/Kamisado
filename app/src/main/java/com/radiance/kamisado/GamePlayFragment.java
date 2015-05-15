@@ -4,10 +4,13 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 public class GamePlayFragment extends Fragment {
@@ -21,6 +24,9 @@ public class GamePlayFragment extends Fragment {
 
     private TextView scoreTextView;
     private TextView undoButton;
+
+    private LinearLayout topUserLayout;
+    private LinearLayout bottomUserLayout;
 
 
     public GamePlayFragment() {
@@ -68,18 +74,44 @@ public class GamePlayFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_game_play, container, false);
 
-        scoreTextView = (TextView) view.findViewById(R.id.scoreTextView);
+        View content = getActivity().getWindow().findViewById(Window.ID_ANDROID_CONTENT);//finds alloted screen size. this will save a lot of time.
+        Log.v("UI", "Content: " + content.getWidth() + " " + content.getHeight());
+
+        int height = content.getHeight(), width = content.getWidth();
+
+        topUserLayout = (LinearLayout) view.findViewById(R.id.topUserLayout);
+        bottomUserLayout = (LinearLayout) view.findViewById(R.id.bottomUserLayout);
+
+        int layoutHeight = (height - width) / 2;
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, layoutHeight);
+        LinearLayout.LayoutParams gameParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, width);
+
+
+        // scoreTextView = (TextView) view.findViewById(R.id.scoreTextView);
+        scoreTextView = new TextView(getActivity());
         scoreTextView.setText("yo");
+
+        //scoreTextView.setLayoutParams(params);
 
         gameBoardView = (GameBoardView) view.findViewById(R.id.gameBoard);
         gameBoardView.setScoreView(scoreTextView);
+        gameBoardView.setLayoutParams(gameParams);
 
-        undoButton = (Button) view.findViewById(R.id.undoButton);
+        // undoButton = (Button) view.findViewById(R.id.undoButton);
+        undoButton = new Button(getActivity());
+        undoButton.setText("Undo");
         undoButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 gameBoardView.undo();
             }
         });
+        // undoButton.setLayoutParams(params);
+        bottomUserLayout.addView(undoButton);
+        topUserLayout.addView(scoreTextView);
+
+        topUserLayout.setLayoutParams(layoutParams);
+        bottomUserLayout.setLayoutParams(layoutParams);
+        //topUserLayout.addView(undoButton);
 
         return view;
     }

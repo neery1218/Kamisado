@@ -1,9 +1,16 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
+    android:orientation="vertical"
     tools:context="com.radiance.kamisado.GamePlayFragment">
 
+
+    <LinearLayout
+        android:id="@+id/topUserLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"></LinearLayout>
 
     <com.radiance.kamisado.GameBoardView
         android:id="@+id/gameBoard"
@@ -12,17 +19,13 @@
         android:layout_gravity="center_vertical"
         />
 
-    <TextView
-        android:id="@+id/scoreTextView"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom" />
 
-    <Button
-        android:id="@+id/undoButton"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/bottomUserLayout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|right"
-        android:text="Undo" />
 
-</FrameLayout>
+        android:orientation="horizontal"></LinearLayout>
+
+
+</LinearLayout>
