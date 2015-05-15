@@ -25,6 +25,8 @@ public class GamePlayFragment extends Fragment {
     private TextView scoreTextView;
     private TextView undoButton;
 
+    private TextView titleTextView;
+
     private LinearLayout topUserLayout;
     private LinearLayout bottomUserLayout;
 
@@ -106,6 +108,7 @@ public class GamePlayFragment extends Fragment {
             }
         });
         // undoButton.setLayoutParams(params);
+        //scoreTextView.setRotation(180f); so other players can view
         bottomUserLayout.addView(undoButton);
         topUserLayout.addView(scoreTextView);
 
