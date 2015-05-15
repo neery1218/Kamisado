@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 public class GamePlayFragment extends Fragment {
@@ -19,6 +20,7 @@ public class GamePlayFragment extends Fragment {
     private OnGamePlayInteractionListener mListener;
 
     private TextView scoreTextView;
+    private TextView undoButton;
 
 
     public GamePlayFragment() {
@@ -71,6 +73,13 @@ public class GamePlayFragment extends Fragment {
 
         gameBoardView = (GameBoardView) view.findViewById(R.id.gameBoard);
         gameBoardView.setScoreView(scoreTextView);
+
+        undoButton = (Button) view.findViewById(R.id.undoButton);
+        undoButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                gameBoardView.undo();
+            }
+        });
 
         return view;
     }

@@ -1,12 +1,19 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background"
+    android:background="@color/white"
     tools:context="com.radiance.kamisado.MatchLengthFragment">
 
+    <com.radiance.kamisado.introBoardView
+        android:id="@+id/introBoardView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center" />
+
     <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_gravity="center"
         android:gravity="center"
         android:orientation="vertical">
@@ -14,32 +21,55 @@
 
         <Button
             android:id="@+id/singleButton"
-            android:layout_width="wrap_content"
+            android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="Single" />
+            android:background="@drawable/button_custom"
+            android:text="Single"
+            android:textColor="@color/text"
+            android:textSize="24sp" />
 
+        <Space
+            android:layout_width="20px"
+            android:layout_height="10dp" />
         <Button
             android:id="@+id/standardButton"
-            android:layout_width="wrap_content"
+            android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="Standard" />
+            android:background="@drawable/button_custom"
+            android:text="Standard"
+            android:textColor="@color/text"
+            android:textSize="24sp" />
 
+        <Space
+            android:layout_width="20px"
+            android:layout_height="10dp" />
         <Button
             android:id="@+id/extendedButton"
-            android:layout_width="wrap_content"
+            android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="Extended" />
+            android:background="@drawable/button_custom"
+            android:text="Extended"
+            android:textColor="@color/text"
+            android:textSize="24sp" />
 
+        <Space
+            android:layout_width="20px"
+            android:layout_height="10dp" />
         <Button
             android:id="@+id/marathonButton"
-            android:layout_width="wrap_content"
+            android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="Marathon" />
+            android:background="@drawable/button_custom"
+            android:text="Marathon"
+            android:textColor="@color/text"
+            android:textSize="24sp" />
+
+
     </LinearLayout>
 
 
-</FrameLayout>
+</RelativeLayout>

@@ -4,6 +4,8 @@ import android.graphics.Color;
 import android.graphics.Point;
 import android.util.Log;
 
+import java.util.Stack;
+
 /**
  * Created by neerajen on 06/04/15.
  */
@@ -13,10 +15,12 @@ public class Board implements Cloneable{//board object
     private int boardDimension = 8;
     private Point[][] collected = new Point[2][boardDimension];
     private int PLAYER_TWO = GameControl.PLAYER_TWO, PLAYER_ONE = GameControl.PLAYER_ONE;
+    private Stack<Move> moveStack;
+    private int undoCount; //this is so that reverted moves don't get added to the stack again
 
     //red,orange,yellow,green,blue,
     private int[] colors = {Color.parseColor("#ffe74c3c"), //red
-            Color.parseColor("#d35400"), //orange
+            Color.parseColor("#F89406"), //orange
             Color.parseColor("#F7CA18"),//yellow
             Color.parseColor("#ff2ecc71"),//green
             Color.parseColor("#ff3498db"),//blue
@@ -26,6 +30,8 @@ public class Board implements Cloneable{//board object
     private int r = colors[0], o = colors[1], ye = colors[2], g = colors[3], b = colors[4], p = colors[5], pk = colors[6], br = colors[7];
 
     public Board() {
+        undoCount = 0;
+        moveStack = new Stack<Move>();
         boardColor = new int[][]{
                 {o,b,p,pk,ye,r,g,br},
                 {r,o,pk,g,b,ye,br,p},
@@ -52,6 +58,8 @@ public class Board implements Cloneable{//board object
     }
 
     public Board(Board temp){
+        undoCount = 0;
+        moveStack = new Stack<Move>();
         Tile[][] tiles = temp.getTiles();
         boardColor = new int[][]{
                 {o,b,p,pk,ye,r,g,br},
@@ -80,11 +88,47 @@ public class Board implements Cloneable{//board object
             Piece temp = board[a.x][a.y].getPiece();
             board[a.x][a.y].pop();
             board[b.x][b.y].setPiece(temp);
-        }
+            if (undoCount == 0)
+                moveStack.add(new Move(a, b));
+            else
+                undoCount--;
 
+        }
 
     }
 
+    public void move(Move move) {//overloaded method
+        Point a = move.start;
+        Point b = move.finish;
+        if (!getTile(a).isEmpty()) {
+            Piece temp = board[a.x][a.y].getPiece();
+            board[a.x][a.y].pop();
+            board[b.x][b.y].setPiece(temp);
+            if (undoCount == 0)
+                moveStack.add(new Move(a, b));
+            else
+                undoCount--;
+
+        }
+    }
+
+    public void move(MoveGroup moveGroup) {
+        for (int i = 0; i < moveGroup.size(); i++) {
+            move(moveGroup.get(i));
+        }
+    }
+    public Move undo() {//return move that has to be executed
+        Move undo = new Move(new Point(-1, -1), new Point(-1, -1));
+        if (!moveStack.empty()) {
+            undoCount++;
+            undo = moveStack.pop().reverse();
+            move(undo.start, undo.finish);
+            return undo;
+        }
+        return undo;
+
+
+    }
     public void rankUp(int r, int c) {//increases rank of a piece
         board[r][c].rankUp();
     }
@@ -165,6 +209,8 @@ public class Board implements Cloneable{//board object
     }
 
     public void fillLeft() {
+        undoCount = 0;
+        moveStack = new Stack<Move>();
 
         Board temp = new Board();
         temp.clear();
@@ -181,7 +227,8 @@ public class Board implements Cloneable{//board object
     }
 
     public void fillRight() {
-
+        undoCount = 0;
+        moveStack = new Stack<Move>();
         Board temp = new Board();
         temp.clear();
         for (int i = 0; i < collected[0].length; i++) {

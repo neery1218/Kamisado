@@ -19,6 +19,7 @@ public class IntroFragment extends Fragment {
     private Button onlineButton;
 
     private TextView titleTextView;
+    private introBoardView introBoardView;
 
     public IntroFragment() {
         // Required empty public constructor
@@ -44,8 +45,20 @@ public class IntroFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_intro, container, false);
+
+        titleTextView = (TextView) view.findViewById(R.id.titleTextView);
+        titleTextView.setTypeface(MainActivity.typefaceHeader);
+        titleTextView.setTextSize(64f);
+
+        introBoardView = (introBoardView) view.findViewById(R.id.introBoardView);
+        introBoardView.setRotation(30f);
+        introBoardView.invalidate();
+
         playButton = (Button)view.findViewById(R.id.playButton);
-        playButton.setText("Play an AI!");
+        playButton.setTypeface(MainActivity.typefaceHeader);
+        //playButton.getBackground().setColorFilter(R.color.white, PorterDuff.Mode.MULTIPLY);
+        //playButton.setAlpha(1f);
+
 
         playButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
@@ -54,15 +67,14 @@ public class IntroFragment extends Fragment {
         });
 
         playerTwoButton = (Button)view.findViewById(R.id.playerTwoButton);
-
         playerTwoButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 mListener.onIntroInteraction(MainActivity.TWO_PLAY_PRESSED);
             }
         });
-
+        playerTwoButton.setTypeface(MainActivity.typefaceHeader);
         onlineButton = (Button)view.findViewById(R.id.onlineButton);
-
+        onlineButton.setTypeface(MainActivity.typefaceHeader);
         onlineButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 mListener.onIntroInteraction(MainActivity.ONLINE_PLAY_PRESSED);
@@ -70,8 +82,7 @@ public class IntroFragment extends Fragment {
         });
 
         tutorialButton = (Button)view.findViewById(R.id.tutorialButton);
-        tutorialButton.setText("tutorial!");
-
+        tutorialButton.setTypeface(MainActivity.typefaceHeader);
         tutorialButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 mListener.onIntroInteraction(MainActivity.TUTORIAL_PRESSED);

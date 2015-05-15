@@ -1,9 +1,8 @@
 package com.radiance.kamisado;
 
 import android.app.Activity;
-import android.net.Uri;
-import android.os.Bundle;
 import android.app.Fragment;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +18,12 @@ public class MatchLengthFragment extends Fragment {
     private Button extendedButton;
     private Button marathonButton;
 
+    private introBoardView introBoardView;
+
+    public MatchLengthFragment() {
+        // Required empty public constructor
+    }
+
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
@@ -30,10 +35,6 @@ public class MatchLengthFragment extends Fragment {
     public static MatchLengthFragment newInstance(String param1, String param2) {
         MatchLengthFragment fragment = new MatchLengthFragment();
         return fragment;
-    }
-
-    public MatchLengthFragment() {
-        // Required empty public constructor
     }
 
     @Override
@@ -50,7 +51,12 @@ public class MatchLengthFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_match_length, container, false);
 
+        introBoardView = (introBoardView) view.findViewById(R.id.introBoardView);
+        introBoardView.setRotation(30f);
+        introBoardView.invalidate();
+
         singleButton = (Button)view.findViewById(R.id.singleButton);
+        singleButton.setTypeface(MainActivity.typefaceHeader);
         singleButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 mListener.onMatchLengthInteraction(MainActivity.MATCH_SINGLE);
@@ -58,6 +64,7 @@ public class MatchLengthFragment extends Fragment {
         });
 
         standardButton = (Button)view.findViewById(R.id.standardButton);
+        standardButton.setTypeface(MainActivity.typefaceHeader);
         standardButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 mListener.onMatchLengthInteraction(MainActivity.MATCH_STANDARD);
@@ -65,6 +72,7 @@ public class MatchLengthFragment extends Fragment {
         });
 
         extendedButton = (Button)view.findViewById(R.id.extendedButton);
+        extendedButton.setTypeface(MainActivity.typefaceHeader);
         extendedButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 mListener.onMatchLengthInteraction(MainActivity.MATCH_EXTENDED);
@@ -72,6 +80,7 @@ public class MatchLengthFragment extends Fragment {
         });
 
         marathonButton = (Button)view.findViewById(R.id.marathonButton);
+        marathonButton.setTypeface(MainActivity.typefaceHeader);
         marathonButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 mListener.onMatchLengthInteraction(MainActivity.MATCH_MARATHON);
