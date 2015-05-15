@@ -45,21 +45,25 @@ public class AIPlayer extends Player {//AI player
             temp = new Board(board);
             temp.move(new Point(selectedPiece.getY(), selectedPiece.getX()), availMoves.get(i));
             ArrayList<Point> opponentMove = nextMove(temp, availMoves.get(i));
+            if(opponentMove.size() == 0){
+                Log.d("AITEST", "opponent no moves");
+                return availMoves.get(i);
+            }
             for (int j = 0; j < opponentMove.size(); j++) {
                 if (hasOpponentWinMove(opponentMove.get(j))) {
                     curValue -= 5   ;
                     Log.d("AITEST", "win detected" + " " + opponentMove.get(j).x + " " + opponentMove.get(j).y);
                     continue;
                 }
-                /*Board temp2 = new Board(temp);
+                Board temp2 = new Board(temp);
                 temp2.move(new Point(availMoves.get(i).y, availMoves.get(i).x), opponentMove.get(j));
                 ArrayList<Point> playerMove = nextMove(temp2, opponentMove.get(j));
                 for(int k = 0; k < playerMove.size(); k++){
                     if(hasPlayerWinMove(playerMove.get(k))){
-                        Log.d("AITEST", "called");
+                        Log.d("AITEST", playerMove.get(k).x + " " + playerMove.get(k).y);
                         curValue++;
                     }
-                }*/
+                }
             }
             if (i == 0) {
                 maxPoint = availMoves.get(i);
@@ -75,6 +79,7 @@ public class AIPlayer extends Player {//AI player
                     maxValue = curValue;
                 }
             }
+            Log.d("AITEST", curValue + "");
         }
 
         return maxPoint;
