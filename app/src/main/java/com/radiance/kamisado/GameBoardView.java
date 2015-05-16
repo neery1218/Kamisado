@@ -24,6 +24,7 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
     private Paint paint;//make these variables easier to read
     private Board board;
     private TextView scoreView;
+    private TextView[] scores;
     private float startX = -1;
     private float endX = -1;
     private float startY = -1;
@@ -61,6 +62,7 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
         paint = new Paint();
         paint.setTextSize(90);
 
+        scores = new TextView[2];
         //board = new GameControl(this,BoardDimension);
 
         MATCH_TYPE = GamePlayFragment.getMATCH_TYPE();
@@ -78,6 +80,10 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
         scoreView = textView;
         updateScore(new int[]{0, 0});
 
+    }
+
+    public void setScoreView(TextView textView, int player) {
+        scores[player] = textView;
     }
 
     public void updateScore(int[] score) {
@@ -341,8 +347,9 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
 
     public void undo() {
 
-
+        if (VERSUS_TYPE == MainActivity.PLAY_PRESSED) {
         gameControl.undo();
+        }
         gameControl.undo();
 
     }

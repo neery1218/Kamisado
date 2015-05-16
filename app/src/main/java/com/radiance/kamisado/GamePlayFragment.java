@@ -5,6 +5,8 @@ import android.app.Fragment;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,10 +22,12 @@ public class GamePlayFragment extends Fragment {
     private static int AI_DIFFICULTY;
     private GameBoardView gameBoardView;
 
+    private int PLAYER_ONE_SCORE;
+    private int PLAYER_TWO_SCORE;
+
     private OnGamePlayInteractionListener mListener;
 
-    private TextView scoreTextView;
-    private TextView undoButton;
+
 
     private TextView titleTextView;
 
@@ -77,6 +81,32 @@ public class GamePlayFragment extends Fragment {
         }
     }
 
+    private void setupUserBar(LinearLayout layout, int player) {
+        layout.removeAllViews();
+
+        // scoreTextView = (TextView) view.findViewById(R.id.scoreTextView);
+        TextView scoreView = new TextView(getActivity());
+        scoreView.setText("yo");
+
+        //scoreTextView.setLayoutParams(params);
+
+        Button undoButton = new Button(getActivity());
+        undoButton.setText("Undo");
+        undoButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                gameBoardView.undo();
+            }
+        });
+        layout.addView(scoreView);
+        layout.addView(undoButton);
+        //undoButton.setLayoutParams(params); i haven't computed them yet
+
+    }
+
+    private void setupUndoBar(LinearLayout layout) {
+        layout.removeAllViews();
+
+    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -87,6 +117,7 @@ public class GamePlayFragment extends Fragment {
         View content = getActivity().getWindow().findViewById(Window.ID_ANDROID_CONTENT);//finds alloted screen size. this will save a lot of time.
         Log.v("UI", "Content: " + content.getWidth() + " " + content.getHeight());
 
+        //player two has top layout, player one has bottom layout
         userLayouts[GameControl.PLAYER_ONE] = (LinearLayout) view.findViewById(R.id.bottomUserLayout);
         userLayouts[GameControl.PLAYER_TWO] = (LinearLayout) view.findViewById(R.id.topUserLayout);
 
@@ -104,42 +135,39 @@ public class GamePlayFragment extends Fragment {
             titleTextView = new TextView(getActivity());
             titleTextView.setText("Kamisado");
             titleTextView.setTypeface(MainActivity.typefaceHeader);
+            titleTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 48f);
+            titleTextView.setTextColor(getResources().getColor(R.color.text));
+            titleTextView.setGravity(Gravity.CENTER);
             titleTextView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
+            titleTextView.setBackgroundColor(getResources().getColor(R.color.white));
             userLayouts[GameControl.PLAYER_TWO].addView(titleTextView);
+
+            setupUserBar(userLayouts[GameControl.PLAYER_ONE], PLAYER_ONE_SCORE);
 
         } else if (VERSUS_TYPE == MainActivity.TWO_PLAY_PRESSED) {//vs two player
             //both layouts are the same, but rotated
             //add onclick listener to call the undoPressed() method
+            setupUserBar(userLayouts[GameControl.PLAYER_TWO], GameControl.PLAYER_TWO);
+            userLayouts[GameControl.PLAYER_TWO].setRotation(180f);
+            setupUserBar(userLayouts[GameControl.PLAYER_ONE], GameControl.PLAYER_ONE);
         }
 
-
-
-
-        // scoreTextView = (TextView) view.findViewById(R.id.scoreTextView);
-        scoreTextView = new TextView(getActivity());
-        scoreTextView.setText("yo");
-
-        //scoreTextView.setLayoutParams(params);
-
         gameBoardView = (GameBoardView) view.findViewById(R.id.gameBoard);
+        //gameBoardView needs to accept two views
         gameBoardView.setScoreView(scoreTextView);
         gameBoardView.setLayoutParams(gameParams);
 
-        // undoButton = (Button) view.findViewById(R.id.undoButton);
-        undoButton = new Button(getActivity());
-        undoButton.setText("Undo");
-        undoButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
-                gameBoardView.undo();
-            }
-        });
+
         // undoButton.setLayoutParams(params);
         //scoreTextView.setRotation(180f); so other players can view
-        bottomUserLayout.addView(undoButton);
-        topUserLayout.addView(scoreTextView);
+        //bottomUserLayout.addView(undoButton);
+        // topUserLayout.addView(scoreTextView);
+        userLayouts[GameControl.PLAYER_ONE].setLayoutParams(layoutParams);
+        userLayouts[GameControl.PLAYER_TWO].setLayoutParams(layoutParams);
+        // userLayout
 
-        topUserLayout.setLayoutParams(layoutParams);
-        bottomUserLayout.setLayoutParams(layoutParams);
+        //topUserLayout.setLayoutParams(layoutParams);
+        //bottomUserLayout.setLayoutParams(layoutParams);
         //topUserLayout.addView(undoButton);
 
         return view;
