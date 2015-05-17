@@ -307,4 +307,8 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
     public Piece getSelectedPiece() {
         return selectedPiece;
     }
+
+    public int getTurn() {
+        return counter;
+    }
 }

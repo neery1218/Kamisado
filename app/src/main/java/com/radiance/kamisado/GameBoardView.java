@@ -76,19 +76,19 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
 
     }//Calls the super constructor and creates a new paint object
 
-    public void setScoreView(TextView textView) {
-        scoreView = textView;
+
+    public void setScoreView(TextView[] scoreView) {
+        scores = scoreView;
         updateScore(new int[]{0, 0});
-
-    }
-
-    public void setScoreView(TextView textView, int player) {
-        scores[player] = textView;
     }
 
     public void updateScore(int[] score) {
-        scoreView.setText(score[PLAYER_TWO] + " " + score[PLAYER_ONE]);
-        if (score[PLAYER_TWO] >= MATCH_TYPE || score[PLAYER_ONE] >= MATCH_TYPE) {
+        scores[PLAYER_ONE].setText(score[PLAYER_TWO] + " " + score[PLAYER_ONE]);
+
+        if (VERSUS_TYPE == MainActivity.TWO_PLAY_PRESSED) {//vs AI
+            scores[PLAYER_TWO].setText(score[PLAYER_ONE] + " " + score[PLAYER_TWO]);
+        }
+        if (score[PLAYER_TWO] >= MATCH_TYPE || score[PLAYER_ONE] >= MATCH_TYPE) {//TODO win screen
             Log.v("Game", "Win");
         }
     }
@@ -345,14 +345,20 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
 
     }
 
-    public void undo() {
-
-        if (VERSUS_TYPE == MainActivity.PLAY_PRESSED) {
-        gameControl.undo();
+    public void undo(int player) {
+        int turn = gameControl.getTurn();
+        if (gameControl.getWin().equals(new Point(-1, -1))) {
+            if (VERSUS_TYPE == MainActivity.PLAY_PRESSED) {
+                gameControl.undo();
+                gameControl.undo();
+            } else if (player == (turn % 2)) {//you can only undo when it's the other person's turn to move
+                gameControl.undo();
+            }
         }
-        gameControl.undo();
+
 
     }
+
 
     public interface OnBoardEvent{
         void onTouch(int x, int y);

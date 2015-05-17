@@ -15,15 +15,14 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-public class GamePlayFragment extends Fragment {
+public class GamePlayFragment extends Fragment implements Button.OnClickListener {
 
     private static int VERSUS_TYPE;
     private static int MATCH_TYPE;
     private static int AI_DIFFICULTY;
     private GameBoardView gameBoardView;
 
-    private int PLAYER_ONE_SCORE;
-    private int PLAYER_TWO_SCORE;
+    private TextView[] scoreTextViews;
 
     private OnGamePlayInteractionListener mListener;
 
@@ -70,7 +69,10 @@ public class GamePlayFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         userLayouts = new LinearLayout[2];
+        scoreTextViews = new TextView[2];
 
+        scoreTextViews[0] = new TextView(getActivity());
+        scoreTextViews[1] = new TextView(getActivity());
         if (getArguments() != null) {
             VERSUS_TYPE = getArguments().getInt(MainActivity.ARG_VERSUS_TYPE);
             MATCH_TYPE = getArguments().getInt(MainActivity.ARG_MATCH_TYPE);
@@ -81,32 +83,21 @@ public class GamePlayFragment extends Fragment {
         }
     }
 
-    private void setupUserBar(LinearLayout layout, int player) {
-        layout.removeAllViews();
+    private void setupUserBar(int player) {
+        userLayouts[player].removeAllViews();
 
-        // scoreTextView = (TextView) view.findViewById(R.id.scoreTextView);
-        TextView scoreView = new TextView(getActivity());
-        scoreView.setText("yo");
 
         //scoreTextView.setLayoutParams(params);
 
-        Button undoButton = new Button(getActivity());
+        UndoButton undoButton = new UndoButton(getActivity(), player);
         undoButton.setText("Undo");
-        undoButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
-                gameBoardView.undo();
-            }
-        });
-        layout.addView(scoreView);
-        layout.addView(undoButton);
+        undoButton.setOnClickListener(this);
+        userLayouts[player].addView(scoreTextViews[player]);
+        userLayouts[player].addView(undoButton);
         //undoButton.setLayoutParams(params); i haven't computed them yet
 
     }
 
-    private void setupUndoBar(LinearLayout layout) {
-        layout.removeAllViews();
-
-    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -142,19 +133,19 @@ public class GamePlayFragment extends Fragment {
             titleTextView.setBackgroundColor(getResources().getColor(R.color.white));
             userLayouts[GameControl.PLAYER_TWO].addView(titleTextView);
 
-            setupUserBar(userLayouts[GameControl.PLAYER_ONE], PLAYER_ONE_SCORE);
+            setupUserBar(GameControl.PLAYER_ONE);
 
         } else if (VERSUS_TYPE == MainActivity.TWO_PLAY_PRESSED) {//vs two player
             //both layouts are the same, but rotated
             //add onclick listener to call the undoPressed() method
-            setupUserBar(userLayouts[GameControl.PLAYER_TWO], GameControl.PLAYER_TWO);
+            setupUserBar(GameControl.PLAYER_TWO);
             userLayouts[GameControl.PLAYER_TWO].setRotation(180f);
-            setupUserBar(userLayouts[GameControl.PLAYER_ONE], GameControl.PLAYER_ONE);
+            setupUserBar(GameControl.PLAYER_ONE);
         }
 
         gameBoardView = (GameBoardView) view.findViewById(R.id.gameBoard);
         //gameBoardView needs to accept two views
-        gameBoardView.setScoreView(scoreTextView);
+        gameBoardView.setScoreView(scoreTextViews);
         gameBoardView.setLayoutParams(gameParams);
 
 
@@ -180,16 +171,6 @@ public class GamePlayFragment extends Fragment {
         }
     }
 
-    private void undoPressed(int player) {
-        if (VERSUS_TYPE == MainActivity.TWO_PLAY_PRESSED) {
-            //pending sign on player's layout
-            //check for confirmation by replacing layout of (player + 1)%2 with a textview and 2 y/n boxes
-            //add listener to call gameBoardView.undo() if yes is pressed
-            //go back to original view
-        } else if (VERSUS_TYPE == MainActivity.PLAY_PRESSED) {
-            gameBoardView.undo();
-        }
-    }
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -205,6 +186,12 @@ public class GamePlayFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void onClick(View v) {
+        UndoButton button = (UndoButton) v;
+        gameBoardView.undo(button.getPlayer());
     }
 
 
