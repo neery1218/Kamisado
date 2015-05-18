@@ -21,10 +21,13 @@ public class GamePlayFragment extends Fragment implements Button.OnClickListener
     private static int MATCH_TYPE;
     private static int AI_DIFFICULTY;
     private GameBoardView gameBoardView;
+    private int layoutHeight;
 
-    private TextView[] scoreTextViews;
 
+    private TextView scoreTextView;
     private OnGamePlayInteractionListener mListener;
+
+    private Button undoButton;
 
 
 
@@ -69,10 +72,7 @@ public class GamePlayFragment extends Fragment implements Button.OnClickListener
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         userLayouts = new LinearLayout[2];
-        scoreTextViews = new TextView[2];
 
-        scoreTextViews[0] = new TextView(getActivity());
-        scoreTextViews[1] = new TextView(getActivity());
         if (getArguments() != null) {
             VERSUS_TYPE = getArguments().getInt(MainActivity.ARG_VERSUS_TYPE);
             MATCH_TYPE = getArguments().getInt(MainActivity.ARG_MATCH_TYPE);
@@ -84,17 +84,17 @@ public class GamePlayFragment extends Fragment implements Button.OnClickListener
     }
 
     private void setupUserBar(int player) {
-        userLayouts[player].removeAllViews();
 
 
         //scoreTextView.setLayoutParams(params);
 
-        UndoButton undoButton = new UndoButton(getActivity(), player);
         undoButton.setText("Undo");
         undoButton.setOnClickListener(this);
-        userLayouts[player].addView(scoreTextViews[player]);
-        userLayouts[player].addView(undoButton);
-        //undoButton.setLayoutParams(params); i haven't computed them yet
+
+        LinearLayout.LayoutParams buttonParams = new LinearLayout.LayoutParams(layoutHeight, layoutHeight);
+        LinearLayout.LayoutParams scoreViewParam = new LinearLayout.LayoutParams(width - layoutHeight, layoutHeight);
+        undoButton.setLayoutParams(buttonParams);
+        scoreTextView.setLayoutParams(scoreViewParam);
 
     }
 
@@ -112,40 +112,33 @@ public class GamePlayFragment extends Fragment implements Button.OnClickListener
         userLayouts[GameControl.PLAYER_ONE] = (LinearLayout) view.findViewById(R.id.bottomUserLayout);
         userLayouts[GameControl.PLAYER_TWO] = (LinearLayout) view.findViewById(R.id.topUserLayout);
 
+        undoButton = (Button) view.findViewById(R.id.undoButton);
+        titleTextView = (TextView) view.findViewById(R.id.titleTextView);
+        scoreTextView = (TextView) view.findViewById(R.id.scoreTextView);
 
         //compute layout sizes
         height = content.getHeight();
         width = content.getWidth();
 
-        int layoutHeight = (height - width) / 2;
+        layoutHeight = (height - width) / 2;
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, layoutHeight);
         LinearLayout.LayoutParams gameParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, width);
 
-        if (VERSUS_TYPE == MainActivity.PLAY_PRESSED) {//vs AI
-            //set top linearlayout to contain textview
-            titleTextView = new TextView(getActivity());
-            titleTextView.setText("Kamisado");
-            titleTextView.setTypeface(MainActivity.typefaceHeader);
-            titleTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 48f);
-            titleTextView.setTextColor(getResources().getColor(R.color.text));
-            titleTextView.setGravity(Gravity.CENTER);
-            titleTextView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
-            titleTextView.setBackgroundColor(getResources().getColor(R.color.white));
-            userLayouts[GameControl.PLAYER_TWO].addView(titleTextView);
+        //set top linearlayout to contain textview
+        titleTextView.setText("Kamisado");
+        titleTextView.setTypeface(MainActivity.typefaceHeader);
+        titleTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 48f);
+        titleTextView.setTextColor(getResources().getColor(R.color.text));
+        titleTextView.setGravity(Gravity.CENTER);
+        titleTextView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
+        titleTextView.setBackgroundColor(getResources().getColor(R.color.white));
 
-            setupUserBar(GameControl.PLAYER_ONE);
+        setupUserBar(GameControl.PLAYER_ONE);
 
-        } else if (VERSUS_TYPE == MainActivity.TWO_PLAY_PRESSED) {//vs two player
-            //both layouts are the same, but rotated
-            //add onclick listener to call the undoPressed() method
-            setupUserBar(GameControl.PLAYER_TWO);
-            userLayouts[GameControl.PLAYER_TWO].setRotation(180f);
-            setupUserBar(GameControl.PLAYER_ONE);
-        }
 
         gameBoardView = (GameBoardView) view.findViewById(R.id.gameBoard);
         //gameBoardView needs to accept two views
-        gameBoardView.setScoreView(scoreTextViews);
+        gameBoardView.setScoreView(scoreTextView);
         gameBoardView.setLayoutParams(gameParams);
 
 
@@ -190,8 +183,7 @@ public class GamePlayFragment extends Fragment implements Button.OnClickListener
 
     @Override
     public void onClick(View v) {
-        UndoButton button = (UndoButton) v;
-        gameBoardView.undo(button.getPlayer());
+        gameBoardView.undo();
     }
 
 

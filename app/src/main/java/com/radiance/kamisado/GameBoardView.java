@@ -24,7 +24,6 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
     private Paint paint;//make these variables easier to read
     private Board board;
     private TextView scoreView;
-    private TextView[] scores;
     private float startX = -1;
     private float endX = -1;
     private float startY = -1;
@@ -62,7 +61,6 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
         paint = new Paint();
         paint.setTextSize(90);
 
-        scores = new TextView[2];
         //board = new GameControl(this,BoardDimension);
 
         MATCH_TYPE = GamePlayFragment.getMATCH_TYPE();
@@ -77,20 +75,15 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
     }//Calls the super constructor and creates a new paint object
 
 
-    public void setScoreView(TextView[] scoreView) {
-        scores = scoreView;
+    public void setScoreView(TextView scoreView) {
+        this.scoreView = scoreView;
         updateScore(new int[]{0, 0});
     }
 
     public void updateScore(int[] score) {
-        scores[PLAYER_ONE].setText(score[PLAYER_TWO] + " " + score[PLAYER_ONE]);
+        scoreView.setText(score[PLAYER_TWO] + " " + score[PLAYER_ONE]);
 
-        if (VERSUS_TYPE == MainActivity.TWO_PLAY_PRESSED) {//vs AI
-            scores[PLAYER_TWO].setText(score[PLAYER_ONE] + " " + score[PLAYER_TWO]);
-        }
-        if (score[PLAYER_TWO] >= MATCH_TYPE || score[PLAYER_ONE] >= MATCH_TYPE) {//TODO win screen
-            Log.v("Game", "Win");
-        }
+
     }
 
     public void setup(){
@@ -345,17 +338,16 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
 
     }
 
-    public void undo(int player) {
-        int turn = gameControl.getTurn();
+    public void undo() {
+        //TODO: BUG. after an ai win, player can undo to take advantage of the ai's rng
         if (gameControl.getWin().equals(new Point(-1, -1))) {
             if (VERSUS_TYPE == MainActivity.PLAY_PRESSED) {
                 gameControl.undo();
                 gameControl.undo();
-            } else if (player == (turn % 2)) {//you can only undo when it's the other person's turn to move
+            } else {//you can only undo when it's the other person's turn to move
                 gameControl.undo();
             }
         }
-
 
     }
 
