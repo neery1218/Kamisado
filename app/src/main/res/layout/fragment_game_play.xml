@@ -39,12 +39,15 @@
             android:id="@+id/scoreTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:gravity="center"
             android:text="New Text" />
 
         <Button
             android:id="@+id/undoButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@drawable/tutorial_button_custom"
             android:text="New Button" />
     </LinearLayout>
 

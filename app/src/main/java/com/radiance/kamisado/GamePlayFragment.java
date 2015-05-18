@@ -92,7 +92,7 @@ public class GamePlayFragment extends Fragment implements Button.OnClickListener
         undoButton.setOnClickListener(this);
 
         LinearLayout.LayoutParams buttonParams = new LinearLayout.LayoutParams(layoutHeight, layoutHeight);
-        LinearLayout.LayoutParams scoreViewParam = new LinearLayout.LayoutParams(width - layoutHeight, layoutHeight);
+        LinearLayout.LayoutParams scoreViewParam = new LinearLayout.LayoutParams(width - layoutHeight, LinearLayout.LayoutParams.MATCH_PARENT);
         undoButton.setLayoutParams(buttonParams);
         scoreTextView.setLayoutParams(scoreViewParam);
 
