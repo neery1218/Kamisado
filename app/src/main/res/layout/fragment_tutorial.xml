@@ -4,8 +4,26 @@
     android:background="@color/background"
     tools:context="com.radiance.kamisado.TutorialFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView android:layout_width="match_parent" android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+
+    <ViewAnimator
+        android:id="@+id/viewAnimator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        >
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="New Text" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Yo" />
+    </ViewAnimator>
+
 
 </FrameLayout>

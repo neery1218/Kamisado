@@ -7,11 +7,15 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.ViewAnimator;
 
 
 public class TutorialFragment extends Fragment {
 
     private OnTutorialInteractionListener mListener;
+    private ViewAnimator viewAnimator;
 
     public TutorialFragment() {
         // Required empty public constructor
@@ -42,7 +46,21 @@ public class TutorialFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_tutorial, container, false);
+        View view = inflater.inflate(R.layout.fragment_tutorial, container, false);
+
+        viewAnimator = (ViewAnimator) view.findViewById(R.id.viewAnimator);
+        Animation inAnim = AnimationUtils.loadAnimation(getActivity(), android.R.anim.slide_in_left);
+        Animation outAnim = AnimationUtils.loadAnimation(getActivity(), android.R.anim.slide_out_right);
+
+        viewAnimator.setInAnimation(inAnim);
+        viewAnimator.setOutAnimation(outAnim);
+
+        viewAnimator.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                viewAnimator.showNext();
+            }
+        });
+        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
