@@ -49,12 +49,11 @@ public class TutorialFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_tutorial, container, false);
 
         viewAnimator = (ViewAnimator) view.findViewById(R.id.viewAnimator);
-        Animation inAnim = AnimationUtils.loadAnimation(getActivity(), android.R.anim.slide_in_left);
-        Animation outAnim = AnimationUtils.loadAnimation(getActivity(), android.R.anim.slide_out_right);
+        Animation inAnim = AnimationUtils.loadAnimation(getActivity(), android.R.anim.slide_out_right);
+        Animation outAnim = AnimationUtils.loadAnimation(getActivity(), android.R.anim.slide_in_left);
 
         viewAnimator.setInAnimation(inAnim);
         viewAnimator.setOutAnimation(outAnim);
-
         viewAnimator.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 viewAnimator.showNext();
