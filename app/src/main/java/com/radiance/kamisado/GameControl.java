@@ -14,7 +14,7 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
     private Point inValid = new Point(-1, -1);
     private Player[] players;
     private GameBoardView gameBoardView;
-    private int[] scores = {1, 3, 7, 15};
+    private int[] scores = {1, 3, 7, 15, 0};
     private int boardDimension = 8;
     private int counter = 1;
     private int[] score = new int[2];
@@ -127,10 +127,7 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
             deadlockCount++;
             if (deadlockCount == 2) {//this means that both players can't move
                 win = new Point(selectedPiece.getY(), selectedPiece.getX());
-                score[selectedPiece.getOwner()] += 1;
-                gameBoardView.updateScore(score);
                 deadlock = true;
-                reset();
                 //new rules: if deadlock, it's a tie
                 //TODO: make deadlock screen
 
@@ -210,12 +207,14 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
                     undoCount--;
                 fin = new Piece(board.getTile(temp.x, temp.y).getPiece());
             }
+
             counter++;
 
 
             //find next piece
-            win = GameLogic.win(board);
-            if (!win.equals(-1, -1)) {//if someone won:
+            if(!deadlock)
+                win = GameLogic.win(board);
+            if (!win.equals(-1, -1) && !deadlock) {//if someone won:
                 Piece winPiece = board.getTile(win.x, win.y).getPiece();
                 int winPlayer = winPiece.getOwner();
                 score[winPlayer] += scores[winPiece.getRank()];
@@ -245,8 +244,11 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
     }
 
     public void reset() {//resets the game board
-        counter = (board.getTile(win.x, win.y).getPiece().getOwner() + 1) % 2;
+        if(!deadlock)
+            counter = (board.getTile(win.x, win.y).getPiece().getOwner() + 1) % 2;
         win = new Point(-1, -1);
+        deadlock = false;
+        deadlockCount = 0;
         firstMove = true;
         selectedPiece = null;
         gameBoardView.setSelectedPiece(null);
@@ -306,5 +308,9 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
 
     public Piece getSelectedPiece() {
         return selectedPiece;
+    }
+
+    public int getTurn() {
+        return counter;
     }
 }

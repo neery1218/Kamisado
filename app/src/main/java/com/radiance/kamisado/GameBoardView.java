@@ -74,17 +74,16 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
 
     }//Calls the super constructor and creates a new paint object
 
-    public void setScoreView(TextView textView) {
-        scoreView = textView;
-        updateScore(new int[]{0, 0});
 
+    public void setScoreView(TextView scoreView) {
+        this.scoreView = scoreView;
+        updateScore(new int[]{0, 0});
     }
 
     public void updateScore(int[] score) {
         scoreView.setText(score[PLAYER_TWO] + " " + score[PLAYER_ONE]);
-        if (score[PLAYER_TWO] >= MATCH_TYPE || score[PLAYER_ONE] >= MATCH_TYPE) {
-            Log.v("Game", "Win");
-        }
+
+
     }
 
     public void setup(){
@@ -340,8 +339,18 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
     }
 
     public void undo() {
-        gameControl.undo();
+        //TODO: BUG. after an ai win, player can undo to take advantage of the ai's rng
+        if (gameControl.getWin().equals(new Point(-1, -1))) {
+            if (VERSUS_TYPE == MainActivity.PLAY_PRESSED) {
+                gameControl.undo();
+                gameControl.undo();
+            } else {//you can only undo when it's the other person's turn to move
+                gameControl.undo();
+            }
+        }
+
     }
+
 
     public interface OnBoardEvent{
         void onTouch(int x, int y);
