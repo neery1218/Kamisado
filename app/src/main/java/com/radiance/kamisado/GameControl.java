@@ -222,7 +222,6 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
             }
 
             if (!win.equals(-1, -1)) {
-                Log.v("game", "somebody has won");
                 counter = board.getTile(win.x, win.y).getPiece().getOwner();
                 if (players[counter % 2] instanceof AIPlayer) {
                     aiWin = true;
