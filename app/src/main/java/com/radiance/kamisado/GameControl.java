@@ -184,20 +184,7 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
         Point temp = players[counter % 2].resolveMove(new Point(y, x));//returns the point that the piece should be moved to
         if (!temp.equals(inValid)) {//check validity
             if (selectedPiece.getRank() > 0 && temp.equals(players[counter % 2].getSumoPushPoint())) {//if it's sumo:
-                init = new Piece(board.getTile(selectedPiece.getY(), selectedPiece.getX()).getPiece());
-                sumoChain = players[counter % 2].getSumoChain();
-                if (undoCount > 0)
-                    undoCount--;
-                switch (counter % 2) {
-                    case PLAYER_TWO:
-                        resolveSumoPushP1();
-                        break;
-                    case PLAYER_ONE:
-                        resolveSumoPushP2();
-                        break;
-                }
-                counter++;
-                fin = new Piece(board.getTile(temp.x, temp.y).getPiece());
+
             } else {
                 init = new Piece(board.getTile(selectedPiece.getY(), selectedPiece.getX()).getPiece());
                 Move move = new Move(new Point(selectedPiece.getY(), selectedPiece.getX()), temp);
@@ -230,8 +217,11 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
                 if (players[counter % 2] instanceof AIPlayer && win.equals(-1, -1))
                     onTouch(-1, -1);
             }
-
         }
+    }
+
+    public void sumoPush(){
+
     }
 
     public void resolveWin(){
