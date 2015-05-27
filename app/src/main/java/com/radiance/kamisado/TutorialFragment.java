@@ -7,16 +7,16 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.widget.ViewAnimator;
+import android.widget.ImageView;
 
 
 public class TutorialFragment extends Fragment {
 
+    int counter;
     private OnTutorialInteractionListener mListener;
-    private ViewAnimator viewAnimator;
-
+    // private ViewAnimator viewAnimator;
+    private ImageView tutorialScreen;
+    private int[] id;
     public TutorialFragment() {
         // Required empty public constructor
     }
@@ -40,6 +40,9 @@ public class TutorialFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
         }
+        int[] id = {R.drawable.tutorialone, R.drawable.tutorialtwo, R.drawable.tutorialthree, R.drawable.tutorialfour, R.drawable.tutorialfive, R.drawable.tutorialsix, R.drawable.tutorialseven, R.drawable.tutorialeight};
+        this.id = id;
+        counter = 0;
     }
 
     @Override
@@ -47,16 +50,18 @@ public class TutorialFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_tutorial, container, false);
+        tutorialScreen = (ImageView) view.findViewById(R.id.imageView);
+        tutorialScreen.setImageResource(id[counter]);
 
-        viewAnimator = (ViewAnimator) view.findViewById(R.id.viewAnimator);
-        Animation inAnim = AnimationUtils.loadAnimation(getActivity(), android.R.anim.slide_out_right);
-        Animation outAnim = AnimationUtils.loadAnimation(getActivity(), android.R.anim.slide_in_left);
-
-        viewAnimator.setInAnimation(inAnim);
-        viewAnimator.setOutAnimation(outAnim);
-        viewAnimator.setOnClickListener(new View.OnClickListener() {
+        tutorialScreen.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                viewAnimator.showNext();
+                counter++;
+                counter %= id.length;
+                tutorialScreen.setImageResource(id[counter]);
+
+
+//                getActivity().getResources().getDrawable(id[counter-1]).
+
             }
         });
         return view;
@@ -100,5 +105,6 @@ public class TutorialFragment extends Fragment {
         // TODO: Update argument type and name
         public void onTutorialInteraction(Uri uri);
     }
+
 
 }
