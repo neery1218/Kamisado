@@ -186,26 +186,20 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
             if (selectedPiece.getRank() > 0 && temp.equals(players[counter % 2].getSumoPushPoint())) {//if it's sumo:
                 sumoPush(temp);
             } else {
-                init = new Piece(board.getTile(selectedPiece.getY(), selectedPiece.getX()).getPiece());
-                Move move = new Move(new Point(selectedPiece.getY(), selectedPiece.getX()), temp);
-                moveStack.push(new MoveGroup(move));
-                board.move(move);
-                if (undoCount > 0)
-                    undoCount--;
-                fin = new Piece(board.getTile(temp.x, temp.y).getPiece());
+                movePiece(temp);
             }
 
             counter++;
             resolveNormalMove(temp.y, temp.x);
-
             gameBoardView.setAvailMoves(availMoves);
             gameBoardView.drawBoard(board, init.getPoint(), fin.getPoint(), selectedPiece);
 
             //find next piece
-            if(!deadlock)
+            if(!deadlock) {
                 win = GameLogic.win(board);
-            if (!win.equals(-1, -1) && !deadlock) {//if someone won:
-                resolveWin();
+                if (!win.equals(-1, -1)) {//if someone won:
+                    resolveWin();
+                }
             }
 
             if (!win.equals(-1, -1)) {
@@ -234,6 +228,16 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
                 break;
         }
         counter++;
+        fin = new Piece(board.getTile(temp.x, temp.y).getPiece());
+    }
+
+    public void movePiece(Point temp){
+        init = new Piece(board.getTile(selectedPiece.getY(), selectedPiece.getX()).getPiece());
+        Move move = new Move(new Point(selectedPiece.getY(), selectedPiece.getX()), temp);
+        moveStack.push(new MoveGroup(move));
+        board.move(move);
+        if (undoCount > 0)
+            undoCount--;
         fin = new Piece(board.getTile(temp.x, temp.y).getPiece());
     }
 
