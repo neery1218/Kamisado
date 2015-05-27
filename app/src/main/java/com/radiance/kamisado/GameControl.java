@@ -36,6 +36,8 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
     private Stack<MoveGroup> moveStack;
     private int undoCount;
 
+    private GameStateListener gameStateListener;
+
 
     public GameControl(GameBoardView gameBoardView, int bd, int VERSUS_TYPE) {
         this.boardDimension = bd;
@@ -244,6 +246,12 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
     public void resolveWin(){
         Piece winPiece = board.getTile(win.x, win.y).getPiece();
         int winPlayer = winPiece.getOwner();
+        if(winPlayer == PLAYER_ONE){
+            gameStateListener.p2Win(winPiece.getPoint());
+        }
+        else{
+            gameStateListener.p1Win(winPiece.getPoint());
+        }
         score[winPlayer] += scores[winPiece.getRank()];
         gameBoardView.updateScore(score);
         board.rankUp(winPiece.getY(), winPiece.getX());
@@ -263,23 +271,6 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
         gameBoardView.drawBoard(board, selectedPiece, true);
         undoCount = 0;
         moveStack = new Stack<MoveGroup>();
-    }
-
-    @Override
-    public void onSwipeRight() {
-        resetBoard = new Board(board);
-        board.search();
-        board.fillLeft();
-        reset();
-    }
-
-    @Override
-    public void onSwipeLeft() {
-        resetBoard = new Board(board);
-        board.search();
-        board.fillLeft();
-        reset();
-
     }
 
     public void undo() {
@@ -313,11 +304,31 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
         Log.v("Game", "undo");
     }
 
-    public Piece getSelectedPiece() {
-        return selectedPiece;
+    public void attachGamePlayFragment(GamePlayFragment gamePlayFragment){
+        gameStateListener = gamePlayFragment;
     }
 
-    public int getTurn() {
-        return counter;
+    @Override
+    public void onSwipeRight() {
+        resetBoard = new Board(board);
+        board.search();
+        board.fillLeft();
+        reset();
+    }
+
+    @Override
+    public void onSwipeLeft() {
+        resetBoard = new Board(board);
+        board.search();
+        board.fillLeft();
+        reset();
+
+    }
+
+    public interface GameStateListener{
+        public void p1Win(Point winPoint);
+        public void p2Win(Point winPoint);
+        public void deadlock(Point winPoint);
+        public void gameLimitReached(int player);
     }
 }
