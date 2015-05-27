@@ -214,12 +214,7 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
             if(!deadlock)
                 win = GameLogic.win(board);
             if (!win.equals(-1, -1) && !deadlock) {//if someone won:
-                Piece winPiece = board.getTile(win.x, win.y).getPiece();
-                int winPlayer = winPiece.getOwner();
-                score[winPlayer] += scores[winPiece.getRank()];
-                gameBoardView.updateScore(score);
-                board.rankUp(winPiece.getY(), winPiece.getX());
-                Log.d("TEST", "win");
+                resolveWin();
             }
             resolveNormalMove(temp.y, temp.x);
 
@@ -240,6 +235,15 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
             }
 
         }
+    }
+
+    public void resolveWin(){
+        Piece winPiece = board.getTile(win.x, win.y).getPiece();
+        int winPlayer = winPiece.getOwner();
+        score[winPlayer] += scores[winPiece.getRank()];
+        gameBoardView.updateScore(score);
+        board.rankUp(winPiece.getY(), winPiece.getX());
+        Log.d("TEST", "win");
     }
 
     public void reset() {//resets the game board
