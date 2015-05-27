@@ -225,7 +225,6 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
                 counter = board.getTile(win.x, win.y).getPiece().getOwner();
                 if (players[counter % 2] instanceof AIPlayer) {
                     aiWin = true;
-                    Log.v("AITEST", "win called");
                 }
             } else {
                 if (players[counter % 2] instanceof AIPlayer && win.equals(-1, -1))
