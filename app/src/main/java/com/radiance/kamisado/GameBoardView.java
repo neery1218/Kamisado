@@ -65,7 +65,7 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
 
         MATCH_TYPE = GamePlayFragment.getMATCH_TYPE();
         VERSUS_TYPE = GamePlayFragment.getVERSUS_TYPE();
-        gameControl = new GameControl(this, boardDimension, VERSUS_TYPE);
+        gameControl = new GameControl(this, boardDimension, VERSUS_TYPE, MATCH_TYPE);
         onBoardEvent = gameControl;
         Log.v("Game", "versustype:" + VERSUS_TYPE);
         Log.v("Game", "matchType:" + MATCH_TYPE);

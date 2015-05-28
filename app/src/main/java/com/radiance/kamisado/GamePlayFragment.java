@@ -210,7 +210,6 @@ public class GamePlayFragment extends Fragment implements Button.OnClickListener
 
     }
 
-
     public interface OnGamePlayInteractionListener {
         // TODO: Update argument type and name
         public void onGamePlayInteraction(Uri uri);
