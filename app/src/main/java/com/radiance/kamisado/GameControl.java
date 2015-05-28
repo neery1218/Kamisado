@@ -36,6 +36,8 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
     private Stack<MoveGroup> moveStack;
     private int undoCount;
 
+    private GameStateListener gameStateListener;
+
 
     public GameControl(GameBoardView gameBoardView, int bd, int VERSUS_TYPE) {
         this.boardDimension = bd;
@@ -184,62 +186,76 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
         Point temp = players[counter % 2].resolveMove(new Point(y, x));//returns the point that the piece should be moved to
         if (!temp.equals(inValid)) {//check validity
             if (selectedPiece.getRank() > 0 && temp.equals(players[counter % 2].getSumoPushPoint())) {//if it's sumo:
-                init = new Piece(board.getTile(selectedPiece.getY(), selectedPiece.getX()).getPiece());
-                sumoChain = players[counter % 2].getSumoChain();
-                if (undoCount > 0)
-                    undoCount--;
-                switch (counter % 2) {
-                    case PLAYER_TWO:
-                        resolveSumoPushP1();
-                        break;
-                    case PLAYER_ONE:
-                        resolveSumoPushP2();
-                        break;
-                }
-                counter++;
-                fin = new Piece(board.getTile(temp.x, temp.y).getPiece());
+                sumoPush(temp);
             } else {
-                init = new Piece(board.getTile(selectedPiece.getY(), selectedPiece.getX()).getPiece());
-                Move move = new Move(new Point(selectedPiece.getY(), selectedPiece.getX()), temp);
-                moveStack.push(new MoveGroup(move));
-                board.move(move);
-                if (undoCount > 0)
-                    undoCount--;
-                fin = new Piece(board.getTile(temp.x, temp.y).getPiece());
+                movePiece(temp);
             }
 
             counter++;
-
-            //find next piece
-            if(!deadlock)
-                win = GameLogic.win(board);
-            if (!win.equals(-1, -1) && !deadlock) {//if someone won:
-                Piece winPiece = board.getTile(win.x, win.y).getPiece();
-                int winPlayer = winPiece.getOwner();
-                score[winPlayer] += scores[winPiece.getRank()];
-                gameBoardView.updateScore(score);
-                board.rankUp(winPiece.getY(), winPiece.getX());
-                Log.d("TEST", "win");
-            }
             resolveNormalMove(temp.y, temp.x);
-
             gameBoardView.setAvailMoves(availMoves);
             gameBoardView.drawBoard(board, init.getPoint(), fin.getPoint(), selectedPiece);
-            Log.d("Animate", fin.toString());
+
+            //find next piece
+            if(!deadlock) {
+                win = GameLogic.win(board);
+                if (!win.equals(-1, -1)) {//if someone won:
+                    resolveWin();
+                }
+            }
+
             if (!win.equals(-1, -1)) {
-                Log.v("game", "somebody has won");
                 counter = board.getTile(win.x, win.y).getPiece().getOwner();
                 if (players[counter % 2] instanceof AIPlayer) {
                     aiWin = true;
-                    Log.v("AITEST", "win called");
                 }
-
             } else {
                 if (players[counter % 2] instanceof AIPlayer && win.equals(-1, -1))
                     onTouch(-1, -1);
             }
-
         }
+    }
+
+    public void sumoPush(Point temp){
+        init = new Piece(board.getTile(selectedPiece.getY(), selectedPiece.getX()).getPiece());
+        sumoChain = players[counter % 2].getSumoChain();
+        if (undoCount > 0)
+            undoCount--;
+        switch (counter % 2) {
+            case PLAYER_TWO:
+                resolveSumoPushP1();
+                break;
+            case PLAYER_ONE:
+                resolveSumoPushP2();
+                break;
+        }
+        counter++;
+        fin = new Piece(board.getTile(temp.x, temp.y).getPiece());
+    }
+
+    public void movePiece(Point temp){
+        init = new Piece(board.getTile(selectedPiece.getY(), selectedPiece.getX()).getPiece());
+        Move move = new Move(new Point(selectedPiece.getY(), selectedPiece.getX()), temp);
+        moveStack.push(new MoveGroup(move));
+        board.move(move);
+        if (undoCount > 0)
+            undoCount--;
+        fin = new Piece(board.getTile(temp.x, temp.y).getPiece());
+    }
+
+    public void resolveWin(){
+        Piece winPiece = board.getTile(win.x, win.y).getPiece();
+        int winPlayer = winPiece.getOwner();
+        if(winPlayer == PLAYER_ONE){
+            gameStateListener.p2Win(winPiece.getPoint());
+        }
+        else{
+            gameStateListener.p1Win(winPiece.getPoint());
+        }
+        score[winPlayer] += scores[winPiece.getRank()];
+        gameBoardView.updateScore(score);
+        board.rankUp(winPiece.getY(), winPiece.getX());
+        Log.d("TEST", "win");
     }
 
     public void reset() {//resets the game board
@@ -255,23 +271,6 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
         gameBoardView.drawBoard(board, selectedPiece, true);
         undoCount = 0;
         moveStack = new Stack<MoveGroup>();
-    }
-
-    @Override
-    public void onSwipeRight() {
-        resetBoard = new Board(board);
-        board.search();
-        board.fillLeft();
-        reset();
-    }
-
-    @Override
-    public void onSwipeLeft() {
-        resetBoard = new Board(board);
-        board.search();
-        board.fillLeft();
-        reset();
-
     }
 
     public void undo() {
@@ -305,11 +304,31 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
         Log.v("Game", "undo");
     }
 
-    public Piece getSelectedPiece() {
-        return selectedPiece;
+    public void attachGamePlayFragment(GamePlayFragment gamePlayFragment){
+        gameStateListener = gamePlayFragment;
     }
 
-    public int getTurn() {
-        return counter;
+    @Override
+    public void onSwipeRight() {
+        resetBoard = new Board(board);
+        board.search();
+        board.fillLeft();
+        reset();
+    }
+
+    @Override
+    public void onSwipeLeft() {
+        resetBoard = new Board(board);
+        board.search();
+        board.fillLeft();
+        reset();
+
+    }
+
+    public interface GameStateListener{
+        public void p1Win(Point winPoint);
+        public void p2Win(Point winPoint);
+        public void deadlock(Point winPoint);
+        public void gameLimitReached(int player);
     }
 }

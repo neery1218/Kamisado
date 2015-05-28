@@ -74,7 +74,6 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
 
     }//Calls the super constructor and creates a new paint object
 
-
     public void setScoreView(TextView scoreView) {
         this.scoreView = scoreView;
         updateScore(new int[]{0, 0});
@@ -116,7 +115,6 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
         //Creates the piece objects
 
     }//initialisation of the gameboard
-
 
     public void drawBoard(Board board, Point init, Point fin, Piece selectedPiece) {
         this.selectedPiece = selectedPiece;
@@ -179,8 +177,6 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
         }
 
     }
-
-
 
     private void resolveSwipe(MotionEvent event){
         if(event.getAction() == 0){
@@ -349,6 +345,10 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
             }
         }
 
+    }
+
+    public void attachGameStateListener(GamePlayFragment gamePlayFragment){
+        gameControl.attachGamePlayFragment(gamePlayFragment);
     }
 
 

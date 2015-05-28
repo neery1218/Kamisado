@@ -2,6 +2,7 @@ package com.radiance.kamisado;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.graphics.Point;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,7 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-public class GamePlayFragment extends Fragment implements Button.OnClickListener {
+public class GamePlayFragment extends Fragment implements Button.OnClickListener , GameControl.GameStateListener{
 
     private static int VERSUS_TYPE;
     private static int MATCH_TYPE;
@@ -141,6 +142,7 @@ public class GamePlayFragment extends Fragment implements Button.OnClickListener
         //gameBoardView needs to accept two views
         gameBoardView.setScoreView(scoreTextView);
         gameBoardView.setLayoutParams(gameParams);
+        gameBoardView.attachGameStateListener(this);
 
 
         // undoButton.setLayoutParams(params);
@@ -185,6 +187,26 @@ public class GamePlayFragment extends Fragment implements Button.OnClickListener
     @Override
     public void onClick(View v) {
         gameBoardView.undo();
+    }
+
+    @Override
+    public void p1Win(Point winPoint) {
+        Log.d("INTERFACE", "p1win called");
+    }
+
+    @Override
+    public void p2Win(Point winPoint) {
+
+    }
+
+    @Override
+    public void deadlock(Point winPoint) {
+
+    }
+
+    @Override
+    public void gameLimitReached(int player) {
+
     }
 
 
