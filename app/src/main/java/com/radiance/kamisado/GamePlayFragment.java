@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class GamePlayFragment extends Fragment implements Button.OnClickListener {
@@ -22,7 +23,7 @@ public class GamePlayFragment extends Fragment implements Button.OnClickListener
     private static int AI_DIFFICULTY;
     private GameBoardView gameBoardView;
     private int layoutHeight;
-
+    private RelativeLayout relativeLayout;
 
     private TextView scoreTextView;
     private OnGamePlayInteractionListener mListener;
@@ -107,7 +108,7 @@ public class GamePlayFragment extends Fragment implements Button.OnClickListener
 
         View content = getActivity().getWindow().findViewById(Window.ID_ANDROID_CONTENT);//finds alloted screen size. this will save a lot of time.
         Log.v("UI", "Content: " + content.getWidth() + " " + content.getHeight());
-
+        relativeLayout = (RelativeLayout) view.findViewById(R.id.relativeLayout);
         //player two has top layout, player one has bottom layout
         userLayouts[GameControl.PLAYER_ONE] = (LinearLayout) view.findViewById(R.id.bottomUserLayout);
         userLayouts[GameControl.PLAYER_TWO] = (LinearLayout) view.findViewById(R.id.topUserLayout);
