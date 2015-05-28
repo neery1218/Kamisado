@@ -28,6 +28,8 @@ public class GamePlayFragment extends Fragment implements Button.OnClickListener
 
     private TextView scoreTextView;
     private OnGamePlayInteractionListener mListener;
+    private TextView winTextView;
+    private int winId;
 
     private Button undoButton;
 
@@ -113,6 +115,11 @@ public class GamePlayFragment extends Fragment implements Button.OnClickListener
         userLayouts[GameControl.PLAYER_ONE] = (LinearLayout) view.findViewById(R.id.bottomUserLayout);
         userLayouts[GameControl.PLAYER_TWO] = (LinearLayout) view.findViewById(R.id.topUserLayout);
 
+
+        winId = View.generateViewId();
+        winTextView = new TextView(getActivity());
+        winTextView.setId(winId);
+
         undoButton = (Button) view.findViewById(R.id.undoButton);
         titleTextView = (TextView) view.findViewById(R.id.titleTextView);
         scoreTextView = (TextView) view.findViewById(R.id.scoreTextView);
@@ -185,13 +192,26 @@ public class GamePlayFragment extends Fragment implements Button.OnClickListener
 
     @Override
     public void onClick(View v) {
-        gameBoardView.undo();
+        if (v.getId() == R.id.undoButton)
+            gameBoardView.undo();
+        if (v.getId() == winId)
+            winTextView.setVisibility(View.GONE);
+
+
     }
 
     @Override
     public void p1Win(Point winPoint) {
         Log.d("INTERFACE", "p1win called");
-        LinearLayout layout = new LinearLayout(getActivity());
+        // LinearLayout layout = new LinearLayout(getActivity());
+
+        winTextView.setText("Player one wins!");
+        winTextView.setBackgroundColor(getResources().getColor(R.color.white));
+        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
+        winTextView.setLayoutParams(layoutParams);
+        winTextView.setOnClickListener(this);
+        relativeLayout.addView(winTextView);
+        // layoutParams.
         // layout.setLayoutParams();
     }
 
