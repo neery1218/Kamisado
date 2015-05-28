@@ -11,6 +11,7 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
     public static final int PLAYER_TWO = 1;
     Board board = new Board();
     private boolean firstMove = true;
+    private boolean scoreLimitReached = false;
     private Point inValid = new Point(-1, -1);
     private Player[] players;
     private GameBoardView gameBoardView;
@@ -23,6 +24,7 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
     private ArrayList<Point> availMoves;
     private int sumoChain = 0;
     private int AI_DIFFICULTY = 0;
+    private int MATCH_TYPE;
     private Piece init;
     private Piece fin;
 
@@ -39,9 +41,10 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
     private GameStateListener gameStateListener;
 
 
-    public GameControl(GameBoardView gameBoardView, int bd, int VERSUS_TYPE) {
+    public GameControl(GameBoardView gameBoardView, int bd, int VERSUS_TYPE, int MATCH_TYPE) {
         this.boardDimension = bd;
         this.gameBoardView = gameBoardView;
+        this.MATCH_TYPE = MATCH_TYPE;
 
         players = new Player[2];
         board = new Board();
@@ -131,6 +134,7 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
                 win = new Point(selectedPiece.getY(), selectedPiece.getX());
                 deadlock = true;
                 //new rules: if deadlock, it's a tie
+                gameStateListener.deadlock(win);
                 //TODO: make deadlock screen
 
             } else {
@@ -166,6 +170,7 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
 
     @Override
     public void onTouch(int x, int y) {//overriden method from the interface: all method calls originate from here
+        if(scoreLimitReached)return;
         if(gameBoardView.animationRunning){return;}
 
         if (aiWin) {
@@ -253,6 +258,11 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
             gameStateListener.p1Win(winPiece.getPoint());
         }
         score[winPlayer] += scores[winPiece.getRank()];
+        Log.d("GAMESTATE", score[winPlayer] + " " + MATCH_TYPE);
+        if(score[winPlayer] > MATCH_TYPE){
+            gameStateListener.gameLimitReached(winPlayer);
+            scoreLimitReached = true;
+        }
         gameBoardView.updateScore(score);
         board.rankUp(winPiece.getY(), winPiece.getX());
         Log.d("TEST", "win");
