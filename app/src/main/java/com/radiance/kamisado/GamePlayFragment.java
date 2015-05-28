@@ -90,10 +90,9 @@ public class GamePlayFragment extends Fragment implements Button.OnClickListener
 
         //scoreTextView.setLayoutParams(params);
 
-        undoButton.setText("Undo");
         undoButton.setOnClickListener(this);
 
-        LinearLayout.LayoutParams buttonParams = new LinearLayout.LayoutParams(layoutHeight, layoutHeight);
+        LinearLayout.LayoutParams buttonParams = new LinearLayout.LayoutParams(layoutHeight, LinearLayout.LayoutParams.MATCH_PARENT);
         LinearLayout.LayoutParams scoreViewParam = new LinearLayout.LayoutParams(width - layoutHeight, LinearLayout.LayoutParams.MATCH_PARENT);
         undoButton.setLayoutParams(buttonParams);
         scoreTextView.setLayoutParams(scoreViewParam);
@@ -192,6 +191,8 @@ public class GamePlayFragment extends Fragment implements Button.OnClickListener
     @Override
     public void p1Win(Point winPoint) {
         Log.d("INTERFACE", "p1win called");
+        LinearLayout layout = new LinearLayout(getActivity());
+        // layout.setLayoutParams();
     }
 
     @Override
