@@ -2,6 +2,7 @@ package com.radiance.kamisado;
 
 import android.graphics.Point;
 import android.os.AsyncTask;
+import android.os.Handler;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -28,6 +29,7 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
     private int MATCH_TYPE;
     private Piece init;
     private Piece fin;
+    private Piece winPiece;
 
     private Point win = new Point(-1, -1);
     private int deadlockCount = 0;
@@ -38,6 +40,7 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
 
     private Stack<MoveGroup> moveStack;
     private int undoCount;
+    private Handler handler;
 
     private GameStateListener gameStateListener;
 
@@ -46,11 +49,11 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
         this.boardDimension = bd;
         this.gameBoardView = gameBoardView;
         this.MATCH_TYPE = MATCH_TYPE;
-
+        handler = new Handler();
         players = new Player[2];
         board = new Board();
         players[PLAYER_TWO] = new HumanPlayer(PLAYER_TWO);
-
+        //winPiece = new Piece(null);
         switch (VERSUS_TYPE) {
             case MainActivity.TWO_PLAY_PRESSED:
                 players[PLAYER_ONE] = new HumanPlayer(PLAYER_ONE);
@@ -250,7 +253,7 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
     }
 
     public void resolveWin(){
-        Piece winPiece = board.getTile(win.x, win.y).getPiece();
+        winPiece = board.getTile(win.x, win.y).getPiece();
         int winPlayer = winPiece.getOwner();
         if(winPlayer == PLAYER_ONE){
             gameStateListener.p2Win(winPiece.getPoint());
@@ -258,7 +261,7 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
         else{
             gameStateListener.p1Win(winPiece.getPoint());
         }
-        //new CallWinTask().execute(winPiece, new Piece(-1, -1));
+        new CallWinTask().execute(winPiece, new Piece(-1, -1));
         score[winPlayer] += scores[winPiece.getRank()];
         Log.d("GAMESTATE", score[winPlayer] + " " + MATCH_TYPE);
         if(score[winPlayer] > MATCH_TYPE){
@@ -358,10 +361,28 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
                 if(!gameBoardView.animationRunning){
                     if(pieces[1].getPoint().x != -1 && pieces[1].getPoint().y != -1)
                         callWin(pieces[0].getOwner(), pieces[0].getPoint());
-                    else if(pieces[1].getPoint().x == 0 && pieces[1].getPoint().y == 0)
-                        gameStateListener.deadlock(pieces[0].getPoint());
+                    else if (pieces[1].getPoint().x == 0 && pieces[1].getPoint().y == 0) {
+                        handler.post(new Runnable() {
+
+                            @Override
+                            public void run() {
+                                gameStateListener.deadlock(winPiece.getPoint());
+
+                            }
+                        });
+
+                    }
+
                     else
-                        gameStateListener.gameLimitReached(pieces[0].getOwner());
+                        handler.post(new Runnable() {
+
+                            @Override
+                            public void run() {
+                                gameStateListener.gameLimitReached(winPiece.getOwner());
+
+                            }
+                        });
+
                     break;
                 }
             return false;
