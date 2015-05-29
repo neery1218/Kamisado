@@ -358,8 +358,17 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
             Log.d("TASK", "called");
             while(true)
                 if(!gameBoardView.animationRunning){
-                    if(pieces[1].getPoint().x != -1 && pieces[1].getPoint().y != -1)
-                        callWin(pieces[0].getOwner(), pieces[0].getPoint());
+                    if (pieces[1].getPoint().x != -1 && pieces[1].getPoint().y != -1) {
+                        handler.post(new Runnable() {
+
+                            @Override
+                            public void run() {
+                                callWin(winPiece.getOwner(), winPiece.getPoint());
+
+                            }
+                        });
+                    }
+
                     else if (pieces[1].getPoint().x == 0 && pieces[1].getPoint().y == 0) {
                         handler.post(new Runnable() {
 
