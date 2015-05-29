@@ -28,7 +28,7 @@ public class GamePlayFragment extends Fragment implements Button.OnClickListener
 
     private TextView scoreTextView;
     private OnGamePlayInteractionListener mListener;
-    private TextView winTextView;
+    private TextView screenTextView;
     private int winId;
 
     private Button undoButton;
@@ -116,9 +116,9 @@ public class GamePlayFragment extends Fragment implements Button.OnClickListener
         userLayouts[GameControl.PLAYER_TWO] = (LinearLayout) view.findViewById(R.id.topUserLayout);
 
 
-        winId = View.generateViewId();
-        winTextView = new TextView(getActivity());
-        winTextView.setId(winId);
+        winId = 123;
+        screenTextView = new TextView(getActivity());
+        screenTextView.setId(winId);
 
         undoButton = (Button) view.findViewById(R.id.undoButton);
         titleTextView = (TextView) view.findViewById(R.id.titleTextView);
@@ -192,10 +192,16 @@ public class GamePlayFragment extends Fragment implements Button.OnClickListener
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.undoButton)
+        if (v.getId() == R.id.undoButton) {
             gameBoardView.undo();
-        if (v.getId() == winId)
-            winTextView.setVisibility(View.GONE);
+            Log.v("INTERFACE", "undo called");
+        }
+
+        if (v.getId() == winId) {
+            Log.v("INTERFACE", "remove View called");
+            relativeLayout.removeView(screenTextView);
+        }
+        //screenTextView.setVisibility(View.GONE);
 
 
     }
@@ -205,12 +211,12 @@ public class GamePlayFragment extends Fragment implements Button.OnClickListener
         Log.d("INTERFACE", "p1win called");
         // LinearLayout layout = new LinearLayout(getActivity());
 
-        winTextView.setText("Player one wins!");
-        winTextView.setBackgroundColor(getResources().getColor(R.color.white));
+        screenTextView.setText("Player one wins!");
+        screenTextView.setBackgroundColor(getResources().getColor(R.color.white));
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
-        winTextView.setLayoutParams(layoutParams);
-        winTextView.setOnClickListener(this);
-        relativeLayout.addView(winTextView);
+        screenTextView.setLayoutParams(layoutParams);
+        screenTextView.setOnClickListener(this);
+        relativeLayout.addView(screenTextView);
         // layoutParams.
         // layout.setLayoutParams();
     }
