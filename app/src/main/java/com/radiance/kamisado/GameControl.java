@@ -1,6 +1,7 @@
 package com.radiance.kamisado;
 
 import android.graphics.Point;
+import android.os.AsyncTask;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -251,12 +252,13 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
     public void resolveWin(){
         Piece winPiece = board.getTile(win.x, win.y).getPiece();
         int winPlayer = winPiece.getOwner();
-        if(winPlayer == PLAYER_ONE){
+        /*if(winPlayer == PLAYER_ONE){
             gameStateListener.p2Win(winPiece.getPoint());
         }
         else{
             gameStateListener.p1Win(winPiece.getPoint());
-        }
+        }*/
+        new CallWinTask().execute(winPiece, new Piece(-1, -1));
         score[winPlayer] += scores[winPiece.getRank()];
         Log.d("GAMESTATE", score[winPlayer] + " " + MATCH_TYPE);
         if(score[winPlayer] > MATCH_TYPE){
@@ -318,6 +320,13 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
         gameStateListener = gamePlayFragment;
     }
 
+    public void callWin(int player, Point point){
+        if(player == PLAYER_ONE)
+            gameStateListener.p2Win(point);
+        else
+            gameStateListener.p1Win(point);
+    }
+
     @Override
     public void onSwipeRight() {
         resetBoard = new Board(board);
@@ -340,5 +349,28 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
         public void p2Win(Point winPoint);
         public void deadlock(Point winPoint);
         public void gameLimitReached(int player);
+    }
+
+    private class CallWinTask extends AsyncTask<Piece, Integer, Boolean> {
+        protected Boolean doInBackground(Piece... pieces) {
+            Log.d("TASK", "called");
+            while(true)
+                if(!gameBoardView.animationRunning){
+                    if(pieces[1].getPoint().x != -1 && pieces[1].getPoint().y != -1)
+                        callWin(pieces[0].getOwner(), pieces[0].getPoint());
+                    else if(pieces[1].getPoint().x == 0 && pieces[1].getPoint().y == 0)
+                        gameStateListener.deadlock(pieces[0].getPoint());
+                    else
+                        gameStateListener.gameLimitReached(pieces[0].getOwner());
+                    break;
+                }
+            return false;
+        }
+
+        protected void onProgressUpdate(Integer... progress) {
+        }
+
+        protected void onPostExecute(Boolean result) {
+        }
     }
 }
