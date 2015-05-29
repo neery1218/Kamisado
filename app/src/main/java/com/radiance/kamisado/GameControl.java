@@ -349,6 +349,7 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
     public interface GameStateListener{
         public void p1Win(Point winPoint);
         public void p2Win(Point winPoint);
+
         public void deadlock(Point winPoint);
         public void gameLimitReached(int player);
     }
