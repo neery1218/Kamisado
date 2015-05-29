@@ -202,6 +202,7 @@ public class GamePlayFragment extends Fragment implements Button.OnClickListener
 
     @Override
     public void p1Win(Point winPoint) {
+        while(gameBoardView.animationRunning){}
         Log.d("INTERFACE", "p1win called");
         // LinearLayout layout = new LinearLayout(getActivity());
 
