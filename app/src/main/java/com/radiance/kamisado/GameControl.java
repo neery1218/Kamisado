@@ -344,7 +344,6 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
         board.search();
         board.fillLeft();
         reset();
-
     }
 
     public interface GameStateListener{
