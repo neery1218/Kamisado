@@ -2,12 +2,9 @@ package com.radiance.kamisado;
 
 import android.app.Activity;
 import android.app.Fragment;
-import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -54,33 +51,19 @@ public class TutorialFragment extends Fragment{
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_tutorial, container, false);
-        view.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                Log.d("SWIPE", event.getAction()  + "");
-                if(event.getAction() == 1){
-                    startX = (int)event.getX();
-                    startY = (int)event.getY();
-                    Log.d("SWIPE", startX + " " + endX);
-                }
-                else if(event.getAction() == 0){
-                    endX = (int)event.getX(); endY = (int)event.getY();
-                    if(startX - endX > 200 && Math.abs(endY - startY) < 100){
-                        startX = -1; endX = -1; startY = -1; endY = -1;
-                        counter++;
-                    }
-                    if (endX - startX > 200 && Math.abs(startY - endY) < 100) {
-                        startX = -1; endX = -1; startY = -1; endY = -1;
-                        counter--;
-                    }
-                    counter %= id.length;
-                    tutorialScreen.setImageResource(id[counter]);
-                }
-                return false;
+        tutorialScreen = (ImageView) view.findViewById(R.id.imageView);
+        tutorialScreen.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                counter++;
+                counter %= 8;
+                tutorialScreen = (ImageView) view.findViewById(R.id.imageView);
+                tutorialScreen.setImageResource(id[counter]);
             }
         });
-        tutorialScreen = (ImageView) view.findViewById(R.id.imageView);
-        tutorialScreen.setImageResource(id[counter]);
+        tutorialScreen.callOnClick();
+
+
+
 
         return view;
     }

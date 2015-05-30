@@ -32,13 +32,11 @@ public class GamePlayFragment extends Fragment implements Button.OnClickListener
     private int winId;
 
     private Button undoButton;
-
+    private LinearLayout screenLayout;
 
 
     private TextView titleTextView;
 
-    private LinearLayout topUserLayout;
-    private LinearLayout bottomUserLayout;
 
     private LinearLayout[] userLayouts;
 
@@ -110,15 +108,34 @@ public class GamePlayFragment extends Fragment implements Button.OnClickListener
 
         View content = getActivity().getWindow().findViewById(Window.ID_ANDROID_CONTENT);//finds alloted screen size. this will save a lot of time.
         Log.v("UI", "Content: " + content.getWidth() + " " + content.getHeight());
+
+
         relativeLayout = (RelativeLayout) view.findViewById(R.id.relativeLayout);
         //player two has top layout, player one has bottom layout
+
+
         userLayouts[GameControl.PLAYER_ONE] = (LinearLayout) view.findViewById(R.id.bottomUserLayout);
         userLayouts[GameControl.PLAYER_TWO] = (LinearLayout) view.findViewById(R.id.topUserLayout);
 
 
+        screenLayout = new LinearLayout(getActivity());
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
+        screenLayout.setLayoutParams(params);
+
         winId = 123;
         screenTextView = new TextView(getActivity());
         screenTextView.setId(winId);
+        screenTextView.setBackgroundColor(getResources().getColor(R.color.white));
+        screenTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 24f);
+        screenTextView.setTypeface(MainActivity.typefaceHeader);
+        LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        param.gravity = Gravity.CENTER;
+
+        screenTextView.setLayoutParams(param);
+        screenTextView.setGravity(Gravity.CENTER);
+        screenTextView.setOnClickListener(this);
+
+
 
         undoButton = (Button) view.findViewById(R.id.undoButton);
         titleTextView = (TextView) view.findViewById(R.id.titleTextView);
@@ -199,7 +216,9 @@ public class GamePlayFragment extends Fragment implements Button.OnClickListener
 
         if (v.getId() == winId) {
             Log.v("INTERFACE", "remove View called");
-            relativeLayout.removeView(screenTextView);
+
+            relativeLayout.removeView(screenLayout);
+            screenLayout.removeAllViews();
         }
         //screenTextView.setVisibility(View.GONE);
 
@@ -208,16 +227,15 @@ public class GamePlayFragment extends Fragment implements Button.OnClickListener
 
     @Override
     public void p1Win(Point winPoint) {
-        while(gameBoardView.animationRunning){}
+        // while(gameBoardView.animationRunning){}
         Log.d("INTERFACE", "p1win called");
         // LinearLayout layout = new LinearLayout(getActivity());
+        screenLayout.addView(screenTextView);
+        relativeLayout.addView(screenLayout);
 
         screenTextView.setText("Player one wins!");
-        screenTextView.setBackgroundColor(getResources().getColor(R.color.white));
-        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
-        screenTextView.setLayoutParams(layoutParams);
-        screenTextView.setOnClickListener(this);
-        relativeLayout.addView(screenTextView);
+
+
         // layoutParams.
         // layout.setLayoutParams();
     }

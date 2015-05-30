@@ -320,6 +320,7 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
         onBoardEvent.onTouch(-1,-1);
         if(gameControl.getWin().x != -1 && gameControl.getWin().y != -1){
             selectedPiece = null;
+            //TODO call gamestatelistener here!!!
         }
         invalidate();
     }
@@ -336,6 +337,7 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
 
     public void undo() {
         //TODO: BUG. after an ai win, player can undo to take advantage of the ai's rng
+        //TODO: BUG. counter doesn't get reset properly after undo-ing in an availMoves==0 scenario
         if (gameControl.getWin().equals(new Point(-1, -1))) {
             if (VERSUS_TYPE == MainActivity.PLAY_PRESSED) {
                 gameControl.undo();
