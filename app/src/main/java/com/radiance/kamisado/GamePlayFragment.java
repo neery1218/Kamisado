@@ -3,7 +3,6 @@ package com.radiance.kamisado;
 import android.app.Activity;
 import android.app.Fragment;
 import android.graphics.Point;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.TypedValue;
@@ -12,12 +11,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-public class GamePlayFragment extends Fragment implements Button.OnClickListener , GameControl.GameStateListener{
+public class GamePlayFragment extends Fragment implements GameControl.GameStateListener {
 
     private static int VERSUS_TYPE;
     private static int MATCH_TYPE;
@@ -90,7 +91,11 @@ public class GamePlayFragment extends Fragment implements Button.OnClickListener
 
         //scoreTextView.setLayoutParams(params);
 
-        undoButton.setOnClickListener(this);
+        undoButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                gameBoardView.undo();
+            }
+        });
 
         LinearLayout.LayoutParams buttonParams = new LinearLayout.LayoutParams(layoutHeight, LinearLayout.LayoutParams.MATCH_PARENT);
         LinearLayout.LayoutParams scoreViewParam = new LinearLayout.LayoutParams(width - layoutHeight, LinearLayout.LayoutParams.MATCH_PARENT);
@@ -122,6 +127,15 @@ public class GamePlayFragment extends Fragment implements Button.OnClickListener
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
         screenLayout.setLayoutParams(params);
 
+
+        screenLayout.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                relativeLayout.removeView(screenLayout);
+                screenLayout.removeAllViews();
+
+            }
+        });
+
         winId = 123;
         screenTextView = new TextView(getActivity());
         screenTextView.setId(winId);
@@ -133,7 +147,7 @@ public class GamePlayFragment extends Fragment implements Button.OnClickListener
 
         screenTextView.setLayoutParams(param);
         screenTextView.setGravity(Gravity.CENTER);
-        screenTextView.setOnClickListener(this);
+        // screenTextView.setOnClickListener(this);
 
 
 
@@ -183,12 +197,7 @@ public class GamePlayFragment extends Fragment implements Button.OnClickListener
         return view;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onGamePlayInteraction(uri);
-        }
-    }
+
 
     @Override
     public void onAttach(Activity activity) {
@@ -207,7 +216,7 @@ public class GamePlayFragment extends Fragment implements Button.OnClickListener
         mListener = null;
     }
 
-    @Override
+   /* @Override
     public void onClick(View v) {
         if (v.getId() == R.id.undoButton) {
             gameBoardView.undo();
@@ -223,7 +232,7 @@ public class GamePlayFragment extends Fragment implements Button.OnClickListener
         //screenTextView.setVisibility(View.GONE);
 
 
-    }
+    }*/
 
     @Override
     public void p1Win(Point winPoint) {
@@ -234,6 +243,11 @@ public class GamePlayFragment extends Fragment implements Button.OnClickListener
         relativeLayout.addView(screenLayout);
 
         screenTextView.setText("Player one wins!");
+        final Animation in = new AlphaAnimation(0.0f, 1.0f);
+        in.setDuration(100);
+
+
+        screenTextView.setAnimation(in);
 
 
         // layoutParams.
@@ -242,22 +256,67 @@ public class GamePlayFragment extends Fragment implements Button.OnClickListener
 
     @Override
     public void p2Win(Point winPoint) {
+        Log.d("INTERFACE", "p2win called");
+        // LinearLayout layout = new LinearLayout(getActivity());
+        screenLayout.addView(screenTextView);
+        relativeLayout.addView(screenLayout);
 
+        screenTextView.setText("Player two wins!");
+        final Animation in = new AlphaAnimation(0.0f, 1.0f);
+        in.setDuration(100);
+
+
+        screenTextView.setAnimation(in);
     }
 
     @Override
     public void deadlock(Point winPoint) {
+        Log.d("INTERFACE", "deadlock called");
+        // LinearLayout layout = new LinearLayout(getActivity());
+        screenLayout.addView(screenTextView);
+        relativeLayout.addView(screenLayout);
+
+        screenTextView.setText("DEADLOCK");
+        final Animation in = new AlphaAnimation(0.0f, 1.0f);
+        in.setDuration(100);
+
+
+        screenTextView.setAnimation(in);
 
     }
 
     @Override
     public void gameLimitReached(int player) {
+        Log.d("INTERFACE", "gameLimitReached called");
+        // LinearLayout layout = new LinearLayout(getActivity());
+
+        if (player == GameControl.PLAYER_ONE)
+            screenTextView.setText("P1 wins game");
+        else
+            screenTextView.setText("P2 wins game");
+
+        screenLayout.addView(screenTextView);
+        screenLayout.setOnClickListener(null);
+
+        screenLayout.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                mListener.done();
+            }
+        });
+        relativeLayout.addView(screenLayout);
+
+        screenTextView.setText("Player one wins!");
+        final Animation in = new AlphaAnimation(0.0f, 1.0f);
+        in.setDuration(100);
+
+
+        screenTextView.setAnimation(in);
 
     }
 
     public interface OnGamePlayInteractionListener {
         // TODO: Update argument type and name
-        public void onGamePlayInteraction(Uri uri);
+        public void done();
     }
 
 }

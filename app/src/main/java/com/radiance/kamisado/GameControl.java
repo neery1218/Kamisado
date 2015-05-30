@@ -264,10 +264,7 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
         new CallWinTask().execute(winPiece, new Piece(-1, -1));
         score[winPlayer] += scores[winPiece.getRank()];
         Log.d("GAMESTATE", score[winPlayer] + " " + MATCH_TYPE);
-        if(score[winPlayer] > MATCH_TYPE){
-            gameStateListener.gameLimitReached(winPlayer);
-            scoreLimitReached = true;
-        }
+
         gameBoardView.updateScore(score);
         board.rankUp(winPiece.getY(), winPiece.getX());
         Log.d("TEST", "win");
@@ -324,7 +321,10 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
     }
 
     public void callWin(int player, Point point){
-        if(player == PLAYER_ONE)
+        if (score[player] > MATCH_TYPE) {
+            gameStateListener.gameLimitReached(player);
+            scoreLimitReached = true;
+        } else if (player == PLAYER_ONE)
             gameStateListener.p2Win(point);
         else
             gameStateListener.p1Win(point);
