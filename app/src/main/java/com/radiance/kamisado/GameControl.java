@@ -255,7 +255,7 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
     public void resolveWin(){
         winPiece = board.getTile(win.x, win.y).getPiece();
         int winPlayer = winPiece.getOwner();
-     /*   if(winPlayer == PLAYER_ONE){
+        /*if(winPlayer == PLAYER_ONE){
             gameStateListener.p2Win(winPiece.getPoint());
         }
         else{
