@@ -321,7 +321,7 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
     }
 
     public void callWin(int player, Point point){
-        if (score[player] > MATCH_TYPE) {
+        if (score[player] >= MATCH_TYPE) {
             gameStateListener.gameLimitReached(player);
             scoreLimitReached = true;
         } else if (player == PLAYER_ONE)

@@ -8,6 +8,7 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -132,7 +133,7 @@ public class GamePlayFragment extends Fragment implements GameControl.GameStateL
             public void onClick(View view) {
                 relativeLayout.removeView(screenLayout);
                 screenLayout.removeAllViews();
-
+                gameBoardView.removeScoreText();
             }
         });
 
@@ -215,24 +216,6 @@ public class GamePlayFragment extends Fragment implements GameControl.GameStateL
         super.onDetach();
         mListener = null;
     }
-
-   /* @Override
-    public void onClick(View v) {
-        if (v.getId() == R.id.undoButton) {
-            gameBoardView.undo();
-            Log.v("INTERFACE", "undo called");
-        }
-
-        if (v.getId() == winId) {
-            Log.v("INTERFACE", "remove View called");
-
-            relativeLayout.removeView(screenLayout);
-            screenLayout.removeAllViews();
-        }
-        //screenTextView.setVisibility(View.GONE);
-
-
-    }*/
 
     @Override
     public void p1Win(Point winPoint) {
