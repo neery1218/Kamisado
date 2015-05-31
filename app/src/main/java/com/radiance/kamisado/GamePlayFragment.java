@@ -242,7 +242,7 @@ public class GamePlayFragment extends Fragment implements GameControl.GameStateL
         screenLayout.addView(screenTextView);
         relativeLayout.addView(screenLayout);
 
-        screenTextView.setText("Player one wins!");
+        screenTextView.setText("P1++");
         final Animation in = new AlphaAnimation(0.0f, 1.0f);
         in.setDuration(100);
 
@@ -261,7 +261,7 @@ public class GamePlayFragment extends Fragment implements GameControl.GameStateL
         screenLayout.addView(screenTextView);
         relativeLayout.addView(screenLayout);
 
-        screenTextView.setText("Player two wins!");
+        screenTextView.setText("P2++");
         final Animation in = new AlphaAnimation(0.0f, 1.0f);
         in.setDuration(100);
 
