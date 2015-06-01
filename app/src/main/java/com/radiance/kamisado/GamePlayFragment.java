@@ -328,7 +328,6 @@ public class GamePlayFragment extends Fragment implements GameControl.GameStateL
     }
 
     public interface OnGamePlayInteractionListener {
-        // TODO: Update argument type and name
         public void done();
     }
 
