@@ -11,6 +11,7 @@ import java.util.Stack;
 public class GameControl implements GameBoardView.OnBoardEvent {//runs the game counter and controls gameBoardView calls
     public static final int PLAYER_ONE = 0;
     public static final int PLAYER_TWO = 1;
+    private static int VERSUS_TYPE = 0;
     Board board = new Board();
     private boolean firstMove = true;
     private boolean scoreLimitReached = false;
@@ -27,6 +28,7 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
     private int sumoChain = 0;
     private int AI_DIFFICULTY = 0;
     private int MATCH_TYPE;
+    private int undoLimit;
     private Piece init;
     private Piece fin;
     private Piece winPiece;
@@ -44,9 +46,11 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
 
 
     public GameControl(GameBoardView gameBoardView, int bd, int VERSUS_TYPE, int MATCH_TYPE) {
+        this.VERSUS_TYPE = VERSUS_TYPE;
         this.boardDimension = bd;
         this.gameBoardView = gameBoardView;
         this.MATCH_TYPE = MATCH_TYPE;
+        undoLimit = MATCH_TYPE * 2 / 3;
         handler = new Handler();
         players = new Player[2];
         board = new Board();
@@ -283,6 +287,10 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
     }
 
     public void undo() {
+        if(VERSUS_TYPE == MainActivity.PLAY_PRESSED && undoLimit == 0){
+            return;
+        }
+        undoLimit--;
 
         if (moveStack.isEmpty()) {
             firstMove = true;
