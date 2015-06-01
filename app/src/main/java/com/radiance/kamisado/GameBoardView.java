@@ -257,6 +257,10 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
             }
     }
 
+    public void removeScoreText(){
+        onBoardEvent.onSwipeLeft();
+    }
+
     @Override
     public void onDraw(Canvas canvas) {
         super.onDraw(canvas);

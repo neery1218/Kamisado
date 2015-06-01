@@ -12,6 +12,8 @@ public class AIPlayer extends Player {//AI player
 
     private int difficulty = 0;
     private Board temp;
+    private boolean aiUndo = false;
+    private Point aiUndoMove;
 
     public AIPlayer(int difficulty, int id) {//basic constructor
         super(id);
@@ -24,8 +26,16 @@ public class AIPlayer extends Player {//AI player
         return test;
     }
 
+    public void setAiUndo(Point undo){
+        aiUndoMove = undo;
+        aiUndo = true;
+    }
+
     public Point difficulty0(){
-        Point p = new Point();
+        for(int i = 0; i < availMoves.size(); i++){
+            if (hasPlayerWinMove(availMoves.get(i)))
+                return availMoves.get(i);
+        }
         int i = (int) (Math.random() * availMoves.size());
 
         return availMoves.get(i);
@@ -110,8 +120,12 @@ public class AIPlayer extends Player {//AI player
 
     @Override
     public Point resolveMove(Point point) {//overridden method, returns a move based on difficulty
+        if(aiUndo) {
+            aiUndo = false;//TODO fix ai rng abuse
+            //return aiUndoMove;
+        }
         if(difficulty == 0){
-            return difficulty1();//TODO: configure AI skill levels
+            return difficulty0();//TODO: configure AI skill levels
         }
         else if(difficulty == 1){
             return difficulty1();

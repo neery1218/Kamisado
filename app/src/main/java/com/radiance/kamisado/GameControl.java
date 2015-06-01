@@ -31,6 +31,9 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
     private Piece fin;
     private Piece winPiece;
 
+    private Point aiUndoMove;
+    private Point humanMove;
+
     private Point win = new Point(-1, -1);
     private int deadlockCount = 0;
     private boolean aiWin = false;
@@ -76,7 +79,7 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
         counter = 1;
 
         undoCount = 0;
-        moveStack = new Stack<MoveGroup>();
+        moveStack = new Stack<>();
 
 
         gameBoardView.setAvailMoves(availMoves);
@@ -150,7 +153,7 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
             deadlockCount = 0;
         }
         if (!win.equals(-1, -1)) {
-            availMoves = new ArrayList<Point>();
+            availMoves = new ArrayList<>();
         }
 
     }
@@ -282,7 +285,7 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
         gameBoardView.setResetBoard(resetBoard);
         gameBoardView.drawBoard(board, selectedPiece, true);
         undoCount = 0;
-        moveStack = new Stack<MoveGroup>();
+        moveStack = new Stack<>();
     }
 
     public void undo() {
@@ -297,11 +300,16 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
         if (undo.size() == 1)
             counter = (counter + 1) % 2;
 
-
         //resolveNormalMove(undo.finish.y, undo.finish.x);
-        Log.v("Game", "undoSize: " + undo.get(0).toString());
+        Log.v("undo", "undoSize: " + undo.get(0).toString());
         init = new Piece(board.getTile(undo.get(0).start.x, undo.get(0).start.y).getPiece());
         board.move(undo);
+
+        if(players[PLAYER_ONE] instanceof AIPlayer && counter % 2 == PLAYER_ONE){
+            aiUndoMove = undo.get(0).getFinish();
+            ((AIPlayer)players[PLAYER_ONE]).setAiUndo(aiUndoMove);
+        }
+
         currColor = board.getTile(undo.get(0).finish.x, undo.get(0).finish.y).getPiece().getColor();
         selectedPiece = GameLogic.findPiece(board, counter % 2, currColor);
         availMoves = players[counter % 2].calcMoves(board, selectedPiece);
@@ -321,7 +329,7 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
     }
 
     public void callWin(int player, Point point){
-        if (score[player] > MATCH_TYPE) {
+        if (score[player] >= MATCH_TYPE) {
             gameStateListener.gameLimitReached(player);
             scoreLimitReached = true;
         } else if (player == PLAYER_ONE)

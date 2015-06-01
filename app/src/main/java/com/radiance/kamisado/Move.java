@@ -21,4 +21,6 @@ public class Move {
     public boolean equals(Move b) {
         return (start.equals(b.start) && finish.equals(b.finish));
     }
+
+    public Point getFinish(){return start;}
 }
