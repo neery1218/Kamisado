@@ -29,11 +29,17 @@ public class GamePlayFragment extends Fragment implements GameControl.GameStateL
 
     private TextView scoreTextView;
     private OnGamePlayInteractionListener mListener;
+
     private TextView screenTextView;
+    private TextView subtitleTextView;
+
+    private LinearLayout holderLayout;
+
     private int winId;
 
     private Button undoButton;
     private LinearLayout screenLayout;
+
 
 
     private TextView titleTextView;
@@ -137,17 +143,29 @@ public class GamePlayFragment extends Fragment implements GameControl.GameStateL
         });
 
         winId = 123;
+        holderLayout = new LinearLayout(getActivity());
+        holderLayout.setOrientation(LinearLayout.VERTICAL);
+
         screenTextView = new TextView(getActivity());
-        screenTextView.setId(winId);
         screenTextView.setBackgroundColor(getResources().getColor(R.color.white));
-        screenTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 24f);
+        screenTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 36f);
         screenTextView.setTypeface(MainActivity.typefaceHeader);
+        screenTextView.setTextColor(getResources().getColor(R.color.text));
         LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         param.gravity = Gravity.CENTER;
 
-        screenTextView.setLayoutParams(param);
+        subtitleTextView = new TextView(getActivity());
+        subtitleTextView.setBackgroundColor(getResources().getColor(R.color.white));
+        subtitleTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 24f);
+        subtitleTextView.setTypeface(MainActivity.typefaceHeader);
+        subtitleTextView.setTextColor(getResources().getColor(R.color.text));
+
         screenTextView.setGravity(Gravity.CENTER);
-        // screenTextView.setOnClickListener(this);
+        subtitleTextView.setGravity(Gravity.CENTER);
+
+        holderLayout.setLayoutParams(param);
+        holderLayout.addView(screenTextView);
+        holderLayout.addView(subtitleTextView);
 
 
 
@@ -239,15 +257,17 @@ public class GamePlayFragment extends Fragment implements GameControl.GameStateL
         // while(gameBoardView.animationRunning){}
         Log.d("INTERFACE", "p1win called");
         // LinearLayout layout = new LinearLayout(getActivity());
-        screenLayout.addView(screenTextView);
+        screenLayout.addView(holderLayout);
         relativeLayout.addView(screenLayout);
 
         screenTextView.setText("P1++");
+        subtitleTextView.setText("Tap to Continue");
         final Animation in = new AlphaAnimation(0.0f, 1.0f);
         in.setDuration(100);
 
 
         screenTextView.setAnimation(in);
+        subtitleTextView.setAnimation(in);
 
 
         // layoutParams.
@@ -258,30 +278,34 @@ public class GamePlayFragment extends Fragment implements GameControl.GameStateL
     public void p2Win(Point winPoint) {
         Log.d("INTERFACE", "p2win called");
         // LinearLayout layout = new LinearLayout(getActivity());
-        screenLayout.addView(screenTextView);
+        screenLayout.addView(holderLayout);
         relativeLayout.addView(screenLayout);
 
         screenTextView.setText("P2++");
+        subtitleTextView.setText("Tap to Continue");
         final Animation in = new AlphaAnimation(0.0f, 1.0f);
         in.setDuration(100);
 
 
         screenTextView.setAnimation(in);
+        subtitleTextView.setAnimation(in);
     }
 
     @Override
     public void deadlock(Point winPoint) {
         Log.d("INTERFACE", "deadlock called");
         // LinearLayout layout = new LinearLayout(getActivity());
-        screenLayout.addView(screenTextView);
+        screenLayout.addView(holderLayout);
         relativeLayout.addView(screenLayout);
 
         screenTextView.setText("DEADLOCK");
+        subtitleTextView.setText("Tap to Continue");
         final Animation in = new AlphaAnimation(0.0f, 1.0f);
         in.setDuration(100);
 
 
         screenTextView.setAnimation(in);
+        subtitleTextView.setAnimation(in);
 
     }
 
@@ -295,7 +319,8 @@ public class GamePlayFragment extends Fragment implements GameControl.GameStateL
         else
             screenTextView.setText("P2 wins game");
 
-        screenLayout.addView(screenTextView);
+        subtitleTextView.setText("Tap to return to Main Menu");
+        screenLayout.addView(holderLayout);
         screenLayout.setOnClickListener(null);
 
         screenLayout.setOnClickListener(new View.OnClickListener() {
@@ -305,7 +330,6 @@ public class GamePlayFragment extends Fragment implements GameControl.GameStateL
         });
         relativeLayout.addView(screenLayout);
 
-        screenTextView.setText("Player one wins!");
         final Animation in = new AlphaAnimation(0.0f, 1.0f);
         in.setDuration(100);
 
