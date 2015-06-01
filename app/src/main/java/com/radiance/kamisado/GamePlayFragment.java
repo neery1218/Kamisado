@@ -8,7 +8,6 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -298,9 +297,9 @@ public class GamePlayFragment extends Fragment implements GameControl.GameStateL
         // LinearLayout layout = new LinearLayout(getActivity());
 
         if (player == GameControl.PLAYER_ONE)
-            screenTextView.setText("P1 wins game");
+            screenTextView.setText("P1 >= MATCH_LENGTH");
         else
-            screenTextView.setText("P2 wins game");
+            screenTextView.setText("P2 >= MATCH_LENGTH");
 
         subtitleTextView.setText("Tap to return to Main Menu");
         screenLayout.addView(holderLayout);
