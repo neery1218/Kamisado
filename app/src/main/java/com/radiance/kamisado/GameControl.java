@@ -30,10 +30,6 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
     private Piece init;
     private Piece fin;
     private Piece winPiece;
-
-    private Point aiUndoMove;
-    private Point humanMove;
-
     private Point win = new Point(-1, -1);
     private int deadlockCount = 0;
     private boolean aiWin = false;
@@ -130,7 +126,7 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
         return true;
     }
 
-    public void resolveNormalMove(int x, int y) {//finds the next piece and availMoves. also checks for no moves and/or deadlock
+    public void resolveNormalMove(int x, int y, int sumoPush) {//finds the next piece and availMoves. also checks for no moves and/or deadlock
         currColor = board.getColor(y, x);
         selectedPiece = GameLogic.findPiece(board, counter % 2, currColor);
         availMoves = players[counter % 2].calcMoves(board, selectedPiece);
@@ -146,7 +142,7 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
 
             } else {
                 counter++;
-                resolveNormalMove(selectedPiece.getX(), selectedPiece.getY());
+                resolveNormalMove(selectedPiece.getX(), selectedPiece.getY(), 1);
             }
         } else {
 
@@ -155,7 +151,6 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
         if (!win.equals(-1, -1)) {
             availMoves = new ArrayList<>();
         }
-
     }
 
     public void resolveAiWin(){
@@ -204,7 +199,7 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
             }
 
             counter++;
-            resolveNormalMove(temp.y, temp.x);
+            resolveNormalMove(temp.y, temp.x, 0);
             gameBoardView.setAvailMoves(availMoves);
             gameBoardView.drawBoard(board, init.getPoint(), fin.getPoint(), selectedPiece);
 
@@ -301,15 +296,8 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
             counter = (counter + 1) % 2;
 
         //resolveNormalMove(undo.finish.y, undo.finish.x);
-        Log.v("undo", "undoSize: " + undo.get(0).toString());
         init = new Piece(board.getTile(undo.get(0).start.x, undo.get(0).start.y).getPiece());
         board.move(undo);
-
-        if(players[PLAYER_ONE] instanceof AIPlayer && counter % 2 == PLAYER_ONE){
-            aiUndoMove = undo.get(0).getFinish();
-            ((AIPlayer)players[PLAYER_ONE]).setAiUndo(aiUndoMove);
-        }
-
         currColor = board.getTile(undo.get(0).finish.x, undo.get(0).finish.y).getPiece().getColor();
         selectedPiece = GameLogic.findPiece(board, counter % 2, currColor);
         availMoves = players[counter % 2].calcMoves(board, selectedPiece);
