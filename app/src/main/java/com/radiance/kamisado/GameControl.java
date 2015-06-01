@@ -34,7 +34,6 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
     private int deadlockCount = 0;
     private boolean aiWin = false;
     private boolean deadlock = false;
-
     private Board resetBoard = null;
 
     private Stack<MoveGroup> moveStack;
