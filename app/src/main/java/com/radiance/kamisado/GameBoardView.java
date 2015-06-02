@@ -20,7 +20,7 @@ import java.util.ArrayList;
 /**
  * Created by neerajen on 31/03/15.
  */
-public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateListener, Animator.AnimatorListener{
+public class GameBoardView extends View{
     public boolean animationRunning = false;
     //gameBoardVariables
     private Paint paint;//make these variables easier to read
@@ -56,6 +56,8 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
     private int animateAlpha = 255;
     private boolean boardReset = false;
     private Board resetBoard;
+    private int[] alphaArray;
+    private boolean animatingAvailMoves = false;
 
     private OnUndoToastCreate onUndoToastCreate;
 
@@ -74,7 +76,6 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
         Log.v("Game", "versustype:" + VERSUS_TYPE);
         Log.v("Game", "matchType:" + MATCH_TYPE);
         animator = new ValueAnimator();
-        animator.addUpdateListener(this);
 
     }//Calls the super constructor and creates a new paint object
 
@@ -127,14 +128,8 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
         this.fin = finPiece;
         Piece initPiece = new Piece(init.x, init.y, this.fin.getColor(), this.fin.getRank(), this.fin.getOwner());
         this.init = initPiece;
-        animationRunning = true;
 
-        animator = ValueAnimator.ofInt(0, 255);
-        animator.setDuration(500);
-        animator.addUpdateListener(this);
-        animator.addListener(this);
-
-        animator.start();
+        resetAnimator();
         invalidate();
     }//Draws the board
 
@@ -145,16 +140,112 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
         fin = null;
         boardReset = reset;
         if(boardReset == true){
-            animationRunning = true;
-            animator = ValueAnimator.ofInt(0, 255);
-            animator.setDuration(500);
-            animator.addUpdateListener(this);
-            animator.addListener(this);
-
-            animator.start();
+            resetAnimator();
+        }
+        if(alphaArray == null && availMoves != null && availMoves.size() != 0){
+            setAvailMovesAnimation();
         }
         invalidate();
     }//Draws the board
+
+    public void setAvailMovesAnimation(){
+        alphaArray = new int[availMoves.size()];
+        for(int i = 0; i < availMoves.size(); i++){
+            alphaArray[i] = 127 - i * 64;
+            Log.d("Animating availMoves", alphaArray[i] + "");
+        }
+        animationRunning = true;
+        animatingAvailMoves = true;
+        animator = ValueAnimator.ofInt(0, alphaArray.length * 64 + 128);
+        animator.setDuration(1000);
+        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                for(int i = 0; i < alphaArray.length; i++){
+                    alphaArray[i] = 127 - 64 * i + (Integer)animation.getAnimatedValue();
+                }
+                invalidate();
+            }
+        });
+        animator.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+
+                boardReset = false;
+                animationRunning = false;
+                animatingAvailMoves = false;
+                onBoardEvent.onTouch(-1,-1);
+                if(gameControl.getWin().x != -1 && gameControl.getWin().y != -1){
+                    selectedPiece = null;
+                    //TODO call gamestatelistener here!!!
+                }
+                invalidate();
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+
+            }
+        });
+
+        animator.start();
+    }
+
+    public void resetAnimator(){
+        animationRunning = true;
+        animator = ValueAnimator.ofInt(0, 255);
+        animator.setDuration(500);
+        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                animateAlpha = 255 - (Integer)animation.getAnimatedValue();
+                invalidate();
+            }
+        });
+        animator.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                if(availMoves.size() != 0) {
+                    setAvailMovesAnimation();
+                }
+
+                boardReset = false;
+                onBoardEvent.onTouch(-1,-1);
+                if(gameControl.getWin().x != -1 && gameControl.getWin().y != -1){
+                    selectedPiece = null;
+                    //TODO call gamestatelistener here!!!
+                }
+                invalidate();
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+
+            }
+        });
+
+        animator.start();
+    }
 
     public void setSelectedPiece(Piece p){
         this.selectedPiece = p;
@@ -175,7 +266,18 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
             Point p = availMoves.get(i);
             paint.setColor(board.getColor(availMoves.get(i).x, availMoves.get(i).y));
             paint.setStyle(Paint.Style.FILL);
-            paint.setAlpha(255);
+            if(alphaArray[i] < 0) {
+                paint.setAlpha(0);
+                Log.d("Animating availMoves", alphaArray[i] + " less");
+            }
+            else if(alphaArray[i] > 255) {
+                paint.setAlpha(255);
+                Log.d("Animating availMoves", alphaArray[i] + " greater");
+            }
+            else {
+                paint.setAlpha(alphaArray[i]);
+                Log.d("Animating availMoves", alphaArray[i] + " in between");
+            }
             canvas.drawRect(startX + p.y * unitSize, startY + p.x * unitSize, startX + (p.y + 1) * unitSize, startY + (p.x + 1) * unitSize, paint);
             //switch to circles eventually?
         }
@@ -268,6 +370,7 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
     @Override
     public void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+        Log.d("Animating availMoves", "called");
         paint.setAntiAlias(true);
         setup();
 
@@ -281,7 +384,7 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
 
 
         //Displays the available moves
-        if (selectedPiece != null && !animationRunning)
+        if (selectedPiece != null && !animationRunning || animatingAvailMoves)
             drawPossibleMoves(canvas);
 
         if(init != null) {
@@ -309,39 +412,6 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
     private boolean valid(int a) {
         return (a >= 0 && a < boardDimension);
     }//Finds available moves of each player
-
-    @Override
-    public void onAnimationUpdate(ValueAnimator animation) {
-        animateAlpha = 255 - (Integer)animation.getAnimatedValue();
-        invalidate();
-    }
-
-    @Override
-    public void onAnimationStart(Animator animation) {
-
-    }
-
-    @Override
-    public void onAnimationEnd(Animator animation) {
-        animationRunning = false;
-        boardReset = false;
-        onBoardEvent.onTouch(-1,-1);
-        if(gameControl.getWin().x != -1 && gameControl.getWin().y != -1){
-            selectedPiece = null;
-            //TODO call gamestatelistener here!!!
-        }
-        invalidate();
-    }
-
-    @Override
-    public void onAnimationCancel(Animator animation) {
-
-    }
-
-    @Override
-    public void onAnimationRepeat(Animator animation) {
-
-    }
 
     public void undo() {
         //TODO: BUG. after an ai win, player can undo to take advantage of the ai's rng
