@@ -286,7 +286,6 @@ public class GamePlayFragment extends Fragment implements GameControl.GameStateL
         final Animation in = new AlphaAnimation(0.0f, 1.0f);
         in.setDuration(100);
 
-
         screenTextView.setAnimation(in);
         subtitleTextView.setAnimation(in);
 
