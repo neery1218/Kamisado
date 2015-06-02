@@ -53,6 +53,7 @@ public class GameBoardView extends View{
     private Piece selectedPiece;
     private Piece init, fin;
     private ValueAnimator animator;
+    private ValueAnimator availMovesAnimator;
     private int animateAlpha = 255;
     private boolean boardReset = false;
     private Board resetBoard;
@@ -158,18 +159,18 @@ public class GameBoardView extends View{
         }
         animationRunning = true;
         animatingAvailMoves = true;
-        animator = ValueAnimator.ofInt(0, alphaArray.length * 64 + 64);
-        animator.setDuration(1000);
-        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+        availMovesAnimator = ValueAnimator.ofInt(0, alphaArray.length * 64 + 64);
+        availMovesAnimator.setDuration(alphaArray.length * 100);
+        availMovesAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
-                for(int i = 0; i < alphaArray.length; i++){
-                    alphaArray[i] = 127 - 64 * i + (Integer)animation.getAnimatedValue();
+                for (int i = 0; i < alphaArray.length; i++) {
+                    alphaArray[i] = 127 - 64 * i + (Integer) animation.getAnimatedValue();
                 }
                 invalidate();
             }
         });
-        animator.addListener(new Animator.AnimatorListener() {
+        availMovesAnimator.addListener(new Animator.AnimatorListener() {
             @Override
             public void onAnimationStart(Animator animation) {
 
@@ -181,8 +182,8 @@ public class GameBoardView extends View{
                 boardReset = false;
                 animationRunning = false;
                 animatingAvailMoves = false;
-                onBoardEvent.onTouch(-1,-1);
-                if(gameControl.getWin().x != -1 && gameControl.getWin().y != -1){
+                onBoardEvent.onTouch(-1, -1);
+                if (gameControl.getWin().x != -1 && gameControl.getWin().y != -1) {
                     selectedPiece = null;
                     //TODO call gamestatelistener here!!!
                 }
@@ -200,7 +201,7 @@ public class GameBoardView extends View{
             }
         });
 
-        animator.start();
+        availMovesAnimator.start();
     }
 
     public void resetAnimator(){
@@ -222,7 +223,7 @@ public class GameBoardView extends View{
 
             @Override
             public void onAnimationEnd(Animator animation) {
-
+                animationRunning = false;
                 boardReset = false;
                 onBoardEvent.onTouch(-1,-1);
                 if(gameControl.getWin().x != -1 && gameControl.getWin().y != -1){
@@ -351,7 +352,6 @@ public class GameBoardView extends View{
     }
 
     private void resetBoard(Canvas canvas){
-        alphaArray = null;
         for(int i = 0; i < boardDimension;i++)
             for(int j = 0; j < boardDimension; j++) {
                 if (!board.getTile(i, j).isEmpty()) {
@@ -378,7 +378,6 @@ public class GameBoardView extends View{
     @Override
     public void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        Log.d("Animating availMoves", "called");
         paint.setAntiAlias(true);
         setup();
 
