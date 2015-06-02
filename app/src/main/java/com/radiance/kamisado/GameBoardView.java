@@ -155,7 +155,6 @@ public class GameBoardView extends View{
         alphaArray = new int[availMoves.size()];
         for(int i = 0; i < availMoves.size(); i++){
             alphaArray[i] = 127 - i * 64;
-            Log.d("Animating availMoves", alphaArray[i] + "");
         }
         animationRunning = true;
         animatingAvailMoves = true;
