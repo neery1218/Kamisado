@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -40,6 +41,7 @@ public class GamePlayFragment extends Fragment implements GameControl.GameStateL
 
     private Button undoButton;
     private LinearLayout screenLayout;
+    private boolean animationRunning;
 
 
 
@@ -50,6 +52,8 @@ public class GamePlayFragment extends Fragment implements GameControl.GameStateL
 
     private int height;
     private int width;
+    private boolean p1Win;
+    private int roundNum;
 
 
 
@@ -83,6 +87,10 @@ public class GamePlayFragment extends Fragment implements GameControl.GameStateL
         super.onCreate(savedInstanceState);
         userLayouts = new LinearLayout[2];
 
+        p1Win = false;
+        roundNum = 1;
+        animationRunning = false;
+
         if (getArguments() != null) {
             VERSUS_TYPE = getArguments().getInt(MainActivity.ARG_VERSUS_TYPE);
             MATCH_TYPE = getArguments().getInt(MainActivity.ARG_MATCH_TYPE);
@@ -110,6 +118,80 @@ public class GamePlayFragment extends Fragment implements GameControl.GameStateL
 
     }
 
+    private void setLayoutClickListener() {
+        screenLayout.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                Log.v("INTERFACE", "Hi");
+                screenLayout.setOnClickListener(null);
+
+                final AlphaAnimation out = new AlphaAnimation(1.0f, 0.0f);
+                out.setDuration(100);
+                out.setAnimationListener(new Animation.AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+                        relativeLayout.removeView(screenLayout);
+                        screenLayout.removeAllViews();
+                        gameBoardView.removeScoreText();
+                        screenTextView.setText("" + roundNum);
+                        if (p1Win)
+                            subtitleTextView.setText("Player One starts");
+                        else
+                            subtitleTextView.setText("Player Two starts");
+                        screenLayout.addView(holderLayout);
+                        relativeLayout.addView(screenLayout);
+                        final Animation outAnimation = new AlphaAnimation(1.0f, 0.0f);
+                        outAnimation.setDuration(100);
+                        outAnimation.setStartOffset(1600);
+                        final Animation inAnimation = new AlphaAnimation(0.0f, 1.0f);
+                        inAnimation.setDuration(100);
+                        final Animation delayAnimation = new AlphaAnimation(1.0f, 1.0f);
+                        delayAnimation.setDuration(1500);
+                        delayAnimation.setStartOffset(100);
+                        AnimationSet animationSet = new AnimationSet(true);
+                        animationSet.addAnimation(inAnimation);
+                        animationSet.addAnimation(delayAnimation);
+                        animationSet.addAnimation(outAnimation);
+                        outAnimation.setAnimationListener(new Animation.AnimationListener() {
+                            @Override
+                            public void onAnimationStart(Animation animation) {
+
+                            }
+
+                            @Override
+                            public void onAnimationEnd(Animation animation) {
+                                relativeLayout.removeView(screenLayout);
+                                screenLayout.removeAllViews();
+                                setLayoutClickListener();
+                            }
+
+                            @Override
+                            public void onAnimationRepeat(Animation animation) {
+
+                            }
+                        });
+                        screenLayout.startAnimation(animationSet);
+
+
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {
+
+                    }
+                });
+                screenTextView.startAnimation(out);
+                subtitleTextView.startAnimation(out);
+
+
+            }
+        });
+
+    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -133,14 +215,7 @@ public class GamePlayFragment extends Fragment implements GameControl.GameStateL
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
         screenLayout.setLayoutParams(params);
 
-
-        screenLayout.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
-                relativeLayout.removeView(screenLayout);
-                screenLayout.removeAllViews();
-                gameBoardView.removeScoreText();
-            }
-        });
+        setLayoutClickListener();
 
         winId = 123;
         holderLayout = new LinearLayout(getActivity());
@@ -237,6 +312,8 @@ public class GamePlayFragment extends Fragment implements GameControl.GameStateL
 
     @Override
     public void p1Win(Point winPoint) {
+        roundNum++;
+        p1Win = true;
         // while(gameBoardView.animationRunning){}
         Log.d("INTERFACE", "p1win called");
         // LinearLayout layout = new LinearLayout(getActivity());
@@ -259,6 +336,9 @@ public class GamePlayFragment extends Fragment implements GameControl.GameStateL
 
     @Override
     public void p2Win(Point winPoint) {
+
+        roundNum++;
+        p1Win = false;
         Log.d("INTERFACE", "p2win called");
         // LinearLayout layout = new LinearLayout(getActivity());
         screenLayout.addView(holderLayout);
