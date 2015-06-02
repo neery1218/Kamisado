@@ -205,8 +205,6 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
 
             counter++;
             resolveNormalMove(temp.y, temp.x, 0);
-            gameBoardView.setAvailMoves(availMoves);
-            gameBoardView.drawBoard(board, init.getPoint(), fin.getPoint(), selectedPiece);
 
             //find next piece
             if(!deadlock) {
@@ -225,6 +223,15 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
                 if (players[counter % 2] instanceof AIPlayer && win.equals(-1, -1))
                     onTouch(-1, -1);
             }
+
+            if(win.equals(-1,-1))
+                gameBoardView.setAvailMoves(availMoves);
+            else {
+                availMoves = new ArrayList<>();
+                availMoves.add(new Point(-1,-1));
+                gameBoardView.setAvailMoves(availMoves);
+            }
+            gameBoardView.drawBoard(board, init.getPoint(), fin.getPoint(), selectedPiece);
         }
     }
 

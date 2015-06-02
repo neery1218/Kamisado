@@ -58,6 +58,7 @@ public class GameBoardView extends View{
     private Board resetBoard;
     private int[] alphaArray;
     private boolean animatingAvailMoves = false;
+    private boolean win = false;
 
     private OnUndoToastCreate onUndoToastCreate;
 
@@ -142,13 +143,14 @@ public class GameBoardView extends View{
         if(boardReset == true){
             resetAnimator();
         }
-        if(alphaArray == null && availMoves != null && availMoves.size() != 0){
-            setAvailMovesAnimation();
-        }
         invalidate();
     }//Draws the board
 
     public void setAvailMovesAnimation(){
+        if(availMoves == null){
+            animatingAvailMoves = false;
+            return;
+        }
         alphaArray = new int[availMoves.size()];
         for(int i = 0; i < availMoves.size(); i++){
             alphaArray[i] = 127 - i * 64;
@@ -156,7 +158,7 @@ public class GameBoardView extends View{
         }
         animationRunning = true;
         animatingAvailMoves = true;
-        animator = ValueAnimator.ofInt(0, alphaArray.length * 64 + 128);
+        animator = ValueAnimator.ofInt(0, alphaArray.length * 64 + 64);
         animator.setDuration(1000);
         animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
@@ -220,9 +222,6 @@ public class GameBoardView extends View{
 
             @Override
             public void onAnimationEnd(Animator animation) {
-                if(availMoves.size() != 0) {
-                    setAvailMovesAnimation();
-                }
 
                 boardReset = false;
                 onBoardEvent.onTouch(-1,-1);
@@ -253,6 +252,12 @@ public class GameBoardView extends View{
 
     public void setAvailMoves(ArrayList<Point> list){
         this.availMoves = list;
+        if(!win)
+            setAvailMovesAnimation();
+    }
+
+    public void setWin(boolean win){
+        this.win = win;
     }
 
     public void setResetBoard(Board b){
@@ -264,6 +269,8 @@ public class GameBoardView extends View{
         //Draws the squares highlighting the available moves
         for(int i = 0; i < availMoves.size(); i++){
             Point p = availMoves.get(i);
+            if(p.equals(-1,-1))
+                continue;
             paint.setColor(board.getColor(availMoves.get(i).x, availMoves.get(i).y));
             paint.setStyle(Paint.Style.FILL);
             if(alphaArray[i] < 0) {
@@ -344,6 +351,7 @@ public class GameBoardView extends View{
     }
 
     private void resetBoard(Canvas canvas){
+        alphaArray = null;
         for(int i = 0; i < boardDimension;i++)
             for(int j = 0; j < boardDimension; j++) {
                 if (!board.getTile(i, j).isEmpty()) {
@@ -380,8 +388,6 @@ public class GameBoardView extends View{
         else{
             resetBoard(canvas);
         }
-        //Draws the board according to color
-
 
         //Displays the available moves
         if (selectedPiece != null && !animationRunning || animatingAvailMoves)
