@@ -150,7 +150,6 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
                 resolveNormalMove(selectedPiece.getX(), selectedPiece.getY(), 1);
             }
         } else {
-
             deadlockCount = 0;
         }
         if (!win.equals(-1, -1)) {
