@@ -13,7 +13,6 @@ public class AIPlayer extends Player {//AI player
     private int difficulty = 0;
     private Board temp;
     private boolean aiUndo = false;
-    private Point aiUndoMove;
 
     public AIPlayer(int difficulty, int id) {//basic constructor
         super(id);
@@ -24,11 +23,6 @@ public class AIPlayer extends Player {//AI player
         int nextPlayer = (player == PLAYER_ONE ? PLAYER_TWO : PLAYER_ONE);
         ArrayList<Point> test = findNextMoves(b, nextPlayer, GameLogic.findPiece(b, nextPlayer, b.getColor(movePoint)));
         return test;
-    }
-
-    public void setAiUndo(Point undo){
-        aiUndoMove = undo;
-        aiUndo = true;
     }
 
     public Point difficulty0(){
@@ -120,10 +114,6 @@ public class AIPlayer extends Player {//AI player
 
     @Override
     public Point resolveMove(Point point) {//overridden method, returns a move based on difficulty
-        if(aiUndo) {
-            aiUndo = false;//TODO fix ai rng abuse
-            //return aiUndoMove;
-        }
         if(difficulty == 0){
             return difficulty0();//TODO: configure AI skill levels
         }

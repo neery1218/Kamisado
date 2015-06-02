@@ -23,4 +23,6 @@ public class Move {
     }
 
     public Point getFinish(){return start;}
+
+    public Point getStart(){return finish;}
 }

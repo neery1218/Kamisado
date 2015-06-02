@@ -2,6 +2,7 @@ package com.radiance.kamisado;
 
 import android.animation.Animator;
 import android.animation.ValueAnimator;
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -12,6 +13,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -54,6 +56,8 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
     private int animateAlpha = 255;
     private boolean boardReset = false;
     private Board resetBoard;
+
+    private OnUndoToastCreate onUndoToastCreate;
 
     public GameBoardView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -357,6 +361,14 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
         gameControl.attachGamePlayFragment(gamePlayFragment);
     }
 
+    public void attachUndoToastCreate(GamePlayFragment gamePlayFragment){
+        onUndoToastCreate = gamePlayFragment;
+    }
+
+    public void showUndoLimitToast(){
+        onUndoToastCreate.onUndoToastCreate();
+    }
+
 
     public interface OnBoardEvent{
         void onTouch(int x, int y);
@@ -364,5 +376,9 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
         void onSwipeRight();
 
         void onSwipeLeft();
+    }
+
+    public interface OnUndoToastCreate{
+        void onUndoToastCreate();
     }
 }

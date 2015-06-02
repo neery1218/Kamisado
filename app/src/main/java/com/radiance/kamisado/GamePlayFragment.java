@@ -17,8 +17,9 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
-public class GamePlayFragment extends Fragment implements GameControl.GameStateListener {
+public class GamePlayFragment extends Fragment implements GameControl.GameStateListener, GameBoardView.OnUndoToastCreate {
 
     private static int VERSUS_TYPE;
     private static int MATCH_TYPE;
@@ -93,7 +94,6 @@ public class GamePlayFragment extends Fragment implements GameControl.GameStateL
     }
 
     private void setupUserBar(int player) {
-
 
         //scoreTextView.setLayoutParams(params);
 
@@ -198,6 +198,7 @@ public class GamePlayFragment extends Fragment implements GameControl.GameStateL
         gameBoardView.setScoreView(scoreTextView);
         gameBoardView.setLayoutParams(gameParams);
         gameBoardView.attachGameStateListener(this);
+        gameBoardView.attachUndoToastCreate(this);
 
 
         // undoButton.setLayoutParams(params);
@@ -318,6 +319,12 @@ public class GamePlayFragment extends Fragment implements GameControl.GameStateL
 
         screenTextView.setAnimation(in);
 
+    }
+
+    @Override
+    public void onUndoToastCreate() {
+        Toast undoToast = Toast.makeText(getActivity().getApplicationContext(), "Undo limit reached", Toast.LENGTH_SHORT);
+        undoToast.show();
     }
 
     public interface OnGamePlayInteractionListener {

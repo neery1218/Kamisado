@@ -1,9 +1,11 @@
 package com.radiance.kamisado;
 
+import android.content.Context;
 import android.graphics.Point;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Stack;
@@ -11,6 +13,7 @@ import java.util.Stack;
 public class GameControl implements GameBoardView.OnBoardEvent {//runs the game counter and controls gameBoardView calls
     public static final int PLAYER_ONE = 0;
     public static final int PLAYER_TWO = 1;
+    private static int VERSUS_TYPE = 0;
     Board board = new Board();
     private boolean firstMove = true;
     private boolean scoreLimitReached = false;
@@ -27,18 +30,14 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
     private int sumoChain = 0;
     private int AI_DIFFICULTY = 0;
     private int MATCH_TYPE;
+    private int undoLimit;
     private Piece init;
     private Piece fin;
     private Piece winPiece;
-
-    private Point aiUndoMove;
-    private Point humanMove;
-
     private Point win = new Point(-1, -1);
     private int deadlockCount = 0;
     private boolean aiWin = false;
     private boolean deadlock = false;
-
     private Board resetBoard = null;
 
     private Stack<MoveGroup> moveStack;
@@ -49,9 +48,11 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
 
 
     public GameControl(GameBoardView gameBoardView, int bd, int VERSUS_TYPE, int MATCH_TYPE) {
+        this.VERSUS_TYPE = VERSUS_TYPE;
         this.boardDimension = bd;
         this.gameBoardView = gameBoardView;
         this.MATCH_TYPE = MATCH_TYPE;
+        undoLimit = MATCH_TYPE * 2 / 3;
         handler = new Handler();
         players = new Player[2];
         board = new Board();
@@ -130,7 +131,7 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
         return true;
     }
 
-    public void resolveNormalMove(int x, int y) {//finds the next piece and availMoves. also checks for no moves and/or deadlock
+    public void resolveNormalMove(int x, int y, int sumoPush) {//finds the next piece and availMoves. also checks for no moves and/or deadlock
         currColor = board.getColor(y, x);
         selectedPiece = GameLogic.findPiece(board, counter % 2, currColor);
         availMoves = players[counter % 2].calcMoves(board, selectedPiece);
@@ -146,7 +147,7 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
 
             } else {
                 counter++;
-                resolveNormalMove(selectedPiece.getX(), selectedPiece.getY());
+                resolveNormalMove(selectedPiece.getX(), selectedPiece.getY(), 1);
             }
         } else {
 
@@ -155,7 +156,6 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
         if (!win.equals(-1, -1)) {
             availMoves = new ArrayList<>();
         }
-
     }
 
     public void resolveAiWin(){
@@ -204,7 +204,7 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
             }
 
             counter++;
-            resolveNormalMove(temp.y, temp.x);
+            resolveNormalMove(temp.y, temp.x, 0);
             gameBoardView.setAvailMoves(availMoves);
             gameBoardView.drawBoard(board, init.getPoint(), fin.getPoint(), selectedPiece);
 
@@ -289,6 +289,11 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
     }
 
     public void undo() {
+        if(VERSUS_TYPE == MainActivity.PLAY_PRESSED && undoLimit == 0){
+            gameBoardView.showUndoLimitToast();
+            return;
+        }
+        undoLimit--;
 
         if (moveStack.isEmpty()) {
             firstMove = true;
@@ -301,15 +306,8 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
             counter = (counter + 1) % 2;
 
         //resolveNormalMove(undo.finish.y, undo.finish.x);
-        Log.v("undo", "undoSize: " + undo.get(0).toString());
         init = new Piece(board.getTile(undo.get(0).start.x, undo.get(0).start.y).getPiece());
         board.move(undo);
-
-        if(players[PLAYER_ONE] instanceof AIPlayer && counter % 2 == PLAYER_ONE){
-            aiUndoMove = undo.get(0).getFinish();
-            ((AIPlayer)players[PLAYER_ONE]).setAiUndo(aiUndoMove);
-        }
-
         currColor = board.getTile(undo.get(0).finish.x, undo.get(0).finish.y).getPiece().getColor();
         selectedPiece = GameLogic.findPiece(board, counter % 2, currColor);
         availMoves = players[counter % 2].calcMoves(board, selectedPiece);
