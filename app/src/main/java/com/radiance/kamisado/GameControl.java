@@ -223,7 +223,6 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
                 if (players[counter % 2] instanceof AIPlayer && win.equals(-1, -1))
                     onTouch(-1, -1);
             }
-
             if(win.equals(-1,-1))
                 gameBoardView.setAvailMoves(availMoves);
             else {
