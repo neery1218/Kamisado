@@ -159,11 +159,11 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
 
     public void resolveAiWin(){
         aiWin = false;
-        onSwipeLeft();
-        Point A = players[counter % 2].selectPiece(board);
+        Point A = players[PLAYER_ONE].selectPiece(board);
         selectedPiece = board.getTile(A.x, A.y).getPiece();
-        gameBoardView.setSelectedPiece(selectedPiece);
         availMoves = players[counter % 2].calcMoves(board, selectedPiece);
+        gameBoardView.setAvailMoves(availMoves);
+        gameBoardView.drawBoard(board, selectedPiece, false);
     }
 
     public Point getWin() {
@@ -174,19 +174,21 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
         return aiWin;
     }
 
+
     @Override
     public void onTouch(int x, int y) {//overriden method from the interface: all method calls originate from here
         if(scoreLimitReached)return;
         if(gameBoardView.animationRunning){return;}
 
         if (aiWin) {
-            resolveAiWin();
+            //resolveAiWin();
         }
 
         if (firstMove) {//first move has its own resolve method
             Log.d("test", x + " " + y);
-            if(x == -1 || y == -1)
+            if(x == -1 || y == -1){
                 return;
+            }
             if(players[counter % 2] instanceof HumanPlayer && !resolveFirstMove(x, y))
                 return;
         }
@@ -206,8 +208,12 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
             resolveNormalMove(temp.y, temp.x, 0);
 
             //find next piece
+            win = GameLogic.win(board);
+            if(win.equals(0, 0))
+                deadlock = true;
+            else
+                deadlock = false;
             if(!deadlock) {
-                win = GameLogic.win(board);
                 if (!win.equals(-1, -1)) {//if someone won:
                     resolveWin();
                 }
@@ -276,11 +282,12 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
         gameBoardView.updateScore(score);
         board.rankUp(winPiece.getY(), winPiece.getX());
         Log.d("TEST", "win");
+        onSwipeLeft();
     }
 
     public void reset() {//resets the game board
         if(!deadlock)
-            counter = (board.getTile(win.x, win.y).getPiece().getOwner() + 1) % 2;
+            counter = (winPiece.getOwner() + 1) % 2 + 1;
         win = new Point(-1, -1);
         deadlock = false;
         deadlockCount = 0;

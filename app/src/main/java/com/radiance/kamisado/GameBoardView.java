@@ -371,7 +371,8 @@ public class GameBoardView extends View{
     }
 
     public void removeScoreText(){
-        onBoardEvent.onSwipeLeft();
+        //onBoardEvent.onSwipeLeft();
+        gameControl.resolveAiWin();
     }
 
     @Override
