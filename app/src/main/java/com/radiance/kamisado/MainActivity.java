@@ -46,11 +46,11 @@ public class MainActivity extends ActionBarActivity implements IntroFragment.OnI
 
         setContentView(R.layout.activity_main);
         introFragment = new IntroFragment();//initializing first fragment being used
-        typefaceHeader = Typeface.createFromAsset(getAssets(), "NanumGothic-Regular.ttf");
+        typefaceHeader = Typeface.createFromAsset(getAssets(), "fonts/nanumgothic.ttf");
         //initialize transaction and add to viewgroup
         getFragmentManager()
                 .beginTransaction()
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE)
                 .add(R.id.fragment_container, introFragment)
                 .addToBackStack(null)
                 .commit();
@@ -89,7 +89,7 @@ public class MainActivity extends ActionBarActivity implements IntroFragment.OnI
         } else if (f instanceof GamePlayFragment) {
             getFragmentManager()
                     .beginTransaction()
-                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE)
                     .replace(R.id.fragment_container, introFragment)
 
                     .commit();
@@ -117,7 +117,7 @@ public class MainActivity extends ActionBarActivity implements IntroFragment.OnI
                 fragmentManager = getFragmentManager();
                 fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.replace(R.id.fragment_container, tutorialFragment);
-                fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+                fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE);
                 fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
                 tutorialPressed = true;
@@ -133,9 +133,9 @@ public class MainActivity extends ActionBarActivity implements IntroFragment.OnI
             matchLengthFragment = new MatchLengthFragment();
             fragmentManager = getFragmentManager();
             fragmentManager.beginTransaction()
-                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE)
                     .replace(R.id.fragment_container, matchLengthFragment)
-                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE)
                     .addToBackStack(null)
                     .commit();
             // fragmentTransaction.replace(R.id.fragment_container, matchLengthFragment);
@@ -146,8 +146,13 @@ public class MainActivity extends ActionBarActivity implements IntroFragment.OnI
     }
 
     @Override
-    public void onGamePlayInteraction(Uri uri) {
+    public void done() {
+        getFragmentManager()
+                .beginTransaction()
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE)
+                .replace(R.id.fragment_container, introFragment)
 
+                .commit();
     }
 
     @Override
@@ -165,7 +170,7 @@ public class MainActivity extends ActionBarActivity implements IntroFragment.OnI
             fragmentManager = getFragmentManager();
             fragmentTransaction = fragmentManager.beginTransaction();
             fragmentTransaction.replace(R.id.fragment_container, aiDifficultyFragment);
-            fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+            fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
             fragmentTransaction.addToBackStack(null);
             fragmentTransaction.commit();
         } else {//calls the listener that sets up gamePlayFragment
@@ -192,7 +197,7 @@ public class MainActivity extends ActionBarActivity implements IntroFragment.OnI
         fragmentManager = getFragmentManager();
         fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.fragment_container, gamePlayFragment);
-        fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+        fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE);
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
 

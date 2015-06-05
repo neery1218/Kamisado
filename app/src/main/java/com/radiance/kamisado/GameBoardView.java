@@ -53,7 +53,10 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
     private ValueAnimator animator;
     private int animateAlpha = 255;
     private boolean boardReset = false;
+    private boolean firstMoveOnly = false;
     private Board resetBoard;
+
+    private OnUndoToastCreate onUndoToastCreate;
 
     public GameBoardView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -65,7 +68,7 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
 
         MATCH_TYPE = GamePlayFragment.getMATCH_TYPE();
         VERSUS_TYPE = GamePlayFragment.getVERSUS_TYPE();
-        gameControl = new GameControl(this, boardDimension, VERSUS_TYPE);
+        gameControl = new GameControl(this, boardDimension, VERSUS_TYPE, MATCH_TYPE);
         onBoardEvent = gameControl;
         Log.v("Game", "versustype:" + VERSUS_TYPE);
         Log.v("Game", "matchType:" + MATCH_TYPE);
@@ -73,7 +76,6 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
         animator.addUpdateListener(this);
 
     }//Calls the super constructor and creates a new paint object
-
 
     public void setScoreView(TextView scoreView) {
         this.scoreView = scoreView;
@@ -117,7 +119,6 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
 
     }//initialisation of the gameboard
 
-
     public void drawBoard(Board board, Point init, Point fin, Piece selectedPiece) {
         this.selectedPiece = selectedPiece;
         this.board = board;
@@ -125,6 +126,9 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
         this.fin = finPiece;
         Piece initPiece = new Piece(init.x, init.y, this.fin.getColor(), this.fin.getRank(), this.fin.getOwner());
         this.init = initPiece;
+
+        if (!gameControl.getFirstMove())
+            firstMoveOnly = false;
         animationRunning = true;
 
         animator = ValueAnimator.ofInt(0, 255);
@@ -139,6 +143,8 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
     public void drawBoard(Board board, Piece piece, boolean reset) {
         this.board = board;
         this.selectedPiece = piece;
+        if (gameControl != null && gameControl.getFirstMove())
+            firstMoveOnly = false;
         init = null;
         fin = null;
         boardReset = reset;
@@ -173,14 +179,12 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
             Point p = availMoves.get(i);
             paint.setColor(board.getColor(availMoves.get(i).x, availMoves.get(i).y));
             paint.setStyle(Paint.Style.FILL);
-            paint.setAlpha(255);
+            paint.setAlpha(255 - animateAlpha);
             canvas.drawRect(startX + p.y * unitSize, startY + p.x * unitSize, startX + (p.y + 1) * unitSize, startY + (p.x + 1) * unitSize, paint);
             //switch to circles eventually?
         }
 
     }
-
-
 
     private void resolveSwipe(MotionEvent event){
         if(event.getAction() == 0){
@@ -226,11 +230,11 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
         for(int i = 0; i < boardDimension;i++)
             for(int j = 0; j < boardDimension; j++) {
                 if (!board.getTile(i, j).isEmpty()) {
-                    if(selectedPiece != null && i == selectedPiece.getY() && j == selectedPiece.getX() && !animationRunning) {
+                    if (selectedPiece != null && i == selectedPiece.getY() && j == selectedPiece.getX()) {
                         Log.d("ASDF", selectedPiece.toString());
                         paint.setColor(board.getColor(i, j));
                         paint.setStyle(Paint.Style.FILL);
-                        paint.setAlpha(255);
+                        paint.setAlpha(255 - animateAlpha);
                         canvas.drawRect(startX + j * unitSize, startY + i * unitSize, startX + (j + 1) * unitSize, startY + (i + 1) * unitSize, paint);
                     }
                     paint.setAlpha(255);
@@ -261,6 +265,10 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
             }
     }
 
+    public void removeScoreText(){
+        onBoardEvent.onSwipeLeft();
+    }
+
     @Override
     public void onDraw(Canvas canvas) {
         super.onDraw(canvas);
@@ -275,15 +283,24 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
         }
         //Draws the board according to color
 
-
         //Displays the available moves
-        if (selectedPiece != null && !animationRunning)
+        if (gameControl.getFirstMove() && !firstMoveOnly && availMoves.size() != 0) {
+            firstMoveOnly = true;
+            animator = ValueAnimator.ofInt(0, 255);
+            animator.setDuration(500);
+            animator.addUpdateListener(this);
+            animator.addListener(this);
+            animator.start();
+            Log.d("Draw first move", "called");
+            invalidate();
+        } else {
             drawPossibleMoves(canvas);
+        }
 
-        if(init != null) {
+        if (init != null && !firstMoveOnly) {
             init.draw(canvas, paint, startX, startY, unitSize, PLAYER_TWO, PLAYER_ONE, animateAlpha);
         }
-        if(fin != null) {
+        if (fin != null && !firstMoveOnly) {
             fin.draw(canvas, paint, startX, startY, unitSize, PLAYER_TWO, PLAYER_ONE, 255 - animateAlpha);
         }
     }//Draws on the fragment
@@ -295,6 +312,7 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
         }
         else if(event.getAction() == 1){
             float x = event.getX(), y = event.getY();
+            Log.v("Touch", "" + x + " " + y);
             int convertedX = (int) ((x - startX) / unitSize), convertedY = (int) ((y - startY) / unitSize);//converts the passed coordinates into a location on the board
             if (valid(convertedX) && valid(convertedY))
                 onBoardEvent.onTouch(convertedX, convertedY);
@@ -309,6 +327,7 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
     @Override
     public void onAnimationUpdate(ValueAnimator animation) {
         animateAlpha = 255 - (Integer)animation.getAnimatedValue();
+        Log.d("draw first move", animateAlpha + "");
         invalidate();
     }
 
@@ -325,7 +344,8 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
         if(gameControl.getWin().x != -1 && gameControl.getWin().y != -1){
             selectedPiece = null;
         }
-        invalidate();
+
+        //invalidate();
     }
 
     @Override
@@ -340,15 +360,23 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
 
     public void undo() {
         //TODO: BUG. after an ai win, player can undo to take advantage of the ai's rng
+        //TODO: BUG. counter doesn't get reset properly after undo-ing in an availMoves==0 scenario
         if (gameControl.getWin().equals(new Point(-1, -1))) {
-            if (VERSUS_TYPE == MainActivity.PLAY_PRESSED) {
-                gameControl.undo();
-                gameControl.undo();
-            } else {//you can only undo when it's the other person's turn to move
-                gameControl.undo();
-            }
+            gameControl.undo();
         }
 
+    }
+
+    public void attachGameStateListener(GamePlayFragment gamePlayFragment){
+        gameControl.attachGamePlayFragment(gamePlayFragment);
+    }
+
+    public void attachUndoToastCreate(GamePlayFragment gamePlayFragment){
+        onUndoToastCreate = gamePlayFragment;
+    }
+
+    public void showUndoLimitToast(){
+        onUndoToastCreate.onUndoToastCreate();
     }
 
 
@@ -358,5 +386,9 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
         void onSwipeRight();
 
         void onSwipeLeft();
+    }
+
+    public interface OnUndoToastCreate{
+        void onUndoToastCreate();
     }
 }

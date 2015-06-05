@@ -2,7 +2,7 @@ package com.radiance.kamisado;
 
 import android.app.Activity;
 import android.app.Fragment;
-import android.net.Uri;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.TypedValue;
@@ -11,30 +11,40 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
-public class GamePlayFragment extends Fragment implements Button.OnClickListener {
+public class GamePlayFragment extends Fragment implements GameControl.GameStateListener, GameBoardView.OnUndoToastCreate {
 
     private static int VERSUS_TYPE;
     private static int MATCH_TYPE;
     private static int AI_DIFFICULTY;
     private GameBoardView gameBoardView;
     private int layoutHeight;
-
+    private RelativeLayout relativeLayout;
 
     private TextView scoreTextView;
     private OnGamePlayInteractionListener mListener;
 
+    private TextView screenTextView;
+    private TextView subtitleTextView;
+
+    private LinearLayout holderLayout;
+
+    private int winId;
+
     private Button undoButton;
+    private LinearLayout screenLayout;
 
 
 
     private TextView titleTextView;
 
-    private LinearLayout topUserLayout;
-    private LinearLayout bottomUserLayout;
 
     private LinearLayout[] userLayouts;
 
@@ -85,13 +95,15 @@ public class GamePlayFragment extends Fragment implements Button.OnClickListener
 
     private void setupUserBar(int player) {
 
-
         //scoreTextView.setLayoutParams(params);
 
-        undoButton.setText("Undo");
-        undoButton.setOnClickListener(this);
+        undoButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                gameBoardView.undo();
+            }
+        });
 
-        LinearLayout.LayoutParams buttonParams = new LinearLayout.LayoutParams(layoutHeight, layoutHeight);
+        LinearLayout.LayoutParams buttonParams = new LinearLayout.LayoutParams(layoutHeight, LinearLayout.LayoutParams.MATCH_PARENT);
         LinearLayout.LayoutParams scoreViewParam = new LinearLayout.LayoutParams(width - layoutHeight, LinearLayout.LayoutParams.MATCH_PARENT);
         undoButton.setLayoutParams(buttonParams);
         scoreTextView.setLayoutParams(scoreViewParam);
@@ -108,9 +120,56 @@ public class GamePlayFragment extends Fragment implements Button.OnClickListener
         View content = getActivity().getWindow().findViewById(Window.ID_ANDROID_CONTENT);//finds alloted screen size. this will save a lot of time.
         Log.v("UI", "Content: " + content.getWidth() + " " + content.getHeight());
 
+
+        relativeLayout = (RelativeLayout) view.findViewById(R.id.relativeLayout);
         //player two has top layout, player one has bottom layout
+
+
         userLayouts[GameControl.PLAYER_ONE] = (LinearLayout) view.findViewById(R.id.bottomUserLayout);
         userLayouts[GameControl.PLAYER_TWO] = (LinearLayout) view.findViewById(R.id.topUserLayout);
+
+
+        screenLayout = new LinearLayout(getActivity());
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
+        screenLayout.setLayoutParams(params);
+
+
+        screenLayout.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                relativeLayout.removeView(screenLayout);
+                //screenLayout.removeAllViews();
+                gameBoardView.removeScoreText();
+            }
+        });
+
+        winId = 123;
+        holderLayout = new LinearLayout(getActivity());
+        holderLayout.setOrientation(LinearLayout.VERTICAL);
+
+        screenTextView = new TextView(getActivity());
+        screenTextView.setBackgroundColor(getResources().getColor(R.color.white));
+        screenTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 36f);
+        screenTextView.setTypeface(MainActivity.typefaceHeader);
+        screenTextView.setTextColor(getResources().getColor(R.color.text));
+        LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        param.gravity = Gravity.CENTER;
+
+        subtitleTextView = new TextView(getActivity());
+        subtitleTextView.setBackgroundColor(getResources().getColor(R.color.white));
+        subtitleTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 24f);
+        subtitleTextView.setTypeface(MainActivity.typefaceHeader);
+        subtitleTextView.setTextColor(getResources().getColor(R.color.text));
+
+        screenTextView.setGravity(Gravity.CENTER);
+        subtitleTextView.setGravity(Gravity.CENTER);
+
+        holderLayout.setLayoutParams(param);
+        holderLayout.addView(screenTextView);
+        holderLayout.addView(subtitleTextView);
+
+        screenLayout.addView(holderLayout);
+
+
 
         undoButton = (Button) view.findViewById(R.id.undoButton);
         titleTextView = (TextView) view.findViewById(R.id.titleTextView);
@@ -140,6 +199,8 @@ public class GamePlayFragment extends Fragment implements Button.OnClickListener
         //gameBoardView needs to accept two views
         gameBoardView.setScoreView(scoreTextView);
         gameBoardView.setLayoutParams(gameParams);
+        gameBoardView.attachGameStateListener(this);
+        gameBoardView.attachUndoToastCreate(this);
 
 
         // undoButton.setLayoutParams(params);
@@ -157,12 +218,7 @@ public class GamePlayFragment extends Fragment implements Button.OnClickListener
         return view;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onGamePlayInteraction(uri);
-        }
-    }
+
 
     @Override
     public void onAttach(Activity activity) {
@@ -182,14 +238,99 @@ public class GamePlayFragment extends Fragment implements Button.OnClickListener
     }
 
     @Override
-    public void onClick(View v) {
-        gameBoardView.undo();
+    public void p1Win(Point winPoint) {
+        // while(gameBoardView.animationRunning){}
+        Log.d("INTERFACE", "p1win called");
+        // LinearLayout layout = new LinearLayout(getActivity());
+        // screenLayout.addView(holderLayout);
+        relativeLayout.addView(screenLayout);
+
+        screenTextView.setText("P1++");
+        subtitleTextView.setText("Tap to Continue");
+        final Animation in = new AlphaAnimation(0.0f, 1.0f);
+        in.setDuration(100);
+
+
+        screenTextView.setAnimation(in);
+        subtitleTextView.setAnimation(in);
+
+
+        // layoutParams.
+        // layout.setLayoutParams();
     }
 
+    @Override
+    public void p2Win(Point winPoint) {
+        Log.d("INTERFACE", "p2win called");
+        // LinearLayout layout = new LinearLayout(getActivity());
+        // screenLayout.addView(holderLayout);
+        relativeLayout.addView(screenLayout);
+
+        screenTextView.setText("P2++");
+        subtitleTextView.setText("Tap to Continue");
+        final Animation in = new AlphaAnimation(0.0f, 1.0f);
+        in.setDuration(100);
+
+
+        screenTextView.setAnimation(in);
+        subtitleTextView.setAnimation(in);
+    }
+
+    @Override
+    public void deadlock(Point winPoint) {
+        Log.d("INTERFACE", "deadlock called");
+        // LinearLayout layout = new LinearLayout(getActivity());
+        //screenLayout.addView(holderLayout);
+        relativeLayout.addView(screenLayout);
+
+        screenTextView.setText("DEADLOCK");
+        subtitleTextView.setText("Tap to Continue");
+        final Animation in = new AlphaAnimation(0.0f, 1.0f);
+        in.setDuration(100);
+
+        screenTextView.setAnimation(in);
+        subtitleTextView.setAnimation(in);
+
+    }
+
+    @Override
+    public void gameLimitReached(int player) {
+        Log.d("INTERFACE", "gameLimitReached called");
+        // LinearLayout layout = new LinearLayout(getActivity());
+
+        if (player == GameControl.PLAYER_TWO)
+            screenTextView.setText("P1 >= MATCH_LENGTH");
+        else
+            screenTextView.setText("P2 >= MATCH_LENGTH");
+
+        subtitleTextView.setText("Tap to return to Main Menu");
+        //screenLayout.addView(holderLayout);
+        screenLayout.setOnClickListener(null);
+
+        screenLayout.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                mListener.done();
+            }
+        });
+        relativeLayout.addView(screenLayout);
+
+        final Animation in = new AlphaAnimation(0.0f, 1.0f);
+        in.setDuration(100);
+
+
+        screenTextView.setAnimation(in);
+
+    }
+
+    @Override
+    public void onUndoToastCreate() {
+        Toast undoToast = Toast.makeText(getActivity().getApplicationContext(), "Undo limit reached", Toast.LENGTH_SHORT);
+        undoToast.show();
+    }
 
     public interface OnGamePlayInteractionListener {
         // TODO: Update argument type and name
-        public void onGamePlayInteraction(Uri uri);
+        public void done();
     }
 
 }
