@@ -1,11 +1,9 @@
 package com.radiance.kamisado;
 
-import android.content.Context;
 import android.graphics.Point;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.util.Log;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Stack;
@@ -52,7 +50,7 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
         this.boardDimension = bd;
         this.gameBoardView = gameBoardView;
         this.MATCH_TYPE = MATCH_TYPE;
-        undoLimit = MATCH_TYPE * 2 / 3;
+        undoLimit = MATCH_TYPE * 2 / 3 - 100;
         handler = new Handler();
         players = new Player[2];
         board = new Board();
@@ -91,7 +89,7 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
 
     public void resolveSumoPushP1() {//moves the pieces from a player one sumopush
         //find pieces that are gonna get sumo pushed
-        MoveGroup sumoMove = new MoveGroup();
+        MoveGroup sumoMove = new MoveGroup(counter);
         for (int j = sumoChain; j >= 1; j--) {
             sumoMove.add(new Move(new Point(selectedPiece.getY() - j, selectedPiece.getX()), new Point(selectedPiece.getY() - j - 1, selectedPiece.getX())));
         }
@@ -104,7 +102,7 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
     }
 
     public void resolveSumoPushP2() {//moves the pieces from a player two sumopush
-        MoveGroup sumoMove = new MoveGroup();
+        MoveGroup sumoMove = new MoveGroup(counter);
         //Pushing from the other end so it doesn't get overwritten
         for (int j = sumoChain; j >= 1; j--) {
             sumoMove.add(new Move(new Point(selectedPiece.getY() + j, selectedPiece.getX()), new Point(selectedPiece.getY() + j + 1, selectedPiece.getX())));
@@ -139,10 +137,10 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
         if (availMoves.size() == 0 && win.equals(-1, -1)) {//if there are no available moves, it skips the player's turn
             deadlockCount++;
             if (deadlockCount == 2) {//this means that both players can't move
-                win = new Point(selectedPiece.getY(), selectedPiece.getX());
+                //win = new Point(selectedPiece.getY(), selectedPiece.getX());
                 deadlock = true;
                 //new rules: if deadlock, it's a tie
-                gameStateListener.deadlock(win);
+                // gameStateListener.deadlock(win);
                 //TODO: make deadlock screen
 
             } else {
@@ -160,11 +158,9 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
 
     public void resolveAiWin(){
         aiWin = false;
-        onSwipeLeft();
-        Point A = players[counter % 2].selectPiece(board);
-        selectedPiece = board.getTile(A.x, A.y).getPiece();
-        gameBoardView.setSelectedPiece(selectedPiece);
-        availMoves = players[counter % 2].calcMoves(board, selectedPiece);
+
+        // onSwipeLeft();
+
     }
 
     public Point getWin() {
@@ -177,8 +173,10 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
 
     @Override
     public void onTouch(int x, int y) {//overriden method from the interface: all method calls originate from here
-        if(scoreLimitReached)return;
-        if(gameBoardView.animationRunning){return;}
+        if (scoreLimitReached) return; //game's over
+        if (gameBoardView.animationRunning) {
+            return;
+        } //if animation's running, the onTouch is irrelevant
 
         if (aiWin) {
             resolveAiWin();
@@ -203,28 +201,26 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
                 movePiece(temp);
             }
 
+
+            win = GameLogic.win(board);
+
+            if (!win.equals(-1, -1)) {//if someone won:
+                resolveWin();
+                Log.d("Debug ai", "" + (players[(counter + 1) % 2] instanceof AIPlayer));
+            }
+
             counter++;
             resolveNormalMove(temp.y, temp.x, 0);
+
             gameBoardView.setAvailMoves(availMoves);
             gameBoardView.drawBoard(board, init.getPoint(), fin.getPoint(), selectedPiece);
 
-            //find next piece
-            if(!deadlock) {
-                win = GameLogic.win(board);
-                if (!win.equals(-1, -1)) {//if someone won:
-                    resolveWin();
-                }
-            }
+            if (players[counter % 2] instanceof AIPlayer)
+                onTouch(-1, -1);
 
-            if (!win.equals(-1, -1)) {
-                counter = board.getTile(win.x, win.y).getPiece().getOwner();
-                if (players[counter % 2] instanceof AIPlayer) {
-                    aiWin = true;
-                }
-            } else {
-                if (players[counter % 2] instanceof AIPlayer && win.equals(-1, -1))
-                    onTouch(-1, -1);
-            }
+
+            //find next piece
+
         }
     }
 
@@ -248,7 +244,8 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
     public void movePiece(Point temp){
         init = new Piece(board.getTile(selectedPiece.getY(), selectedPiece.getX()).getPiece());
         Move move = new Move(new Point(selectedPiece.getY(), selectedPiece.getX()), temp);
-        moveStack.push(new MoveGroup(move));
+        moveStack.push(new MoveGroup(move, counter));
+        Log.d("counter test", counter + " ");
         board.move(move);
         if (undoCount > 0)
             undoCount--;
@@ -285,7 +282,18 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
         gameBoardView.setResetBoard(resetBoard);
         gameBoardView.drawBoard(board, selectedPiece, true);
         undoCount = 0;
+        undoLimit = MATCH_TYPE * 2 / 3 - 100;
         moveStack = new Stack<>();
+
+        if (players[(counter) % 2] instanceof AIPlayer) {
+            Point A = players[counter % 2].selectPiece(board);
+            selectedPiece = board.getTile(A.x, A.y).getPiece();
+            gameBoardView.setSelectedPiece(selectedPiece);
+            availMoves = players[counter % 2].calcMoves(board, selectedPiece);
+            firstMove = false;
+            onTouch(-1, -1);
+        }
+
     }
 
     public void undo() {
@@ -302,8 +310,14 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
         undoCount++;
         MoveGroup undo = moveStack.pop().reverse();
 
-        if (undo.size() == 1)
-            counter = (counter + 1) % 2;
+
+        counter = undo.getCounter();
+        Log.d("counter test", counter + " ");
+
+
+
+     /*   if (undo.size() == 1)
+            counter = (counter + 1) % 2;*/
 
         //resolveNormalMove(undo.finish.y, undo.finish.x);
         init = new Piece(board.getTile(undo.get(0).start.x, undo.get(0).start.y).getPiece());
@@ -317,6 +331,11 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
         gameBoardView.drawBoard(board, init.getPoint(), fin.getPoint(), selectedPiece);
         if (moveStack.isEmpty()) {
             firstMove = true;
+        }
+
+        if (!moveStack.isEmpty() && (players[counter % 2] instanceof AIPlayer || (!moveStack.isEmpty() && players[moveStack.peek().getCounter() % 2] instanceof HumanPlayer))) {
+            undoLimit++;
+            undo();
         }
 
         Log.v("Game", "undo");
@@ -373,9 +392,7 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
 
                             }
                         });
-                    }
-
-                    else if (pieces[1].getPoint().x == 0 && pieces[1].getPoint().y == 0) {
+                    } else if (deadlock) {
                         handler.post(new Runnable() {
 
                             @Override
@@ -387,7 +404,7 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
 
                     }
 
-                    else
+                    /*else
                         handler.post(new Runnable() {
 
                             @Override
@@ -395,7 +412,7 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
                                 gameStateListener.gameLimitReached(winPiece.getOwner());
 
                             }
-                        });
+                        });*/
 
                     break;
                 }

@@ -296,7 +296,7 @@ public class GamePlayFragment extends Fragment implements GameControl.GameStateL
         Log.d("INTERFACE", "gameLimitReached called");
         // LinearLayout layout = new LinearLayout(getActivity());
 
-        if (player == GameControl.PLAYER_ONE)
+        if (player == GameControl.PLAYER_TWO)
             screenTextView.setText("P1 >= MATCH_LENGTH");
         else
             screenTextView.setText("P2 >= MATCH_LENGTH");

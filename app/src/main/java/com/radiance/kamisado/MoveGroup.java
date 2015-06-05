@@ -7,13 +7,16 @@ import java.util.ArrayList;
  */
 public class MoveGroup {//holds a set of moves, used because there are scenarios such as sumoPushes which require multiple-move undos
     private ArrayList<Move> moves;
+    private int counter;
 
-    public MoveGroup() {
+    public MoveGroup(int counter) {
+        this.counter = counter;
         moves = new ArrayList<Move>();
     }
 
-    public MoveGroup(Move move) {
+    public MoveGroup(Move move, int counter) {
         moves = new ArrayList<Move>();
+        this.counter = counter;
         moves.add(move);
     }
 
@@ -30,11 +33,15 @@ public class MoveGroup {//holds a set of moves, used because there are scenarios
     }
 
     public MoveGroup reverse() {
-        MoveGroup reversed = new MoveGroup();
+        MoveGroup reversed = new MoveGroup(counter);
         for (int i = moves.size() - 1; i >= 0; i--) {
             reversed.add(moves.get(i).reverse());
         }
 
         return reversed;
+    }
+
+    public int getCounter() {
+        return counter;
     }
 }

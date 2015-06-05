@@ -2,7 +2,6 @@ package com.radiance.kamisado;
 
 import android.animation.Animator;
 import android.animation.ValueAnimator;
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -13,7 +12,6 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -347,12 +345,7 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
         //TODO: BUG. after an ai win, player can undo to take advantage of the ai's rng
         //TODO: BUG. counter doesn't get reset properly after undo-ing in an availMoves==0 scenario
         if (gameControl.getWin().equals(new Point(-1, -1))) {
-            if (VERSUS_TYPE == MainActivity.PLAY_PRESSED) {
-                gameControl.undo();
-                gameControl.undo();
-            } else {//you can only undo when it's the other person's turn to move
-                gameControl.undo();
-            }
+            gameControl.undo();
         }
 
     }
