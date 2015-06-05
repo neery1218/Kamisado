@@ -3,7 +3,6 @@ package com.radiance.kamisado;
 import android.graphics.Point;
 import android.os.AsyncTask;
 import android.os.Handler;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Stack;
@@ -59,13 +58,10 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
         switch (VERSUS_TYPE) {
             case MainActivity.TWO_PLAY_PRESSED:
                 players[PLAYER_ONE] = new HumanPlayer(PLAYER_ONE);
-                Log.v("Game", "HumanPlayer");
                 break;
             case MainActivity.PLAY_PRESSED:
                 AI_DIFFICULTY = GamePlayFragment.getAiDifficulty();
-                Log.v("Game", "" + AI_DIFFICULTY);
                 players[PLAYER_ONE] = new AIPlayer(AI_DIFFICULTY, PLAYER_ONE);
-                Log.v("Game", "AIPlayer");
                 break;
         }
 
@@ -133,7 +129,6 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
         currColor = board.getColor(y, x);
         selectedPiece = GameLogic.findPiece(board, counter % 2, currColor);
         availMoves = players[counter % 2].calcMoves(board, selectedPiece);
-        Log.v("Game", "availMoves: " + availMoves.size());
         if (availMoves.size() == 0 && win.equals(-1, -1)) {//if there are no available moves, it skips the player's turn
             deadlockCount++;
             if (deadlockCount == 2) {//this means that both players can't move
@@ -188,15 +183,12 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
         }
 
         if (firstMove) {//first move has its own resolve method
-            Log.d("test", x + " " + y);
             if(x == -1 || y == -1)
                 return;
             if(players[counter % 2] instanceof HumanPlayer && !resolveFirstMove(x, y))
                 return;
         }
         firstMove = false;
-        Log.d("test", "" + firstMove);
-
 
         Point temp = players[counter % 2].resolveMove(new Point(y, x));//returns the point that the piece should be moved to
         if (!temp.equals(inValid)) {//check validity
@@ -210,7 +202,6 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
 
             if (!win.equals(-1, -1)) {//if someone won:
                 resolveWin();
-                Log.d("Debug ai", "" + (players[(counter + 1) % 2] instanceof AIPlayer));
             }
 
             counter++;
@@ -253,7 +244,6 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
         init = new Piece(board.getTile(selectedPiece.getY(), selectedPiece.getX()).getPiece());
         Move move = new Move(new Point(selectedPiece.getY(), selectedPiece.getX()), temp);
         moveStack.push(new MoveGroup(move, counter));
-        Log.d("counter test", counter + " ");
         board.move(move);
         if (undoCount > 0)
             undoCount--;
@@ -261,17 +251,14 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
     }
 
     public void resolveWin(){
-        Log.d("win called", "called" + " " + counter);
         winPiece = board.getTile(win.x, win.y).getPiece();
         int winPlayer = winPiece.getOwner();
 
         new CallWinTask().execute(winPiece, new Piece(-1, -1));
         score[winPlayer] += scores[winPiece.getRank()];
-        Log.d("GAMESTATE", score[winPlayer] + " " + MATCH_TYPE);
 
         gameBoardView.updateScore(score);
         board.rankUp(winPiece.getY(), winPiece.getX());
-        Log.d("TEST", "win");
     }
 
     public void reset() {//resets the game board
@@ -316,7 +303,6 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
 
 
         counter = undo.getCounter();
-        Log.d("counter test", counter + " ");
 
 
 
@@ -344,7 +330,6 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
             }
         }
 
-        Log.v("Game", "undo");
     }
 
     public void attachGamePlayFragment(GamePlayFragment gamePlayFragment){
@@ -352,7 +337,6 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
     }
 
     public void callWin(int player, Point point){
-        Log.v("view bug", "call win called");
         if (score[player] >= MATCH_TYPE) {
             gameStateListener.gameLimitReached(player);
             scoreLimitReached = true;
@@ -387,7 +371,6 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
 
     private class CallWinTask extends AsyncTask<Piece, Integer, Boolean> {
         protected Boolean doInBackground(Piece... pieces) {
-            Log.d("TASK", "called");
             while(true)
                 if(!gameBoardView.animationRunning){
                     if (deadlock) {

@@ -63,9 +63,6 @@ public class TutorialFragment extends Fragment{
         });
         tutorialScreen.callOnClick();
 
-
-
-
         return view;
     }
 

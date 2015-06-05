@@ -8,7 +8,6 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
@@ -70,8 +69,6 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
         VERSUS_TYPE = GamePlayFragment.getVERSUS_TYPE();
         gameControl = new GameControl(this, boardDimension, VERSUS_TYPE, MATCH_TYPE);
         onBoardEvent = gameControl;
-        Log.v("Game", "versustype:" + VERSUS_TYPE);
-        Log.v("Game", "matchType:" + MATCH_TYPE);
         animator = new ValueAnimator();
         animator.addUpdateListener(this);
 
@@ -104,7 +101,6 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
         startX = borderWidth;
         endX = width - borderWidth;
 
-        Log.d("", "");
 
         //The size of each individual square on the gameControl
         unitSize = (endX - startX) / boardDimension;
@@ -231,7 +227,6 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
             for(int j = 0; j < boardDimension; j++) {
                 if (!board.getTile(i, j).isEmpty()) {
                     if (selectedPiece != null && i == selectedPiece.getY() && j == selectedPiece.getX()) {
-                        Log.d("ASDF", selectedPiece.toString());
                         paint.setColor(board.getColor(i, j));
                         paint.setStyle(Paint.Style.FILL);
                         paint.setAlpha(255 - animateAlpha);
@@ -291,7 +286,6 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
             animator.addUpdateListener(this);
             animator.addListener(this);
             animator.start();
-            Log.d("Draw first move", "called");
             invalidate();
         } else {
             drawPossibleMoves(canvas);
@@ -312,7 +306,6 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
         }
         else if(event.getAction() == 1){
             float x = event.getX(), y = event.getY();
-            Log.v("Touch", "" + x + " " + y);
             int convertedX = (int) ((x - startX) / unitSize), convertedY = (int) ((y - startY) / unitSize);//converts the passed coordinates into a location on the board
             if (valid(convertedX) && valid(convertedY))
                 onBoardEvent.onTouch(convertedX, convertedY);
@@ -327,7 +320,6 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
     @Override
     public void onAnimationUpdate(ValueAnimator animation) {
         animateAlpha = 255 - (Integer)animation.getAnimatedValue();
-        Log.d("draw first move", animateAlpha + "");
         invalidate();
     }
 

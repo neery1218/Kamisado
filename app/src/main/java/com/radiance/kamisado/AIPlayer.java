@@ -1,7 +1,6 @@
 package com.radiance.kamisado;
 
 import android.graphics.Point;
-import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -51,13 +50,11 @@ public class AIPlayer extends Player {//AI player
             Piece selectedPiece2 = GameLogic.findPiece(temp, this.player, curColor);
             ArrayList<Point> opponentMove = nextMove(temp, availMoves.get(i));
             if(opponentMove.size() == 0){
-                Log.d("AITEST", "opponent no moves");
                 curValue += 3;
             }
             for (int j = 0; j < opponentMove.size(); j++) {
                 if (hasOpponentWinMove(opponentMove.get(j))) {
                     curValue -= 5   ;
-                    Log.d("AITEST", "win detected" + " " + opponentMove.get(j).x + " " + opponentMove.get(j).y);
                     continue;
                 }
                 /*Log.d("AITEST", availMoves.get(i).toString());

@@ -2,7 +2,6 @@ package com.radiance.kamisado;
 
 import android.graphics.Color;
 import android.graphics.Point;
-import android.util.Log;
 
 import java.util.Stack;
 
@@ -188,11 +187,9 @@ public class Board implements Cloneable{//board object
                     if (temp.getOwner() == PLAYER_TWO) {
                         collected[PLAYER_TWO][counter1] = new Point(temp.getY(), temp.getX());
                         counter1++;
-                        Log.v("One", temp.getY() + " " + temp.getX());
                     } else {
                         collected[PLAYER_ONE][counter2] = new Point(temp.getY(), temp.getX());
                         counter2++;
-                        Log.v("Two", temp.getY() + " " + temp.getX());
                     }
 
                 }
@@ -223,7 +220,6 @@ public class Board implements Cloneable{//board object
                 board[j][i] = temp.board[j][i];
             }
         }
-        Log.v("fill", "Left");
     }
 
     public void fillRight() {
@@ -240,7 +236,6 @@ public class Board implements Cloneable{//board object
                 board[j][i] = temp.board[j][i];
             }
         }
-        Log.v("fill", "Right");
     }
 
     public void flip() {//used in player logic in order to retain calcMoves algorithm across all orientations

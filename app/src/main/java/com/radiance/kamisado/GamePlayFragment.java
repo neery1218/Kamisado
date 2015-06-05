@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.graphics.Point;
 import android.os.Bundle;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -118,8 +117,6 @@ public class GamePlayFragment extends Fragment implements GameControl.GameStateL
         View view = inflater.inflate(R.layout.fragment_game_play, container, false);
 
         View content = getActivity().getWindow().findViewById(Window.ID_ANDROID_CONTENT);//finds alloted screen size. this will save a lot of time.
-        Log.v("UI", "Content: " + content.getWidth() + " " + content.getHeight());
-
 
         relativeLayout = (RelativeLayout) view.findViewById(R.id.relativeLayout);
         //player two has top layout, player one has bottom layout
@@ -240,7 +237,6 @@ public class GamePlayFragment extends Fragment implements GameControl.GameStateL
     @Override
     public void p1Win(Point winPoint) {
         // while(gameBoardView.animationRunning){}
-        Log.d("INTERFACE", "p1win called");
         // LinearLayout layout = new LinearLayout(getActivity());
         // screenLayout.addView(holderLayout);
         relativeLayout.addView(screenLayout);
@@ -261,7 +257,6 @@ public class GamePlayFragment extends Fragment implements GameControl.GameStateL
 
     @Override
     public void p2Win(Point winPoint) {
-        Log.d("INTERFACE", "p2win called");
         // LinearLayout layout = new LinearLayout(getActivity());
         // screenLayout.addView(holderLayout);
         relativeLayout.addView(screenLayout);
@@ -278,7 +273,6 @@ public class GamePlayFragment extends Fragment implements GameControl.GameStateL
 
     @Override
     public void deadlock(Point winPoint) {
-        Log.d("INTERFACE", "deadlock called");
         // LinearLayout layout = new LinearLayout(getActivity());
         //screenLayout.addView(holderLayout);
         relativeLayout.addView(screenLayout);
@@ -295,7 +289,6 @@ public class GamePlayFragment extends Fragment implements GameControl.GameStateL
 
     @Override
     public void gameLimitReached(int player) {
-        Log.d("INTERFACE", "gameLimitReached called");
         // LinearLayout layout = new LinearLayout(getActivity());
 
         if (player == GameControl.PLAYER_TWO)

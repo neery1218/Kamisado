@@ -5,7 +5,6 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Point;
-import android.util.Log;
 
 public class Piece {//object that conducts piece logic and is used by board
 	
@@ -19,8 +18,8 @@ public class Piece {//object that conducts piece logic and is used by board
     private float innerEdge = 0.7f;
 
     private float rankEdge = 0.3f;
-    private float[] rankX = {-0.7071067f, 0, 0.7071067f};
-    private float[] rankY = {-0.7071067f, 0.7f, -0.7071067f};
+    private float[] rankX = {-0.7071067f, 0, 0.7071067f, 0};
+    private float[] rankY = {-0.7071067f, 0.7f, -0.7071067f, 0};
 
     public Piece(Piece p){
         locX = p.getX();
@@ -99,8 +98,8 @@ public class Piece {//object that conducts piece logic and is used by board
     public void rankUp (){
         rank++;
         distance-=2;
-        Log.v("GAT", "Rankup");
     }
+
     public String toString(){return "Piece X=" + locX + " Y=" + locY + " Rank=" + rank + " Color=" + color;}
 
     public void draw(Canvas canvas, Paint paint, float startX, float startY, float unitSize, int PLAYER_TWO, int PLAYER_ONE, int animateAlpha){

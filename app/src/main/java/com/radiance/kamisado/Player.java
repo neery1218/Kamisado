@@ -1,7 +1,6 @@
 package com.radiance.kamisado;
 
 import android.graphics.Point;
-import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -72,17 +71,12 @@ abstract class Player {//abstract class used to hold player logic and give way t
         }
 
 
-        // Log.v("GAT", "Current Distance:" + selectedPiece.getDistance() + " Rank:" + selectedPiece.getRank());
-        Log.v("Game", "Rank:" + selectedPiece.getRank());
         for (int i = 1; i <= selectedPiece.getDistance(); i++) {
 
             if (!forwardBlocked && valid(y - i)) { //finds moves directly forward
                 if (board.getTile(y - i, x).isEmpty()) {
                     availMoves.add(new Point(y - i, x));
                 } else if (selectedPiece.getRank() > 0 && i == 1) {//check for sumoPushes
-                    Log.v("Game", "SumoOptionTrue");
-                    Log.v("TAG", "HI");
-
                     int sumoCounter = 0;
 
                     while (valid(y - i - sumoCounter) && !board.getTile(y - i - sumoCounter, x).isEmpty() && board.getTile(y - i - sumoCounter, x).getPiece().getOwner() != player) {//checks for a chain of opponent pieces
@@ -92,7 +86,6 @@ abstract class Player {//abstract class used to hold player logic and give way t
                         }
                         sumoCounter++;
                     }
-                    // Log.v("GAT", "counter:" + sumoCounter);
                     //if the number of opponent pieces are less than the current piece's rank, and the square behind the chain is empty
                     if (valid(y - i - sumoCounter) && sumoCounter > 0 && sumoCounter <= selectedPiece.getRank() && board.getTile(y - i - sumoCounter, x).getPiece() == null) {
                         sumoPushOption = new Point(y - i - sumoCounter, x);
@@ -132,7 +125,6 @@ abstract class Player {//abstract class used to hold player logic and give way t
                 sumoPushOption = new Point(boardDimension - 1 - sumoPushOption.x, boardDimension - 1 - sumoPushOption.y);
             }
         }
-        Log.d("debug", availMoves.size() + " " + player + "");
         this.availMoves = availMoves;
         return availMoves;
     }//Finds available moves of each player
@@ -155,8 +147,6 @@ abstract class Player {//abstract class used to hold player logic and give way t
             y = boardDimension - 1 - y;
         }
 
-
-        // Log.v("GAT", "Current Distance:" + selectedPiece.getDistance() + " Rank:" + selectedPiece.getRank());
 
         for (int i = 1; i <= selectedPiece.getDistance(); i++) {
             if (!forwardBlocked && valid(y - i)) { //finds moves directly forward
