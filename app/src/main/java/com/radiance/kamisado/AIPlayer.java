@@ -12,7 +12,6 @@ public class AIPlayer extends Player {//AI player
 
     private int difficulty = 0;
     private Board temp;
-    private boolean aiUndo = false;
 
     public AIPlayer(int difficulty, int id) {//basic constructor
         super(id);
@@ -48,19 +47,44 @@ public class AIPlayer extends Player {//AI player
             curValue = 0;
             temp = new Board(board);
             temp.move(new Point(selectedPiece.getY(), selectedPiece.getX()), availMoves.get(i));
+            int curColor = temp.getTile(availMoves.get(i).x, availMoves.get(i).y).getPiece().getColor();
+            Piece selectedPiece2 = GameLogic.findPiece(temp, this.player, curColor);
             ArrayList<Point> opponentMove = nextMove(temp, availMoves.get(i));
+            if(opponentMove.size() == 0){
+                Log.d("AITEST", "opponent no moves");
+                curValue += 3;
+            }
             for (int j = 0; j < opponentMove.size(); j++) {
                 if (hasOpponentWinMove(opponentMove.get(j))) {
                     curValue -= 5   ;
                     Log.d("AITEST", "win detected" + " " + opponentMove.get(j).x + " " + opponentMove.get(j).y);
                     continue;
                 }
-                /*Board temp2 = new Board(temp);
-                temp2.move(new Point(availMoves.get(i).y, availMoves.get(i).x), opponentMove.get(j));
+                /*Log.d("AITEST", availMoves.get(i).toString());
+                Board temp2 = new Board(temp);
+                for(int k = 0; k < opponentMove.size(); k++){
+                    Log.d("AITEST", opponentMove.get(k).toString());
+                }
+                temp2.move(selectedPiece2.getPoint(), opponentMove.get(j));
+                for(int k = 0; k < 8; k++){
+                    String s = "";
+                    for(int l = 0; l < 8; l++){
+                        if(temp2.getTile(k,l).isEmpty())
+                            s+="0";
+                        else
+                            s+="1";
+                    }
+                    Log.d("AITEST", s);
+                }
                 ArrayList<Point> playerMove = nextMove(temp2, opponentMove.get(j));
+
+                for(int k = 0; k < playerMove.size(); k++){
+                    Log.d("AITEST", "opponent " + playerMove.get(k).toString());
+                }
+
                 for(int k = 0; k < playerMove.size(); k++){
                     if(hasPlayerWinMove(playerMove.get(k))){
-                        Log.d("AITEST", "called");
+                        Log.d("AITEST", playerMove.get(k).x + " " + playerMove.get(k).y);
                         curValue++;
                     }
                 }*/
