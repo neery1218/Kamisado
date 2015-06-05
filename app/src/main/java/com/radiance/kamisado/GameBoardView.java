@@ -297,6 +297,7 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
         }
         else if(event.getAction() == 1){
             float x = event.getX(), y = event.getY();
+            Log.v("Touch", "" + x + " " + y);
             int convertedX = (int) ((x - startX) / unitSize), convertedY = (int) ((y - startY) / unitSize);//converts the passed coordinates into a location on the board
             if (valid(convertedX) && valid(convertedY))
                 onBoardEvent.onTouch(convertedX, convertedY);

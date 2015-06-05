@@ -175,7 +175,7 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
 
     @Override
     public void onTouch(int x, int y) {//overriden method from the interface: all method calls originate from here
-        if (scoreLimitReached) return; //game's over
+        if (scoreLimitReached || !win.equals(-1, -1)) return; //game's over
         if (gameBoardView.animationRunning) {
             return;
         } //if animation's running, the onTouch is irrelevant
@@ -203,7 +203,6 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
                 movePiece(temp);
             }
 
-
             win = GameLogic.win(board);
 
             if (!win.equals(-1, -1)) {//if someone won:
@@ -217,8 +216,9 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
             gameBoardView.setAvailMoves(availMoves);
             gameBoardView.drawBoard(board, init.getPoint(), fin.getPoint(), selectedPiece);
 
-            if (players[counter % 2] instanceof AIPlayer)
+            if (players[counter % 2] instanceof AIPlayer && win.equals(-1, -1)) {
                 onTouch(-1, -1);
+            }
 
 
             //find next piece
@@ -255,14 +255,10 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
     }
 
     public void resolveWin(){
+        Log.d("win called", "called" + " " + counter);
         winPiece = board.getTile(win.x, win.y).getPiece();
         int winPlayer = winPiece.getOwner();
-        /*if(winPlayer == PLAYER_ONE){
-            gameStateListener.p2Win(winPiece.getPoint());
-        }
-        else{
-            gameStateListener.p1Win(winPiece.getPoint());
-        }*/
+
         new CallWinTask().execute(winPiece, new Piece(-1, -1));
         score[winPlayer] += scores[winPiece.getRank()];
         Log.d("GAMESTATE", score[winPlayer] + " " + MATCH_TYPE);
@@ -336,8 +332,10 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
         }
 
         if (!moveStack.isEmpty() && (players[counter % 2] instanceof AIPlayer || (!moveStack.isEmpty() && players[moveStack.peek().getCounter() % 2] instanceof HumanPlayer))) {
-            undoLimit++;
-            undo();
+            if (VERSUS_TYPE == MainActivity.PLAY_PRESSED) {
+                undoLimit++;
+                undo();
+            }
         }
 
         Log.v("Game", "undo");
@@ -348,6 +346,7 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
     }
 
     public void callWin(int player, Point point){
+        Log.v("view bug", "call win called");
         if (score[player] >= MATCH_TYPE) {
             gameStateListener.gameLimitReached(player);
             scoreLimitReached = true;
@@ -404,18 +403,6 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
                             }
                         });
                     }
-
-
-
-                    /*else
-                        handler.post(new Runnable() {
-
-                            @Override
-                            public void run() {
-                                gameStateListener.gameLimitReached(winPiece.getOwner());
-
-                            }
-                        });*/
 
                     break;
                 }

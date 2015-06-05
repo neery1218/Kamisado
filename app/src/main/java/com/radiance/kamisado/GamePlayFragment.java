@@ -137,7 +137,7 @@ public class GamePlayFragment extends Fragment implements GameControl.GameStateL
         screenLayout.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 relativeLayout.removeView(screenLayout);
-                screenLayout.removeAllViews();
+                //screenLayout.removeAllViews();
                 gameBoardView.removeScoreText();
             }
         });
@@ -166,6 +166,8 @@ public class GamePlayFragment extends Fragment implements GameControl.GameStateL
         holderLayout.setLayoutParams(param);
         holderLayout.addView(screenTextView);
         holderLayout.addView(subtitleTextView);
+
+        screenLayout.addView(holderLayout);
 
 
 
@@ -240,7 +242,7 @@ public class GamePlayFragment extends Fragment implements GameControl.GameStateL
         // while(gameBoardView.animationRunning){}
         Log.d("INTERFACE", "p1win called");
         // LinearLayout layout = new LinearLayout(getActivity());
-        screenLayout.addView(holderLayout);
+        // screenLayout.addView(holderLayout);
         relativeLayout.addView(screenLayout);
 
         screenTextView.setText("P1++");
@@ -261,7 +263,7 @@ public class GamePlayFragment extends Fragment implements GameControl.GameStateL
     public void p2Win(Point winPoint) {
         Log.d("INTERFACE", "p2win called");
         // LinearLayout layout = new LinearLayout(getActivity());
-        screenLayout.addView(holderLayout);
+        // screenLayout.addView(holderLayout);
         relativeLayout.addView(screenLayout);
 
         screenTextView.setText("P2++");
@@ -278,7 +280,7 @@ public class GamePlayFragment extends Fragment implements GameControl.GameStateL
     public void deadlock(Point winPoint) {
         Log.d("INTERFACE", "deadlock called");
         // LinearLayout layout = new LinearLayout(getActivity());
-        screenLayout.addView(holderLayout);
+        //screenLayout.addView(holderLayout);
         relativeLayout.addView(screenLayout);
 
         screenTextView.setText("DEADLOCK");
@@ -302,7 +304,7 @@ public class GamePlayFragment extends Fragment implements GameControl.GameStateL
             screenTextView.setText("P2 >= MATCH_LENGTH");
 
         subtitleTextView.setText("Tap to return to Main Menu");
-        screenLayout.addView(holderLayout);
+        //screenLayout.addView(holderLayout);
         screenLayout.setOnClickListener(null);
 
         screenLayout.setOnClickListener(new View.OnClickListener() {
