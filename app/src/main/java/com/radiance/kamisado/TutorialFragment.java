@@ -54,10 +54,11 @@ public class TutorialFragment extends Fragment{
         tutorialScreen = (ImageView) view.findViewById(R.id.imageView);
         tutorialScreen.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                counter++;
-                counter %= 8;
+
                 tutorialScreen = (ImageView) view.findViewById(R.id.imageView);
                 tutorialScreen.setImageResource(id[counter]);
+                counter++;
+                counter %= 8;
             }
         });
         tutorialScreen.callOnClick();
