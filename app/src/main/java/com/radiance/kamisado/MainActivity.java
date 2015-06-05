@@ -46,7 +46,7 @@ public class MainActivity extends ActionBarActivity implements IntroFragment.OnI
 
         setContentView(R.layout.activity_main);
         introFragment = new IntroFragment();//initializing first fragment being used
-        typefaceHeader = Typeface.createFromAsset(getAssets(), "NanumGothic-Regular.ttf");
+        typefaceHeader = Typeface.createFromAsset(getAssets(), "fonts/nanumgothic.ttf");
         //initialize transaction and add to viewgroup
         getFragmentManager()
                 .beginTransaction()
