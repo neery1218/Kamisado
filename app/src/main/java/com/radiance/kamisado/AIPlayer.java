@@ -108,6 +108,10 @@ public class AIPlayer extends Player {//AI player
         return maxPoint;
     }
 
+    public Point difficulty2() {
+        return difficulty1();
+    }
+
     @Override
     public Point selectPiece(Board board) {
         Point A;
@@ -143,6 +147,8 @@ public class AIPlayer extends Player {//AI player
         }
         else if(difficulty == 1){
             return difficulty1();
+        } else if (difficulty == 2) {
+            return difficulty2();
         }
         return new Point(-1, -1);
     }
