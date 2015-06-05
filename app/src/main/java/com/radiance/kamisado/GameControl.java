@@ -173,6 +173,9 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
         return aiWin;
     }
 
+    public boolean getFirstMove() {
+        return firstMove;
+    }
     @Override
     public void onTouch(int x, int y) {//overriden method from the interface: all method calls originate from here
         if (scoreLimitReached || !win.equals(-1, -1)) return; //game's over
@@ -213,7 +216,10 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
             counter++;
             resolveNormalMove(temp.y, temp.x, 0);
 
-            gameBoardView.setAvailMoves(availMoves);
+            if (players[counter % 2] instanceof HumanPlayer)
+                gameBoardView.setAvailMoves(availMoves);
+            else
+                gameBoardView.setAvailMoves(new ArrayList<Point>());
             gameBoardView.drawBoard(board, init.getPoint(), fin.getPoint(), selectedPiece);
 
             if (players[counter % 2] instanceof AIPlayer && win.equals(-1, -1)) {
