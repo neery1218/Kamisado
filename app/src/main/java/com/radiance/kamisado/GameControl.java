@@ -141,7 +141,9 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
                 deadlock = true;
                 //new rules: if deadlock, it's a tie
                 // gameStateListener.deadlock(win);
-                //TODO: make deadlock screen
+                //winPiece = board.getTile(win.x, win.y).getPiece();
+                winPiece = selectedPiece;
+                new CallWinTask().execute(winPiece, new Piece(-1, -1));
 
             } else {
                 counter++;
@@ -383,16 +385,7 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
             Log.d("TASK", "called");
             while(true)
                 if(!gameBoardView.animationRunning){
-                    if (pieces[1].getPoint().x != -1 && pieces[1].getPoint().y != -1) {
-                        handler.post(new Runnable() {
-
-                            @Override
-                            public void run() {
-                                callWin(winPiece.getOwner(), winPiece.getPoint());
-
-                            }
-                        });
-                    } else if (deadlock) {
+                    if (deadlock) {
                         handler.post(new Runnable() {
 
                             @Override
@@ -401,8 +394,18 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
 
                             }
                         });
+                    } else if (pieces[1].getPoint().x != -1 && pieces[1].getPoint().y != -1) {
+                        handler.post(new Runnable() {
 
+                            @Override
+                            public void run() {
+                                callWin(winPiece.getOwner(), winPiece.getPoint());
+
+                            }
+                        });
                     }
+
+
 
                     /*else
                         handler.post(new Runnable() {
