@@ -35,7 +35,8 @@ public class Piece {//object that conducts piece logic and is used by board
 		locY = y;
         this.color = color;
         this.owner = owner;
-        distance = 7 - 2 * rank;
+        // distance = 7 - 2 * rank;
+        distance = 7;
 	}
 
     public Piece(int color, int owner) {
@@ -49,7 +50,8 @@ public class Piece {//object that conducts piece logic and is used by board
         this.color = color;
         this.owner = owner;
         this.rank = rank;
-        distance = 7 - 2 * rank;
+        //distance = 7 - 2 * rank;
+        distance = 7;
     }
 
     public int getX(){
@@ -97,7 +99,7 @@ public class Piece {//object that conducts piece logic and is used by board
 
     public void rankUp (){
         rank++;
-        distance-=2;
+        //distance-=2;
     }
 
     public String toString(){return "Piece X=" + locX + " Y=" + locY + " Rank=" + rank + " Color=" + color;}
