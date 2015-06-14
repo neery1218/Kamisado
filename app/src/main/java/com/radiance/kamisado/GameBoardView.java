@@ -127,8 +127,8 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
             firstMoveOnly = false;
         animationRunning = true;
 
-        animator = ValueAnimator.ofInt(0, 255);
-        animator.setDuration(500);
+        animator = ValueAnimator.ofInt(0, 511);
+        animator.setDuration(800);
         animator.addUpdateListener(this);
         animator.addListener(this);
 
@@ -144,10 +144,10 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
         init = null;
         fin = null;
         boardReset = reset;
-        if(boardReset == true){
+        if(boardReset){
             animationRunning = true;
-            animator = ValueAnimator.ofInt(0, 255);
-            animator.setDuration(500);
+            animator = ValueAnimator.ofInt(256, 511);
+            animator.setDuration(400);
             animator.addUpdateListener(this);
             animator.addListener(this);
 
@@ -175,7 +175,10 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
             Point p = availMoves.get(i);
             paint.setColor(board.getColor(availMoves.get(i).x, availMoves.get(i).y));
             paint.setStyle(Paint.Style.FILL);
-            paint.setAlpha(255 - animateAlpha);
+            if (animateAlpha <= 255)
+                paint.setAlpha(0);
+            else
+                paint.setAlpha(animateAlpha - 256);
             canvas.drawRect(startX + p.y * unitSize, startY + p.x * unitSize, startX + (p.y + 1) * unitSize, startY + (p.x + 1) * unitSize, paint);
             //switch to circles eventually?
         }
@@ -229,7 +232,10 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
                     if (selectedPiece != null && i == selectedPiece.getY() && j == selectedPiece.getX()) {
                         paint.setColor(board.getColor(i, j));
                         paint.setStyle(Paint.Style.FILL);
-                        paint.setAlpha(255 - animateAlpha);
+                        if (animateAlpha <= 255 )
+                            paint.setAlpha(0);
+                        else
+                            paint.setAlpha(animateAlpha - 256);
                         canvas.drawRect(startX + j * unitSize, startY + i * unitSize, startX + (j + 1) * unitSize, startY + (i + 1) * unitSize, paint);
                     }
                     paint.setAlpha(255);
@@ -247,7 +253,7 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
                     paint.setAlpha(255 - animateAlpha);
                     Piece temp = board.getTile(i, j).getPiece();
                     if (fin == null || (temp.getX() != fin.getX() || temp.getY() != fin.getY()))
-                        temp.draw(canvas, paint, startX, startY, unitSize, PLAYER_TWO, PLAYER_ONE, 255 - animateAlpha);
+                        temp.draw(canvas, paint, startX, startY, unitSize, PLAYER_TWO, PLAYER_ONE, animateAlpha - 255);
 
                 }
 
@@ -255,7 +261,7 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
                     paint.setAlpha(animateAlpha);
                     Piece temp = resetBoard.getTile(i, j).getPiece();
                     if (fin == null || (temp.getX() != fin.getX() || temp.getY() != fin.getY()))
-                        temp.draw(canvas, paint, startX, startY, unitSize, PLAYER_TWO, PLAYER_ONE, animateAlpha);
+                        temp.draw(canvas, paint, startX, startY, unitSize, PLAYER_TWO, PLAYER_ONE, 511 - animateAlpha);
                 }
             }
     }
@@ -281,8 +287,8 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
         //Displays the available moves
         if (gameControl.getFirstMove() && !firstMoveOnly && availMoves.size() != 0) {
             firstMoveOnly = true;
-            animator = ValueAnimator.ofInt(0, 255);
-            animator.setDuration(500);
+            animator = ValueAnimator.ofInt(256, 511);
+            animator.setDuration(400);
             animator.addUpdateListener(this);
             animator.addListener(this);
             animator.start();
@@ -292,10 +298,16 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
         }
 
         if (init != null && !firstMoveOnly) {
-            init.draw(canvas, paint, startX, startY, unitSize, PLAYER_TWO, PLAYER_ONE, animateAlpha);
+            if (animateAlpha <= 255)
+                init.draw(canvas, paint, startX, startY, unitSize, PLAYER_TWO, PLAYER_ONE, 255 - animateAlpha);
+            else
+                init.draw(canvas, paint, startX, startY, unitSize, PLAYER_TWO, PLAYER_ONE, 0);
         }
         if (fin != null && !firstMoveOnly) {
-            fin.draw(canvas, paint, startX, startY, unitSize, PLAYER_TWO, PLAYER_ONE, 255 - animateAlpha);
+            if(animateAlpha <= 255)
+                fin.draw(canvas, paint, startX, startY, unitSize, PLAYER_TWO, PLAYER_ONE, animateAlpha);
+            else
+                fin.draw(canvas, paint, startX, startY, unitSize, PLAYER_TWO, PLAYER_ONE, 255);
         }
     }//Draws on the fragment
 
@@ -319,7 +331,7 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
 
     @Override
     public void onAnimationUpdate(ValueAnimator animation) {
-        animateAlpha = 255 - (Integer)animation.getAnimatedValue();
+        animateAlpha = (Integer)animation.getAnimatedValue();
         invalidate();
     }
 
