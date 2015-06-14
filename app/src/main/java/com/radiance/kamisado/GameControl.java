@@ -17,7 +17,7 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
     private Point inValid = new Point(-1, -1);
     private Player[] players;
     private GameBoardView gameBoardView;
-    private int[] scores = {1, 3, 7, 15, 0};
+    private int[] scores = {1, 1, 1, 1, 0};
     private int boardDimension = 8;
     private int counter = 1;
     private int[] score = new int[2];

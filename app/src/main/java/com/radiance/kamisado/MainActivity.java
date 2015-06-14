@@ -20,8 +20,8 @@ public class MainActivity extends ActionBarActivity implements IntroFragment.OnI
 
     public static final int MATCH_SINGLE = 1;
     public static final int MATCH_STANDARD = 3;
-    public static final int MATCH_EXTENDED = 7;
-    public static final int MATCH_MARATHON = 15;
+    public static final int MATCH_EXTENDED = 5;
+    public static final int MATCH_MARATHON = 9;
 
     public static final String ARG_MATCH_TYPE = "ARG_MATCH_TYPE";
     public static final String ARG_VERSUS_TYPE = "ARG_VERSUS_TYPE";
