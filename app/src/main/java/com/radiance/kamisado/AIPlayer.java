@@ -1,6 +1,7 @@
 package com.radiance.kamisado;
 
 import android.graphics.Point;
+import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -17,8 +18,7 @@ public class AIPlayer extends Player {//AI player
         this.difficulty = difficulty;
     }
 
-    public ArrayList<Point> nextMove(Board b, Point movePoint) {
-        int nextPlayer = (player == PLAYER_ONE ? PLAYER_TWO : PLAYER_ONE);
+    public ArrayList<Point> nextMove(Board b, Point movePoint, int nextPlayer) {
         ArrayList<Point> test = findNextMoves(b, nextPlayer, GameLogic.findPiece(b, nextPlayer, b.getColor(movePoint)));
         return test;
     }
@@ -46,9 +46,9 @@ public class AIPlayer extends Player {//AI player
             curValue = 0;
             temp = new Board(board);
             temp.move(new Point(selectedPiece.getY(), selectedPiece.getX()), availMoves.get(i));
-            int curColor = temp.getTile(availMoves.get(i).x, availMoves.get(i).y).getPiece().getColor();
-            Piece selectedPiece2 = GameLogic.findPiece(temp, this.player, curColor);
-            ArrayList<Point> opponentMove = nextMove(temp, availMoves.get(i));
+            int curColor = temp.getTile(availMoves.get(i).x, availMoves.get(i).y).getColor();
+            Piece selectedPiece2 = GameLogic.findPiece(temp, this.player + 1, curColor);
+            ArrayList<Point> opponentMove = nextMove(temp, availMoves.get(i), player + 1);
             if(opponentMove.size() == 0){
                 curValue += 3;
             }
@@ -57,34 +57,33 @@ public class AIPlayer extends Player {//AI player
                     curValue -= 5   ;
                     continue;
                 }
-                /*Log.d("AITEST", availMoves.get(i).toString());
                 Board temp2 = new Board(temp);
-                for(int k = 0; k < opponentMove.size(); k++){
-                    Log.d("AITEST", opponentMove.get(k).toString());
-                }
-                temp2.move(selectedPiece2.getPoint(), opponentMove.get(j));
-                for(int k = 0; k < 8; k++){
-                    String s = "";
-                    for(int l = 0; l < 8; l++){
-                        if(temp2.getTile(k,l).isEmpty())
-                            s+="0";
-                        else
-                            s+="1";
-                    }
-                    Log.d("AITEST", s);
-                }
-                ArrayList<Point> playerMove = nextMove(temp2, opponentMove.get(j));
+                temp2.move(new Point(selectedPiece2.getPoint().y, selectedPiece2.getPoint().x), opponentMove.get(j));
+                //Log.d("AI TEST", selectedPiece.getPoint() + " " + selectedPiece2.getPoint() + " " + opponentMove.get(j));
 
-                for(int k = 0; k < playerMove.size(); k++){
-                    Log.d("AITEST", "opponent " + playerMove.get(k).toString());
-                }
+                ArrayList<Point> playerMove = nextMove(temp2, opponentMove.get(j), player);
+
+                //Log.d("MOVES", "OPPONENT " + selectedPiece2.getPoint() + " " + availMoves.get(i) + " " +  opponentMove.get(j));
+                /*for(int k = 0; k < playerMove.size(); k++){
+                    Log.d("MOVES", "opponent " + playerMove.get(k).toString());
+                }*/
 
                 for(int k = 0; k < playerMove.size(); k++){
                     if(hasPlayerWinMove(playerMove.get(k))){
-                        Log.d("AITEST", playerMove.get(k).x + " " + playerMove.get(k).y);
+                        /*Log.d("MOVES", "WIN" +  playerMove.get(k).x + " " + playerMove.get(k).y + " " + opponentMove.get(j).x + " " + opponentMove.get(j).y);
+                        for(int m = 0; m < 8; m++){
+                            String s = "";
+                            for(int l = 0; l < 8; l++){
+                                if(temp2.getTile(m,l).isEmpty())
+                                    s+="0";
+                                else
+                                    s+="1";
+                            }
+                            Log.d("MOVES", s);
+                        }*/
                         curValue++;
                     }
-                }*/
+                }
             }
             if (i == 0) {
                 maxPoint = availMoves.get(i);
