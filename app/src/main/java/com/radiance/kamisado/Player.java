@@ -58,9 +58,19 @@ abstract class Player {//abstract class used to hold player logic and give way t
         this.selectedPiece = selectedPiece;
         ArrayList<Point> availMoves = new ArrayList<>();
 
+        //regular piece options
         boolean leftDiagonalBlocked = false;
         boolean rightDiagonalBlocked = false;
         boolean forwardBlocked = false;
+
+        //sumo options
+        boolean leftSideWaysBlocked = false;
+        boolean rightSideWaysBlocked = false;
+
+        //double sumo options
+        boolean backwardsBlocked = false;
+        boolean backLeftDiagonalBlocked = false;
+        boolean backRightDiagonalBlocked = false;
 
         //these have a different orientation
         int x = selectedPiece.getX();
@@ -73,6 +83,7 @@ abstract class Player {//abstract class used to hold player logic and give way t
 
         for (int i = 1; i <= selectedPiece.getDistance(); i++) {
 
+            //regular moves
             if (!forwardBlocked && valid(y - i)) { //finds moves directly forward
                 if (board.getTile(y - i, x).isEmpty()) {
                     availMoves.add(new Point(y - i, x));
@@ -114,6 +125,44 @@ abstract class Player {//abstract class used to hold player logic and give way t
                 else
                     rightDiagonalBlocked = true;
             }
+
+            //sumo moves
+            if (selectedPiece.getRank() > 0 && !leftSideWaysBlocked && valid(i + x) && valid(y)) {//left Sideways
+                if (board.getTile(y, i + x).isEmpty())
+                    availMoves.add(new Point(y, x + i));
+                else
+                    leftSideWaysBlocked = true;
+            }
+
+            if (selectedPiece.getRank() > 0 && !rightSideWaysBlocked && valid(x - i) && valid(y)) {//right Sideways
+                if (board.getTile(y, x - i).isEmpty())
+                    availMoves.add(new Point(y, x - i));
+                else
+                    rightSideWaysBlocked = true;
+            }
+
+            //double sumo moves
+            if (selectedPiece.getRank() > 1 && !backLeftDiagonalBlocked && valid(i + x) && valid(y + i)) {//back left diagonal
+                if (board.getTile(y + i, i + x).isEmpty())
+                    availMoves.add(new Point(y + i, x + i));
+                else
+                    backLeftDiagonalBlocked = true;
+            }
+
+            if (selectedPiece.getRank() > 1 && !backRightDiagonalBlocked && valid(x - i) && valid(y + i)) {//back right diagonal
+                if (board.getTile(y + i, x - i).isEmpty())
+                    availMoves.add(new Point(y + i, x - i));
+                else
+                    backRightDiagonalBlocked = true;
+            }
+
+            if (selectedPiece.getRank() > 1 && !backwardsBlocked && valid(x) && valid(y + i)) {//right Sideways
+                if (board.getTile(y + i, x).isEmpty())
+                    availMoves.add(new Point(y + i, x));
+                else
+                    backwardsBlocked = true;
+            }
+
         }
         if(player == PLAYER_ONE) {
             for(int i = 0; i < availMoves.size(); i++){
