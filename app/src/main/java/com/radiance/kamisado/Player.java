@@ -49,13 +49,11 @@ abstract class Player {//abstract class used to hold player logic and give way t
         return (a >= 0 && a < boardDimension);
     }
 
-    public ArrayList<Point> calcMoves(Board temp, Piece selectedPiece) {//determines all available moves
+    public ArrayList<Point> calcMoves(Board board, int player, Piece selectedPiece) {//determines all available moves
         sumoPushOption = new Point(-1, -1);
         if(player == PLAYER_ONE)
-            temp.flip();
+            board.flip();
 
-        this.board = temp;
-        this.selectedPiece = selectedPiece;
         ArrayList<Point> availMoves = new ArrayList<>();
 
         //regular piece options
@@ -169,68 +167,14 @@ abstract class Player {//abstract class used to hold player logic and give way t
                 Point orient = availMoves.get(i);
                 availMoves.set(i, new Point(boardDimension - 1 - orient.x, boardDimension - 1 - orient.y));
             }
-            temp.flip();
+            board.flip();
             if (!sumoPushOption.equals(-1, -1)) {
                 sumoPushOption = new Point(boardDimension - 1 - sumoPushOption.x, boardDimension - 1 - sumoPushOption.y);
             }
         }
-        this.availMoves = availMoves;
+        //this.availMoves = availMoves;
         return availMoves;
     }//Finds available moves of each player
-
-    public ArrayList<Point> findNextMoves(Board board, int player, Piece selectedPiece){
-        if(player == PLAYER_ONE)
-            board.flip();
-
-        ArrayList<Point> availMoves = new ArrayList<>();
-
-        boolean leftDiagonalBlocked = false;
-        boolean rightDiagonalBlocked = false;
-        boolean forwardBlocked = false;
-
-        //these have a different orientation
-        int x = selectedPiece.getX();
-        int y = selectedPiece.getY();
-        if (player == PLAYER_ONE) {
-            x = boardDimension - 1 - x;
-            y = boardDimension - 1 - y;
-        }
-
-
-        for (int i = 1; i <= selectedPiece.getDistance(); i++) {
-            if (!forwardBlocked && valid(y - i)) { //finds moves directly forward
-                if (board.getTile(y - i, x).isEmpty()) {
-                    availMoves.add(new Point(y - i, x));
-                }
-                else
-                    forwardBlocked = true;
-            }
-
-
-            if (!leftDiagonalBlocked && valid(y - i) && valid(x - i)) {//left diagonal
-                if (board.getTile(y - i, x - i).isEmpty())
-                    availMoves.add(new Point(y - i, x - i));
-                else
-                    leftDiagonalBlocked = true;
-            }
-
-            if (!rightDiagonalBlocked && valid(i + x) && valid(y - i)) {//right diagonal
-                if (board.getTile(y - i, i + x).isEmpty())
-                    availMoves.add(new Point(y - i, x + i));
-                else
-                    rightDiagonalBlocked = true;
-            }
-        }
-        if(player == PLAYER_ONE) {
-            for(int i = 0; i < availMoves.size(); i++){
-                Point orient = availMoves.get(i);
-                availMoves.set(i, new Point(boardDimension - 1 - orient.x, boardDimension - 1 - orient.y));
-
-            }
-            board.flip();
-        }
-        return availMoves;
-    }
 
     public Point getSumoPushPoint() {
         return sumoPushOption;
@@ -240,5 +184,15 @@ abstract class Player {//abstract class used to hold player logic and give way t
         return sumoChain;
     }
 
+    public void setAvailMoves(ArrayList availMoves){
+        this.availMoves = availMoves;
+    }
 
+    public void setBoard(Board board){
+        this.board = board;
+    }
+
+    public void setSelectedPiece(Piece piece){
+        this.selectedPiece = piece;
+    }
 }

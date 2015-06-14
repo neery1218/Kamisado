@@ -19,7 +19,7 @@ public class AIPlayer extends Player {//AI player
     }
 
     public ArrayList<Point> nextMove(Board b, Point movePoint, int nextPlayer) {
-        ArrayList<Point> test = findNextMoves(b, nextPlayer, GameLogic.findPiece(b, nextPlayer, b.getColor(movePoint)));
+        ArrayList<Point> test = calcMoves(b, nextPlayer, GameLogic.findPiece(b, nextPlayer, b.getColor(movePoint)));
         return test;
     }
 
@@ -115,7 +115,7 @@ public class AIPlayer extends Player {//AI player
         else
             A = new Point(0, 0);
 
-        calcMoves(board, board.getTile(A.x, A.y).getPiece());
+        calcMoves(board, player, board.getTile(A.x, A.y).getPiece());
         return A;
     }
 

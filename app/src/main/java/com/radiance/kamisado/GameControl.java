@@ -3,6 +3,7 @@ package com.radiance.kamisado;
 import android.graphics.Point;
 import android.os.AsyncTask;
 import android.os.Handler;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Stack;
@@ -115,7 +116,10 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
     public boolean resolveFirstMove(int x, int y) {//used to display moves when it's the first move of a game
         if (!board.getTile(y, x).isEmpty() && board.getTile(y, x).getPiece().getOwner() == counter % 2) {
             selectedPiece = board.getTile(y, x).getPiece();
-            availMoves = players[counter % 2].calcMoves(board, selectedPiece);
+            availMoves = players[counter % 2].calcMoves(board, counter % 2, selectedPiece);
+            players[counter % 2].setAvailMoves(availMoves);
+            players[counter % 2].setBoard(board);
+            players[counter % 2].setSelectedPiece(selectedPiece);
             gameBoardView.setSelectedPiece(selectedPiece);
             gameBoardView.setAvailMoves(availMoves);
             gameBoardView.drawBoard(board, selectedPiece, false);
@@ -128,7 +132,10 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
     public void resolveNormalMove(int x, int y, int sumoPush) {//finds the next piece and availMoves. also checks for no moves and/or deadlock
         currColor = board.getColor(y, x);
         selectedPiece = GameLogic.findPiece(board, counter % 2, currColor);
-        availMoves = players[counter % 2].calcMoves(board, selectedPiece);
+        availMoves = players[counter % 2].calcMoves(board, counter % 2, selectedPiece);
+        players[counter % 2].setAvailMoves(availMoves);
+        players[counter % 2].setBoard(board);
+        players[counter % 2].setSelectedPiece(selectedPiece);
         if (availMoves.size() == 0 && win.equals(-1, -1)) {//if there are no available moves, it skips the player's turn
             deadlockCount++;
             if (deadlockCount == 2) {//this means that both players can't move
@@ -248,6 +255,8 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
         if (undoCount > 0)
             undoCount--;
         fin = new Piece(board.getTile(temp.x, temp.y).getPiece());
+        Point openings = GameLogic.findOpenings(board);
+        Log.v("MinMax","Player One:" + openings.x + "Player Two:" + openings.y);
     }
 
     public void resolveWin(){
@@ -280,7 +289,10 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
             Point A = players[counter % 2].selectPiece(board);
             selectedPiece = board.getTile(A.x, A.y).getPiece();
             gameBoardView.setSelectedPiece(selectedPiece);
-            availMoves = players[counter % 2].calcMoves(board, selectedPiece);
+            availMoves = players[counter % 2].calcMoves(board, counter % 2, selectedPiece);
+            players[counter % 2].setAvailMoves(availMoves);
+            players[counter % 2].setBoard(board);
+            players[counter % 2].setSelectedPiece(selectedPiece);
             firstMove = false;
             onTouch(-1, -1);
         }
@@ -314,7 +326,10 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
         board.move(undo);
         currColor = board.getTile(undo.get(0).finish.x, undo.get(0).finish.y).getPiece().getColor();
         selectedPiece = GameLogic.findPiece(board, counter % 2, currColor);
-        availMoves = players[counter % 2].calcMoves(board, selectedPiece);
+        availMoves = players[counter % 2].calcMoves(board, counter % 2, selectedPiece);
+        players[counter % 2].setAvailMoves(availMoves);
+        players[counter % 2].setBoard(board);
+        players[counter % 2].setSelectedPiece(selectedPiece);
 
         fin = new Piece(board.getTile(undo.get(0).finish.x, undo.get(0).finish.y).getPiece());
         gameBoardView.setAvailMoves(availMoves);
