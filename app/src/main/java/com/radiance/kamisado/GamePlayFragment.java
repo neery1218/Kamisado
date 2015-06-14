@@ -191,7 +191,6 @@ public class GamePlayFragment extends Fragment implements GameControl.GameStateL
 
         setupUserBar(GameControl.PLAYER_ONE);
 
-
         gameBoardView = (GameBoardView) view.findViewById(R.id.gameBoard);
         //gameBoardView needs to accept two views
         gameBoardView.setScoreView(scoreTextView);
