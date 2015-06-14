@@ -181,7 +181,7 @@ public class GamePlayFragment extends Fragment implements GameControl.GameStateL
         LinearLayout.LayoutParams gameParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, width);
 
         //set top linearlayout to contain textview
-        titleTextView.setText("Kamisado");
+        titleTextView.setText("ColorEdge");
         titleTextView.setTypeface(MainActivity.typefaceHeader);
         titleTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 48f);
         titleTextView.setTextColor(getResources().getColor(R.color.text));
