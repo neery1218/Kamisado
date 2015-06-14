@@ -100,7 +100,6 @@ public class AIPlayer extends Player {//AI player
                 }
             }
         }
-
         return maxPoint;
     }
 
