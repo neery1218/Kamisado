@@ -18,8 +18,8 @@ abstract class RomanNumeralConvert {
             case 7: s += "VII"; break;
             case 8: s += "VIII"; break;
             case 9: s += "IX"; break;
+            default: s += "IX";
         }
-
         return s;
     }
 }
