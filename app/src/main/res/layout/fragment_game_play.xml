@@ -24,6 +24,7 @@
                 android:id="@+id/titleTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:color="@color/text"
                 android:text="@string/title" />
         </LinearLayout>
 

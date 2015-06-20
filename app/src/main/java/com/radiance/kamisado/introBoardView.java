@@ -31,7 +31,7 @@ public class introBoardView extends View {
             getResources().getColor(R.color.purple),//purple
             getResources().getColor(R.color.pink),//pink
             getResources().getColor(R.color.brown)};
-    private int r = colors[0], o = colors[1], ye = colors[2], g = colors[3], b = colors[4], p = colors[5], pk = colors[6], br = colors[7];
+    private int r = colors[1], o = colors[2], ye = colors[5], g = colors[0], b = colors[7], p = colors[6], pk = colors[4], br = colors[3];
     private int[][] boardColor = new int[][]{
             {o, b, p, pk, ye, r, g, br},
             {r, o, pk, g, b, ye, br, p},
