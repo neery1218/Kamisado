@@ -29,7 +29,7 @@
             android:layout_gravity="center_horizontal"
             android:background="@drawable/button_custom"
             android:gravity="center_horizontal"
-            android:text="ColorEdge"
+            android:text="@string/title"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textColor="@color/text" />
 

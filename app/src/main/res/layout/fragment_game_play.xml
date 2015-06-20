@@ -24,7 +24,7 @@
                 android:id="@+id/titleTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="New Text" />
+                android:text="@string/title" />
         </LinearLayout>
 
         <com.radiance.kamisado.GameBoardView

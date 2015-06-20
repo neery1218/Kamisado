@@ -6,6 +6,7 @@
     <string name="tapToContinue"><font size="24">Tap to Continue</font></string>
     <string name="p1Win"><font size="36">P1++</font></string>
     <string name="p2Win"><font size="36">P2++</font></string>
+    <string name="title">Confine</string>
 
 
 </resources>
