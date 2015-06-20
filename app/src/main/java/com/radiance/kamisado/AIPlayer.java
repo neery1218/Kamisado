@@ -32,7 +32,7 @@ public class AIPlayer extends Player {//AI player
         return availMoves.get(i);
     }
 
-    public Point difficulty1() {//if there is a winning move, it takes it, otherwise it returns a random move
+    public Point difficulty2() {//if there is a winning move, it takes it, otherwise it returns a random move
         int distance = 0;
         for(int i = 0; i < availMoves.size(); i++){
             if (hasPlayerWinMove(availMoves.get(i)))
@@ -53,7 +53,7 @@ public class AIPlayer extends Player {//AI player
             }
             for (int j = 0; j < opponentMove.size(); j++) {
                 if (hasOpponentWinMove(opponentMove.get(j))) {
-                    curValue -= 5   ;
+                    curValue -= 100;
                     continue;
                 }
                 Board temp2 = new Board(temp);
@@ -102,7 +102,7 @@ public class AIPlayer extends Player {//AI player
         return maxPoint;
     }
 
-    public Point difficulty2() {
+    public Point difficulty1() {
 
         int distance = 0;
 
