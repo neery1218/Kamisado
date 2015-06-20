@@ -21,6 +21,7 @@ public class Piece {//object that conducts piece logic and is used by board
     private float[] rankX = {-0.7071067f, 0, 0.7071067f, 0};
     private float[] rankY = {-0.7071067f, 0.7f, -0.7071067f, 0};
 
+
     public Piece(Piece p){
         locX = p.getX();
         locY = p.getY();
@@ -143,9 +144,36 @@ public class Piece {//object that conducts piece logic and is used by board
         piecePaint.setAntiAlias(true);
         /*canvas.drawPath(outerPath, playerPaint);
         canvas.drawPath(innerPath, piecePaint);*/
-        for (int i = 0; i < rank; i++) {
+        /*for (int i = 0; i < rank; i++) {
             canvas.drawCircle((float) xCenter + rankEdge * (float)radius * rankX[i], (float) yCenter + rankEdge * (float)radius* rankY[i], unitSize / 2 * rankEdge, playerPaint);
+        }*/
+        float avgEdge = (innerEdge + outerEdge) / 2;
+        float widthEdge = 0.1f;
+        if (rank > 0) {
+            Path path = new Path();
+            float topCenterX = (float) (xCenter - avgEdge * radius * rankX[2]);
+            float topCenterY = (float) (yCenter - avgEdge * radius * rankX[2]);
+            float bottomCenterX = (float) (xCenter + avgEdge * radius * rankX[2]);
+            float bottomCenterY = (float) (yCenter + avgEdge * radius * rankX[2]);
+
+
+            path.moveTo(Math.round(topCenterX + widthEdge * radius * rankX[2]), Math.round(topCenterY - widthEdge * radius * rankX[2]));
+            path.lineTo(Math.round(topCenterX - widthEdge * radius * rankX[2]), Math.round(topCenterY + widthEdge * radius * rankX[2]));
+            path.lineTo(Math.round(bottomCenterX + widthEdge * radius * rankX[2]), Math.round(bottomCenterY - widthEdge * radius * rankX[2]));
+            path.lineTo(Math.round(bottomCenterX - widthEdge * radius * rankX[2]), Math.round(bottomCenterY + widthEdge * radius * rankX[2]));
+
+            canvas.drawPath(path, playerPaint);
+            if (rank > 1) {
+
+                Path doublePath = new Path();
+                doublePath.moveTo(Math.round(bottomCenterX + widthEdge * radius * rankX[2]), Math.round(topCenterY - widthEdge * radius * rankX[2]));
+                doublePath.lineTo(Math.round(bottomCenterX - widthEdge * radius * rankX[2]), Math.round(topCenterY - widthEdge * radius * rankX[2]));
+                doublePath.lineTo(Math.round(topCenterX - widthEdge * radius * rankX[2]), Math.round(bottomCenterY + widthEdge * radius * rankX[2]));
+                doublePath.lineTo(Math.round(topCenterX + widthEdge * radius * rankX[2]), Math.round(bottomCenterY + widthEdge * radius * rankX[2]));
+                canvas.drawPath(doublePath, playerPaint);
+            }
         }
+        //draw diagonal line for single sumo, draw x for double sumo, d
 
     }
 
