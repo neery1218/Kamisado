@@ -20,7 +20,6 @@ abstract class RomanNumeralConvert {
             case 9: s += "IX"; break;
             default: s += "IX";
         }
-
         return s;
     }
 }
