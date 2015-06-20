@@ -51,7 +51,6 @@ public class GamePlayFragment extends Fragment implements GameControl.GameStateL
     private int width;
 
 
-
     public GamePlayFragment() {
         // Required empty public constructor
 
