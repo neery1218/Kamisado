@@ -25,7 +25,7 @@ public class Board implements Cloneable{//board object
             Color.parseColor("#ff3498db"),//blue
             Color.parseColor("#ff8e44ad"),//purple
             Color.parseColor("#D2527F"),//pink
-            Color.parseColor("#A86E3A")};
+            Color.parseColor("#ACA46F")};
     private int r = colors[1], o = colors[2], ye = colors[5], g = colors[0], b = colors[7], p = colors[6], pk = colors[4], br = colors[3];
 
     public Board() {
