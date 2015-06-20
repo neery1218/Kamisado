@@ -22,7 +22,8 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
     //gameBoardVariables
     private Paint paint;//make these variables easier to read
     private Board board;
-    private TextView scoreView;
+    private TextView scoreTextView1;
+    private TextView scoreTextView2;
     private float startX = -1;
     private float endX = -1;
     private float startY = -1;
@@ -74,21 +75,23 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
 
     }//Calls the super constructor and creates a new paint object
 
-    public void setScoreView(TextView scoreView) {
-        this.scoreView = scoreView;
+    public void setScoreTextView(TextView scoreTextView1, TextView scoreTextView2) {
+        this.scoreTextView1 = scoreTextView1;
+        this.scoreTextView2 = scoreTextView2;
         updateScore(new int[]{0, 0});
     }
 
     public void updateScore(int[] score) {
-        scoreView.setText(score[PLAYER_TWO] + " " + score[PLAYER_ONE]);
 
-
+        scoreTextView1.setText(RomanNumeralConvert.convertToRomanNumerals(score[PLAYER_TWO]));
+        scoreTextView2.setText(RomanNumeralConvert.convertToRomanNumerals(score[PLAYER_ONE]));
     }
 
     public void setup(){
         //Only ran once when the view is first created
         if(!firstTime)
             return;
+        updateScore(new int[]{0,0});
 
         firstTime = false;
 

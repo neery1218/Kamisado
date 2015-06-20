@@ -42,16 +42,46 @@
 
             android:orientation="horizontal">
 
-
-            <TextView
-                android:id="@+id/scoreTextView"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:id="@+id/scoreLayout"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/white"
-                android:gravity="center"
-                android:text="New Text"
-                android:textColor="@color/text"
-                android:textSize="24sp" />
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/scoreTextView1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:background="@color/white"
+                    android:gravity="center|right"
+                    android:text="New Text"
+                    android:textColor="@color/text"
+                    android:textSize="40sp"
+                    android:layout_weight="3"/>
+
+                <TextView
+                    android:id="@+id/seperatorTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:background="@color/white"
+                    android:gravity="center"
+                    android:text=" / "
+                    android:textColor="@color/text"
+                    android:textSize="40sp"
+                    android:layout_weight="1"/>
+
+                <TextView
+                    android:id="@+id/scoreTextView2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:background="@color/white"
+                    android:gravity="center|left"
+                    android:text="New Text"
+                    android:textColor="@color/text"
+                    android:textSize="40sp"
+                    android:layout_weight="3"/>
+            </LinearLayout>
+
 
             <Button
                 android:id="@+id/undoButton"

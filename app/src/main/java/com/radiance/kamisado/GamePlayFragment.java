@@ -3,6 +3,7 @@ package com.radiance.kamisado;
 import android.app.Activity;
 import android.app.Fragment;
 import android.graphics.Point;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -27,11 +28,15 @@ public class GamePlayFragment extends Fragment implements GameControl.GameStateL
     private int layoutHeight;
     private RelativeLayout relativeLayout;
 
-    private TextView scoreTextView;
+    private TextView scoreTextView1;
+    private TextView seperatorTextView;
+    private TextView scoreTextView2;
     private OnGamePlayInteractionListener mListener;
 
     private TextView screenTextView;
     private TextView subtitleTextView;
+
+    private Typeface typeface;
 
     private LinearLayout holderLayout;
 
@@ -49,7 +54,6 @@ public class GamePlayFragment extends Fragment implements GameControl.GameStateL
 
     private int height;
     private int width;
-
 
 
     public GamePlayFragment() {
@@ -92,9 +96,9 @@ public class GamePlayFragment extends Fragment implements GameControl.GameStateL
         }
     }
 
-    private void setupUserBar(int player) {
+    private void setupUserBar(int player, View view) {
 
-        //scoreTextView.setLayoutParams(params);
+        //scoreTextView1.setLayoutParams(params);
 
         undoButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
@@ -105,7 +109,8 @@ public class GamePlayFragment extends Fragment implements GameControl.GameStateL
         LinearLayout.LayoutParams buttonParams = new LinearLayout.LayoutParams(layoutHeight, LinearLayout.LayoutParams.MATCH_PARENT);
         LinearLayout.LayoutParams scoreViewParam = new LinearLayout.LayoutParams(width - layoutHeight, LinearLayout.LayoutParams.MATCH_PARENT);
         undoButton.setLayoutParams(buttonParams);
-        scoreTextView.setLayoutParams(scoreViewParam);
+        LinearLayout scoreLayout = (LinearLayout)view.findViewById(R.id.scoreLayout);
+        scoreLayout.setLayoutParams(scoreViewParam);
 
     }
 
@@ -115,6 +120,7 @@ public class GamePlayFragment extends Fragment implements GameControl.GameStateL
 
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_game_play, container, false);
+        typeface = Typeface.createFromAsset(getActivity().getAssets(), "fonts/trajan.ttf");
 
         View content = getActivity().getWindow().findViewById(Window.ID_ANDROID_CONTENT);//finds alloted screen size. this will save a lot of time.
 
@@ -170,7 +176,15 @@ public class GamePlayFragment extends Fragment implements GameControl.GameStateL
 
         undoButton = (Button) view.findViewById(R.id.undoButton);
         titleTextView = (TextView) view.findViewById(R.id.titleTextView);
-        scoreTextView = (TextView) view.findViewById(R.id.scoreTextView);
+        scoreTextView1 = (TextView) view.findViewById(R.id.scoreTextView1);
+        scoreTextView2 = (TextView) view.findViewById(R.id.scoreTextView2);
+        seperatorTextView = (TextView) view.findViewById(R.id.seperatorTextView);
+        scoreTextView1.setTypeface(typeface);
+        scoreTextView2.setTypeface(typeface);
+        seperatorTextView.setTypeface(typeface);
+        scoreTextView1.setText("-");
+        scoreTextView2.setText("-");
+        seperatorTextView.setText(" / ");
 
         //compute layout sizes
         height = content.getHeight();
@@ -188,20 +202,20 @@ public class GamePlayFragment extends Fragment implements GameControl.GameStateL
         titleTextView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
         titleTextView.setBackgroundColor(getResources().getColor(R.color.white));
 
-        setupUserBar(GameControl.PLAYER_ONE);
+        setupUserBar(GameControl.PLAYER_ONE, view);
 
         gameBoardView = (GameBoardView) view.findViewById(R.id.gameBoard);
         //gameBoardView needs to accept two views
-        gameBoardView.setScoreView(scoreTextView);
+        gameBoardView.setScoreTextView(scoreTextView1, scoreTextView2);
         gameBoardView.setLayoutParams(gameParams);
         gameBoardView.attachGameStateListener(this);
         gameBoardView.attachUndoToastCreate(this);
 
 
         // undoButton.setLayoutParams(params);
-        //scoreTextView.setRotation(180f); so other players can view
+        //scoreTextView1.setRotation(180f); so other players can view
         //bottomUserLayout.addView(undoButton);
-        // topUserLayout.addView(scoreTextView);
+        // topUserLayout.addView(scoreTextView1);
         userLayouts[GameControl.PLAYER_ONE].setLayoutParams(layoutParams);
         userLayouts[GameControl.PLAYER_TWO].setLayoutParams(layoutParams);
         // userLayout
