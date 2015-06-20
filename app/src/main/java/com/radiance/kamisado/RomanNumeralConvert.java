@@ -1,14 +1,16 @@
+package com.radiance.kamisado;
+
 /**
  * Created by Michael on 6/20/2015.
  */
 abstract class RomanNumeralConvert {
 
-    public String convertToRomanNumerals(int num){
+    public  static String convertToRomanNumerals(int num){
         String s = "";
         int i = num % 5, v = num - i;
         if(v == 1)
-            s += "V";
-        switch (i){
+            s += "v";
+        switch(i){
             case 0: s += ""; break;
             case 1: s += "I"; break;
             case 2: s += "II"; break;
@@ -18,6 +20,9 @@ abstract class RomanNumeralConvert {
 
         if(num == 9)
             s = "IX";
+        else if(num == 0)
+            s = "-";
+
         return s;
     }
 }
