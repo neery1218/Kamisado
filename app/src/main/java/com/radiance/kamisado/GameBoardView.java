@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
@@ -57,6 +58,7 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
     private boolean boardReset = false;
     private boolean firstMoveOnly = false;
     private Board resetBoard;
+    private boolean boardDim = false;
 
     private OnUndoToastCreate onUndoToastCreate;
 
@@ -152,6 +154,7 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
         boardReset = reset;
         if(boardReset){
             animationRunning = true;
+            boardDim = false;
             animator = ValueAnimator.ofInt(256, 511);
             animator.setDuration(400);
             animator.addUpdateListener(this);
@@ -221,16 +224,17 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
                 if(selectedPiece != null) {
                     paint.setColor(Color.parseColor("#090404"));
                     paint.setStyle(Paint.Style.FILL);
-                    if(!gameControl.getFirstMove() && gameControl.getWin().equals(-1, -1))
-                        paint.setAlpha(150);
-                    else if(!gameControl.getWin().equals(-1, -1)) {
+                    if(!gameControl.getWin().equals(-1, -1)) {
                         if(animateAlpha <= 255)
                             paint.setAlpha(150 - (int) ((double) (animateAlpha) * 150 / 255));
                         else
                             paint.setAlpha(0);
                     }
-                    else if(gameControl.getFirstMove() && gameControl.getWin().equals(-1, -1))
+                    else if(gameControl.getFirstMove() && gameControl.getWin().equals(-1, -1) && !boardDim && (int)((double)(animateAlpha - 256) * 150 / 255) <= 150)
                         paint.setAlpha((int)((double)(animateAlpha - 256) * 150 / 255));
+                    else {
+                        paint.setAlpha(150);
+                    }
                     canvas.drawRect(startX + j * unitSize, startY + i * unitSize, startX + (j + 1) * unitSize, startY + (i + 1) * unitSize, paint);
                 }
 
@@ -287,7 +291,7 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
 
     @Override
     public void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
+        //super.onDraw(canvas);
         paint.setAntiAlias(true);
         setup();
 
@@ -360,6 +364,7 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
         animationRunning = false;
         boardReset = false;
         onBoardEvent.onTouch(-1,-1);
+        boardDim = true;
         if(gameControl.getWin().x != -1 && gameControl.getWin().y != -1){
             selectedPiece = null;
         }

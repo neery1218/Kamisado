@@ -141,6 +141,7 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
             if (deadlockCount == 2) {//this means that both players can't move
                 //win = new Point(selectedPiece.getY(), selectedPiece.getX());
                 deadlock = true;
+                win = new Point(-2, -2);
                 //new rules: if deadlock, it's a tie
                 // gameStateListener.deadlock(win);
                 //winPiece = board.getTile(win.x, win.y).getPiece();
@@ -396,7 +397,7 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
                                 gameStateListener.deadlock(winPiece.getPoint());
 
                             }
-                        }, 500);
+                        }, 00);
                     } else if (pieces[1].getPoint().x != -1 && pieces[1].getPoint().y != -1) {
                         handler.postDelayed(new Runnable() {
 
