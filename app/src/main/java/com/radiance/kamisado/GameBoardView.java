@@ -8,7 +8,6 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
@@ -251,7 +250,7 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
                     if (selectedPiece != null && i == selectedPiece.getY() && j == selectedPiece.getX()) {
                         paint.setColor(board.getColor(i, j));
                         paint.setStyle(Paint.Style.FILL);
-                        if (animateAlpha <= 255 )
+                        if (animateAlpha <= 256 )
                             paint.setAlpha(0);
                         else
                             paint.setAlpha(animateAlpha - 256);
