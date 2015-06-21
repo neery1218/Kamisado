@@ -253,7 +253,7 @@ public class GamePlayFragment extends Fragment implements GameControl.GameStateL
         // screenLayout.addView(holderLayout);
         relativeLayout.addView(screenLayout);
 
-        screenTextView.setText("P1++");
+        screenTextView.setText("P1 wins round!");
         subtitleTextView.setText("Tap to Continue");
         final Animation in = new AlphaAnimation(0.0f, 1.0f);
         in.setDuration(300);
@@ -273,7 +273,7 @@ public class GamePlayFragment extends Fragment implements GameControl.GameStateL
         // screenLayout.addView(holderLayout);
         relativeLayout.addView(screenLayout);
 
-        screenTextView.setText("P2++");
+        screenTextView.setText("P2 wins round!");
         subtitleTextView.setText("Tap to Continue");
         final Animation in = new AlphaAnimation(0.0f, 1.0f);
         in.setDuration(300);
@@ -304,9 +304,9 @@ public class GamePlayFragment extends Fragment implements GameControl.GameStateL
         // LinearLayout layout = new LinearLayout(getActivity());
 
         if (player == GameControl.PLAYER_TWO)
-            screenTextView.setText("P1 >= MATCH_LENGTH");
+            screenTextView.setText("P1 wins game!");
         else
-            screenTextView.setText("P2 >= MATCH_LENGTH");
+            screenTextView.setText("P2 wins game!");
 
         subtitleTextView.setText("Tap to return to Main Menu");
         //screenLayout.addView(holderLayout);

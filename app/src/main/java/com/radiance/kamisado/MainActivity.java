@@ -49,7 +49,7 @@ public class MainActivity extends ActionBarActivity implements IntroFragment.OnI
         //initialize transaction and add to viewgroup
         getFragmentManager()
                 .beginTransaction()
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE)
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                 .add(R.id.fragment_container, introFragment)
                 .addToBackStack(null)
                 .commit();
@@ -132,7 +132,6 @@ public class MainActivity extends ActionBarActivity implements IntroFragment.OnI
             fragmentManager.beginTransaction()
                     .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE)
                     .replace(R.id.fragment_container, matchLengthFragment)
-                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE)
                     .addToBackStack(null)
                     .commit();
             // fragmentTransaction.replace(R.id.fragment_container, matchLengthFragment);
@@ -167,7 +166,7 @@ public class MainActivity extends ActionBarActivity implements IntroFragment.OnI
             fragmentManager = getFragmentManager();
             fragmentTransaction = fragmentManager.beginTransaction();
             fragmentTransaction.replace(R.id.fragment_container, aiDifficultyFragment);
-            fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+            fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE);
             fragmentTransaction.addToBackStack(null);
             fragmentTransaction.commit();
         } else {//calls the listener that sets up gamePlayFragment
@@ -194,7 +193,7 @@ public class MainActivity extends ActionBarActivity implements IntroFragment.OnI
         fragmentManager = getFragmentManager();
         fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.fragment_container, gamePlayFragment);
-        fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE);
+        fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
 
