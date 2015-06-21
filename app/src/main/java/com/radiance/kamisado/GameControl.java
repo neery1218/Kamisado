@@ -389,23 +389,23 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
             while(true)
                 if(!gameBoardView.animationRunning){
                     if (deadlock) {
-                        handler.post(new Runnable() {
+                        handler.postDelayed(new Runnable() {
 
                             @Override
                             public void run() {
                                 gameStateListener.deadlock(winPiece.getPoint());
 
                             }
-                        });
+                        }, 1000);
                     } else if (pieces[1].getPoint().x != -1 && pieces[1].getPoint().y != -1) {
-                        handler.post(new Runnable() {
+                        handler.postDelayed(new Runnable() {
 
                             @Override
                             public void run() {
                                 callWin(winPiece.getOwner(), winPiece.getPoint());
 
                             }
-                        });
+                        }, 1000);
                     }
 
                     break;
