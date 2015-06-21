@@ -168,7 +168,7 @@ public class Piece {//object that conducts piece logic and is used by board
                 Path doublePath = new Path();
                 doublePath.moveTo(Math.round(bottomCenterX + widthEdge * radius * rankX[2]), Math.round(topCenterY - widthEdge * radius * rankX[2]));
                 doublePath.lineTo(Math.round(bottomCenterX - widthEdge * radius * rankX[2]), Math.round(topCenterY + widthEdge * radius * rankX[2]));
-                doublePath.lineTo(Math.round(topCenterX + widthEdge * radius * rankX[2]), Math.round(bottomCenterY + widthEdge * radius * rankX[2]));
+                doublePath.lineTo(Math.round(topCenterX + widthEdge * radius * rankX[2]), Math.round(bottomCenterY - widthEdge * radius * rankX[2]));
                 doublePath.lineTo(Math.round(topCenterX - widthEdge * radius * rankX[2]), Math.round(bottomCenterY + widthEdge * radius * rankX[2]));
                 canvas.drawPath(doublePath, playerPaint);
             }
