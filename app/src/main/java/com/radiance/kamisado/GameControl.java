@@ -257,7 +257,7 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
             undoCount--;
         fin = new Piece(board.getTile(temp.x, temp.y).getPiece());
         Point openings = GameLogic.findOpenings(board);
-        Log.v("MinMax","Player One:" + openings.x + "Player Two:" + openings.y);
+        Log.v("MinMax", "Player One:" + openings.x + "Player Two:" + openings.y);
     }
 
     public void resolveWin(){
@@ -308,11 +308,12 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
         undoLimit--;
 
         if (moveStack.isEmpty()) {
-            firstMove = true;
             return;
         }
         undoCount++;
         MoveGroup undo = moveStack.pop().reverse();
+        if(moveStack.isEmpty())
+            firstMove = true;
 
 
         counter = undo.getCounter();
@@ -334,9 +335,10 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
 
         fin = new Piece(board.getTile(undo.get(0).finish.x, undo.get(0).finish.y).getPiece());
         gameBoardView.setAvailMoves(availMoves);
-        gameBoardView.drawBoard(board, init.getPoint(), fin.getPoint(), selectedPiece);
-        if (moveStack.isEmpty()) {
-            firstMove = true;
+        if(!firstMove)
+            gameBoardView.drawBoard(board, init.getPoint(), fin.getPoint(), selectedPiece);
+        else {
+            gameBoardView.drawBoard(board, selectedPiece, false);
         }
 
         if (!moveStack.isEmpty() && (players[counter % 2] instanceof AIPlayer || (!moveStack.isEmpty() && players[moveStack.peek().getCounter() % 2] instanceof HumanPlayer))) {
