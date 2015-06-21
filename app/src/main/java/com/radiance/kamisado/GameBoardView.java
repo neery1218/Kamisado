@@ -52,6 +52,8 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
     private Piece init, fin;
     private ValueAnimator animator;
     private int animateAlpha = 255;
+    private int boardAlpha = 150;
+    private ValueAnimator boardAnimator;
     private boolean boardReset = false;
     private boolean firstMoveOnly = false;
     private Board resetBoard;
@@ -142,8 +144,9 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
     public void drawBoard(Board board, Piece piece, boolean reset) {
         this.board = board;
         this.selectedPiece = piece;
-        if (gameControl != null && gameControl.getFirstMove())
+        if (gameControl != null && gameControl.getFirstMove()) {
             firstMoveOnly = false;
+        }
         init = null;
         fin = null;
         boardReset = reset;
@@ -218,7 +221,16 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
                 if(selectedPiece != null) {
                     paint.setColor(Color.parseColor("#090404"));
                     paint.setStyle(Paint.Style.FILL);
-                    paint.setAlpha(150);
+                    if(!gameControl.getFirstMove() && gameControl.getWin().equals(-1, -1))
+                        paint.setAlpha(150);
+                    else if(!gameControl.getWin().equals(-1, -1)) {
+                        if(animateAlpha <= 255)
+                            paint.setAlpha(150 - (int) ((double) (animateAlpha) * 150 / 255));
+                        else
+                            paint.setAlpha(0);
+                    }
+                    else if(gameControl.getFirstMove() && gameControl.getWin().equals(-1, -1))
+                        paint.setAlpha((int)((double)(animateAlpha - 256) * 150 / 255));
                     canvas.drawRect(startX + j * unitSize, startY + i * unitSize, startX + (j + 1) * unitSize, startY + (i + 1) * unitSize, paint);
                 }
 

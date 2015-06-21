@@ -256,7 +256,7 @@ public class GamePlayFragment extends Fragment implements GameControl.GameStateL
         screenTextView.setText("P1++");
         subtitleTextView.setText("Tap to Continue");
         final Animation in = new AlphaAnimation(0.0f, 1.0f);
-        in.setDuration(100);
+        in.setDuration(300);
 
 
         screenTextView.setAnimation(in);
@@ -276,7 +276,7 @@ public class GamePlayFragment extends Fragment implements GameControl.GameStateL
         screenTextView.setText("P2++");
         subtitleTextView.setText("Tap to Continue");
         final Animation in = new AlphaAnimation(0.0f, 1.0f);
-        in.setDuration(100);
+        in.setDuration(300);
 
 
         screenTextView.setAnimation(in);
@@ -292,7 +292,7 @@ public class GamePlayFragment extends Fragment implements GameControl.GameStateL
         screenTextView.setText("DEADLOCK");
         subtitleTextView.setText("Tap to Continue");
         final Animation in = new AlphaAnimation(0.0f, 1.0f);
-        in.setDuration(100);
+        in.setDuration(300);
 
         screenTextView.setAnimation(in);
         subtitleTextView.setAnimation(in);

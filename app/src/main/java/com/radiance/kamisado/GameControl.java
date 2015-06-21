@@ -396,7 +396,7 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
                                 gameStateListener.deadlock(winPiece.getPoint());
 
                             }
-                        }, 1000);
+                        }, 500);
                     } else if (pieces[1].getPoint().x != -1 && pieces[1].getPoint().y != -1) {
                         handler.postDelayed(new Runnable() {
 
@@ -405,7 +405,7 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
                                 callWin(winPiece.getOwner(), winPiece.getPoint());
 
                             }
-                        }, 1000);
+                        }, 500);
                     }
 
                     break;
