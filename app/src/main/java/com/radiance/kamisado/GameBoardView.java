@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
@@ -52,6 +53,7 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
     private Piece init, fin;
     private ValueAnimator animator;
     private int animateAlpha = 255;
+    private int previousAlpha = 254;
     private int boardAlpha = 150;
     private ValueAnimator boardAnimator;
     private boolean boardReset = false;
@@ -151,6 +153,7 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
         init = null;
         fin = null;
         boardReset = reset;
+        previousAlpha = 0;
         if(boardReset){
             animationRunning = true;
             boardDim = false;
@@ -254,6 +257,13 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
                             paint.setAlpha(0);
                         else
                             paint.setAlpha(animateAlpha - 256);
+                        Log.d("animate alphas", paint.getAlpha() + " " + previousAlpha);
+                        if(gameControl.getFirstMove() && paint.getAlpha() == 255) {
+                            if(previousAlpha < 500)
+                                paint.setAlpha(0);
+                            previousAlpha = 0;
+                        }
+
                         canvas.drawRect(startX + j * unitSize, startY + i * unitSize, startX + (j + 1) * unitSize, startY + (i + 1) * unitSize, paint);
                     }
                     paint.setAlpha(255);
@@ -349,6 +359,7 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
 
     @Override
     public void onAnimationUpdate(ValueAnimator animation) {
+        previousAlpha = animateAlpha;
         animateAlpha = (Integer)animation.getAnimatedValue();
         invalidate();
     }
