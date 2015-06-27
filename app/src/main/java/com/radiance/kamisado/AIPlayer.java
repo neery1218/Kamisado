@@ -43,7 +43,7 @@ public class AIPlayer extends Player {//AI player
             return difficulty1();
 
         Point maxPoint = new Point(-1, -1);
-        int maxValue = -1, curValue = 0;
+        double maxValue = -1, curValue = 0;
         for(int i = 0; i < availMoves.size(); i++){
             curValue = 0;
             temp = new Board(board);
@@ -52,7 +52,7 @@ public class AIPlayer extends Player {//AI player
             Piece selectedPiece2 = GameLogic.findPiece(temp, this.player + 1, curColor);
             ArrayList<Point> opponentMove = nextMove(temp, availMoves.get(i), player + 1);
             if(opponentMove.size() == 0){
-                curValue += 3;
+                curValue += 50;
             }
             for (int j = 0; j < opponentMove.size(); j++) {
                 if (hasOpponentWinMove(opponentMove.get(j))) {
@@ -64,6 +64,8 @@ public class AIPlayer extends Player {//AI player
                 //Log.d("AI TEST", selectedPiece.getPoint() + " " + selectedPiece2.getPoint() + " " + opponentMove.get(j));
 
                 ArrayList<Point> playerMove = nextMove(temp2, opponentMove.get(j), player);
+                if(playerMove.size() == 0)
+                    curValue-= 50;
 
                 //Log.d("MOVES", "OPPONENT " + selectedPiece2.getPoint() + " " + availMoves.get(i) + " " +  opponentMove.get(j));
                 /*for(int k = 0; k < playerMove.size(); k++){
@@ -83,7 +85,7 @@ public class AIPlayer extends Player {//AI player
                             }
                             Log.d("MOVES", s);
                         }*/
-                        curValue++;
+                        curValue+=20/playerMove.size();
                     }
                 }
             }
