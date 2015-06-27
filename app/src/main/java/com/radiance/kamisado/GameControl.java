@@ -200,11 +200,9 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
 
         Point temp = players[counter % 2].resolveMove(new Point(y, x));//returns the point that the piece should be moved to
         if (!temp.equals(inValid)) {//check validity
-            if (selectedPiece.getRank() > 0 && temp.equals(players[counter % 2].getSumoPushPoint())) {//if it's sumo:
-                sumoPush(temp);
-            } else {
-                movePiece(temp);
-            }
+
+            movePiece(temp);
+
 
             win = GameLogic.win(board);
 

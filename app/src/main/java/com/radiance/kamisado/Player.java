@@ -83,28 +83,8 @@ abstract class Player {//abstract class used to hold player logic and give way t
 
             //regular moves
             if (!forwardBlocked && valid(y - i)) { //finds moves directly forward
-                if (board.getTile(y - i, x).isEmpty()) {
+                if (board.getTile(y - i, x).isEmpty())
                     availMoves.add(new Point(y - i, x));
-                } else if (selectedPiece.getRank() > 0 && i == 1) {//check for sumoPushes
-                    int sumoCounter = 0;
-
-                    while (valid(y - i - sumoCounter) && !board.getTile(y - i - sumoCounter, x).isEmpty() && board.getTile(y - i - sumoCounter, x).getPiece().getOwner() != player) {//checks for a chain of opponent pieces
-                        if (board.getTile(y - i - sumoCounter, x).getPiece().getRank() >= selectedPiece.getRank()) {
-                            sumoCounter = 0;
-                            break;
-                        }
-                        sumoCounter++;
-                    }
-                    //if the number of opponent pieces are less than the current piece's rank, and the square behind the chain is empty
-                    if (valid(y - i - sumoCounter) && sumoCounter > 0 && sumoCounter <= selectedPiece.getRank() && board.getTile(y - i - sumoCounter, x).getPiece() == null) {
-                        sumoPushOption = new Point(y - i - sumoCounter, x);
-                        availMoves.add(sumoPushOption);//adds it as a valid move
-                        sumoChain = sumoCounter;
-                    }
-
-
-                    forwardBlocked = true;
-                }
                 else
                     forwardBlocked = true;
             }
