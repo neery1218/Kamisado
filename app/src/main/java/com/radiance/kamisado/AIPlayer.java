@@ -34,7 +34,8 @@ public class AIPlayer extends Player {//AI player
 
     public Point difficulty2() {//if there is a winning move, it takes it, otherwise it returns a random move
         int distance = 0;
-        for(int i = 0; i < availMoves.size(); i++){
+
+        for (int i = 0; i < availMoves.size(); i++) {//returns winning move immediately
             if (hasPlayerWinMove(availMoves.get(i)))
                 return availMoves.get(i);
         }
@@ -48,11 +49,12 @@ public class AIPlayer extends Player {//AI player
             int curColor = temp.getTile(availMoves.get(i).x, availMoves.get(i).y).getColor();
             Piece selectedPiece2 = GameLogic.findPiece(temp, this.player + 1, curColor);
             ArrayList<Point> opponentMove = nextMove(temp, availMoves.get(i), player + 1);
-            if(opponentMove.size() == 0){
+
+            if (opponentMove.size() == 0) {//no moves for the opponent is good
                 curValue += 100;
             }
             for (int j = 0; j < opponentMove.size(); j++) {
-                if (hasOpponentWinMove(opponentMove.get(j))) {
+                if (hasOpponentWinMove(opponentMove.get(j))) {//if they have a win, that's worst-case scenario
                     curValue -= 1000;
                     continue;
                 }
@@ -61,7 +63,7 @@ public class AIPlayer extends Player {//AI player
                 //Log.d("AI TEST", selectedPiece.getPoint() + " " + selectedPiece2.getPoint() + " " + opponentMove.get(j));
 
                 ArrayList<Point> playerMove = nextMove(temp2, opponentMove.get(j), player);
-                if(playerMove.size() == 0)
+                if (playerMove.size() == 0)//if they can move to a position where ai has no moves, that's really bad, pretty much a guaranteed win
                     curValue-= 500;
 
                 //Log.d("MOVES", "OPPONENT " + selectedPiece2.getPoint() + " " + availMoves.get(i) + " " +  opponentMove.get(j));
@@ -69,8 +71,8 @@ public class AIPlayer extends Player {//AI player
                     Log.d("MOVES", "opponent " + playerMove.get(k).toString());
                 }*/
 
-                for(int k = 0; k < playerMove.size(); k++){
-                    if(hasPlayerWinMove(playerMove.get(k))){
+                for (int k = 0; k < playerMove.size(); k++) {//kinda useless?
+                    if (hasPlayerWinMove(playerMove.get(k))) {//if ai has win upon player's move
                         /*Log.d("MOVES", "WIN" +  playerMove.get(k).x + " " + playerMove.get(k).y + " " + opponentMove.get(j).x + " " + opponentMove.get(j).y);
                         for(int m = 0; m < 8; m++){
                             String s = "";
@@ -125,7 +127,7 @@ public class AIPlayer extends Player {//AI player
             ArrayList<Point> opponentMove = nextMove(temp, availMoves.get(i), player + 1);
 
             if (opponentMove.size() == 0) {//if the opponent can move, curValue gets added five points because it's favourable
-                curValue += 5;
+                curValue += 50;
             }
 
             for (int j = 0; j < opponentMove.size(); j++) {//but if opponent can win, subtract 100 from curValue
