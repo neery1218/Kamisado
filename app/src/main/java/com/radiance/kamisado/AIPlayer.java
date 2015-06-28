@@ -49,11 +49,11 @@ public class AIPlayer extends Player {//AI player
             Piece selectedPiece2 = GameLogic.findPiece(temp, this.player + 1, curColor);
             ArrayList<Point> opponentMove = nextMove(temp, availMoves.get(i), player + 1);
             if(opponentMove.size() == 0){
-                curValue += 50;
+                curValue += 100;
             }
             for (int j = 0; j < opponentMove.size(); j++) {
                 if (hasOpponentWinMove(opponentMove.get(j))) {
-                    curValue -= 100;
+                    curValue -= 1000;
                     continue;
                 }
                 Board temp2 = new Board(temp);
@@ -62,7 +62,7 @@ public class AIPlayer extends Player {//AI player
 
                 ArrayList<Point> playerMove = nextMove(temp2, opponentMove.get(j), player);
                 if(playerMove.size() == 0)
-                    curValue-= 50;
+                    curValue-= 100;
 
                 //Log.d("MOVES", "OPPONENT " + selectedPiece2.getPoint() + " " + availMoves.get(i) + " " +  opponentMove.get(j));
                 /*for(int k = 0; k < playerMove.size(); k++){
@@ -82,7 +82,7 @@ public class AIPlayer extends Player {//AI player
                             }
                             Log.d("MOVES", s);
                         }*/
-                        curValue+=20/playerMove.size();
+                        curValue+=10/playerMove.size();
                     }
                 }
             }
@@ -95,7 +95,7 @@ public class AIPlayer extends Player {//AI player
                 maxValue = curValue;
             } else if (curValue == maxValue) {
                 double random = Math.random();
-                if (random > 0.95) {
+                if (random > 0.75) {
                     maxPoint = availMoves.get(i);
                     maxValue = curValue;
                 }
