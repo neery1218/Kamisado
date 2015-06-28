@@ -61,7 +61,6 @@ public class AIPlayer extends Player {//AI player
                 //Log.d("AI TEST", selectedPiece.getPoint() + " " + selectedPiece2.getPoint() + " " + opponentMove.get(j));
 
                 ArrayList<Point> playerMove = nextMove(temp2, opponentMove.get(j), player);
-                ArrayList<Integer> colors = new ArrayList<>();
                 if(playerMove.size() == 0)
                     curValue-= 500;
 
@@ -72,26 +71,18 @@ public class AIPlayer extends Player {//AI player
 
                 for(int k = 0; k < playerMove.size(); k++){
                     if(hasPlayerWinMove(playerMove.get(k))){
-                        boolean repeatedColor = false;
-                        for(int color : colors)
-                            if(color == board.getColor(playerMove.get(k).y, playerMove.get(k).x))
-                                repeatedColor = true;
-
-                        if(!repeatedColor) {
-                            colors.add(board.getColor(playerMove.get(k).y, playerMove.get(k).x));
-                            /*Log.d("MOVES", "WIN" +  playerMove.get(k).x + " " + playerMove.get(k).y + " " + opponentMove.get(j).x + " " + opponentMove.get(j).y);
-                            for(int m = 0; m < 8; m++){
-                                String s = "";
-                                for(int l = 0; l < 8; l++){
-                                    if(temp2.getTile(m,l).isEmpty())
-                                        s+="0";
-                                    else
-                                        s+="1";
-                                }
-                                Log.d("MOVES", s);
-                            }*/
-                            curValue += 10 / playerMove.size();
-                        }
+                        /*Log.d("MOVES", "WIN" +  playerMove.get(k).x + " " + playerMove.get(k).y + " " + opponentMove.get(j).x + " " + opponentMove.get(j).y);
+                        for(int m = 0; m < 8; m++){
+                            String s = "";
+                            for(int l = 0; l < 8; l++){
+                                if(temp2.getTile(m,l).isEmpty())
+                                    s+="0";
+                                else
+                                    s+="1";
+                            }
+                            Log.d("MOVES", s);
+                        }*/
+                        curValue+=10/playerMove.size();
                     }
                 }
             }
