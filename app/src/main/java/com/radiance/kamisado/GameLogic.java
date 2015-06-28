@@ -46,7 +46,7 @@ public abstract class GameLogic {//contains methods used by gameControl, and all
     public static Point findOpenings (Board board) {
 
         Point openings = new Point(0, 0); //openings.x is player one openings, openings.y = player two openings
-
+        //TODO: openings = piecesOpen + 0.5 * (totalOpenings - piecesOpen) or something like that
         boolean forwardBlockedTwo = false;
         boolean leftBlockedTwo = false;
         boolean rightBlockedTwo = false;
