@@ -165,7 +165,7 @@ public class AIPlayer extends Player {//AI player
         int enemyRow = boardDimension - 1;
 
         for (int j = 1; j < 5; j++) {
-            for (int i = 0; i < board.getHeight(); i++) {
+            for (int i = 1; i < board.getHeight() - 1; i++) {
                 int enemyColor = board.getTile(enemyRow, i).getPiece().getColor();
                 //check forward only on j = 1
                 if (j == 1 && valid(enemyRow - j) && board.getTile(enemyRow - j, i).getColor() == enemyColor)
