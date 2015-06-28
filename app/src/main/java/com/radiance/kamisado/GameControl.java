@@ -333,6 +333,7 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
 
         fin = new Piece(board.getTile(undo.get(0).finish.x, undo.get(0).finish.y).getPiece());
         gameBoardView.setAvailMoves(availMoves);
+        if(!(players[counter % 2] instanceof  AIPlayer))
         if(!firstMove)
             gameBoardView.drawBoard(board, init.getPoint(), fin.getPoint(), selectedPiece);
         else {
