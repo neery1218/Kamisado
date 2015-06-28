@@ -39,9 +39,6 @@ public class AIPlayer extends Player {//AI player
                 return availMoves.get(i);
         }
 
-        if (availMoves.size() < 7)
-            return difficulty1();
-
         Point maxPoint = new Point(-1, -1);
         double maxValue = -1, curValue = 0;
         for(int i = 0; i < availMoves.size(); i++){
