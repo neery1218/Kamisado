@@ -84,7 +84,7 @@ public class AIPlayer extends Player {//AI player
                             }
                             Log.d("MOVES", s);
                         }*/
-                        curValue+=10/playerMove.size();
+                        curValue+=10.0/playerMove.size();
                     }
                 }
             }
