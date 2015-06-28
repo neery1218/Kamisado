@@ -160,11 +160,25 @@ public class AIPlayer extends Player {//AI player
 
     @Override
     public Point selectPiece(Board board) {
-        Point A;
-        if (board.getTile(boardDimension - 1, 0).getPiece().getOwner() == player)
-            A = new Point(boardDimension - 1, 0);
-        else
-            A = new Point(0, 0);
+        Point A = new Point(0, 0);//assuming it's player two
+        Point firstMove = new Point(1, 0);
+        int enemyRow = boardDimension - 1;
+
+        for (int j = 1; j < 5; j++) {
+            for (int i = 0; i < board.getHeight(); i++) {
+                int enemyColor = board.getTile(enemyRow, i).getPiece().getColor();
+                //check forward only on j = 1
+                if (j == 1 && valid(enemyRow - j) && board.getTile(enemyRow - j, i).getColor() == enemyColor)
+                    return new Point(0, i);
+
+                if (valid(enemyRow - j) && valid(i - j) && board.getTile(enemyRow - j, i - j).getColor() == enemyColor)
+                    return new Point(0, i);
+
+                if (valid(enemyRow - j) && valid(i + j) && board.getTile(enemyRow - j, i + j).getColor() == enemyColor)
+                    return new Point(0, i);
+
+            }
+        }
 
         calcMoves(board, player, board.getTile(A.x, A.y).getPiece());
         return A;
@@ -189,7 +203,7 @@ public class AIPlayer extends Player {//AI player
     @Override
     public Point resolveMove(Point point) {//overridden method, returns a move based on difficulty
         if(difficulty == 0){
-            return difficulty0();//TODO: configure AI skill levels
+            return difficulty0();
         }
         else if(difficulty == 1){
             return difficulty1();
@@ -198,4 +212,6 @@ public class AIPlayer extends Player {//AI player
         }
         return new Point(-1, -1);
     }
+
+
 }

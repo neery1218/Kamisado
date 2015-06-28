@@ -45,7 +45,7 @@ abstract class Player {//abstract class used to hold player logic and give way t
     }
 
 
-    private boolean valid (int a){
+    protected boolean valid(int a) {
         return (a >= 0 && a < boardDimension);
     }
 
