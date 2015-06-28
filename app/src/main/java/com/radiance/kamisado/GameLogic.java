@@ -46,6 +46,7 @@ public abstract class GameLogic {//contains methods used by gameControl, and all
     public static Point findOpenings (Board board) {
 
         Point openings = new Point(0, 0); //openings.x is player one openings, openings.y = player two openings
+        boolean[][] pieceCounted = new boolean[board.getHeight()][board.getWidth()];
         //TODO: openings = piecesOpen + 0.5 * (totalOpenings - piecesOpen) or something like that
         boolean forwardBlockedTwo = false;
         boolean leftBlockedTwo = false;
@@ -55,27 +56,49 @@ public abstract class GameLogic {//contains methods used by gameControl, and all
         boolean leftBlockedOne = false;
         boolean rightBlockedOne = false;
 
+        for (int i = 0; i < pieceCounted.length; i++)
+            for (int j = 0; j < pieceCounted[i].length; j++)
+                pieceCounted[i][j] = false;
         for (int i = 0; i < board.getHeight(); i++) {
             if (board.getTile(0, i).isEmpty()) {//check for player two piece win openings
                 int y = 0, x = i;
                 for (int j = 1; j <= board.getHeight() - 1; j++) {
                     if (!forwardBlockedTwo && valid(y + j) && valid(x) && !board.getTile(y + j, x).isEmpty()) {//forwards
-                        if (board.getTile(y + j, x).getPiece().getOwner() == PLAYER_TWO)
-                            openings.y++;
+                        if (board.getTile(y + j, x).getPiece().getOwner() == PLAYER_TWO) {
 
+                            if (pieceCounted[y + j][x])
+                                openings.y++;
+                            else
+                                openings.y += 3;
+
+                            pieceCounted[y + j][x] = true;
+                        }
                             forwardBlockedTwo = true;
                     }
 
                     if (!leftBlockedTwo && valid(y + j) && valid(x + j) && !board.getTile(y + j, x + j).isEmpty()) {//left diagonal
-                        if (board.getTile(y + j, x + j).getPiece().getOwner() == PLAYER_TWO)
-                            openings.y++;
+                        if (board.getTile(y + j, x + j).getPiece().getOwner() == PLAYER_TWO) {
 
+                            if (pieceCounted[y + j][x + j])
+                                openings.y++;
+                            else
+                                openings.y += 3;
+
+                            pieceCounted[y + j][x + j] = true;
+                        }
                             leftBlockedTwo = true;
                     }
 
                     if (!rightBlockedTwo && valid(y + j) && valid(x - j) && !board.getTile(y + j, x - j).isEmpty()) {//right diagonal
-                        if (board.getTile(y + j, x - j).getPiece().getOwner() == PLAYER_TWO)
-                            openings.y++;
+                        if (board.getTile(y + j, x - j).getPiece().getOwner() == PLAYER_TWO) {
+
+                            if (pieceCounted[y + j][x - j])
+                                openings.y++;
+                            else
+                                openings.y += 3;
+
+                            pieceCounted[y + j][x - j] = true;
+                        }
 
                             rightBlockedTwo = true;
                     }
@@ -86,23 +109,43 @@ public abstract class GameLogic {//contains methods used by gameControl, and all
                 int y = board.getHeight() - 1, x = i;
                 for (int j = 1; j <= board.getHeight() - 1; j++) {
                     if (!forwardBlockedOne && valid(y - j) && valid(x) && !board.getTile(y - j, x).isEmpty()) {//forwards  (relative to that side)
-                        if (board.getTile(y - j, x).getPiece().getOwner() == PLAYER_ONE)
-                            openings.x++;
+                        if (board.getTile(y - j, x).getPiece().getOwner() == PLAYER_ONE) {
+
+                            if (pieceCounted[y - j][x])
+                                openings.x++;
+                            else
+                                openings.x += 3;
+
+                            pieceCounted[y - j][x] = true;
+                        }
 
                             forwardBlockedOne = true;
                     }
 
                     if (!leftBlockedOne && valid(y - j) && valid(x + j) && !board.getTile(y - j, x + j).isEmpty()) {//left diagonal
-                        if (board.getTile(y - j, x + j).getPiece().getOwner() == PLAYER_ONE)
-                            openings.x++;
+                        if (board.getTile(y - j, x + j).getPiece().getOwner() == PLAYER_ONE) {
+
+                            if (pieceCounted[y - j][x + j])
+                                openings.x++;
+                            else
+                                openings.x += 3;
+
+                            pieceCounted[y - j][x + j] = true;
+                        }
 
                             leftBlockedOne = true;
                     }
 
                     if (!rightBlockedOne && valid(y - j) && valid(x - j) && !board.getTile(y - j, x - j).isEmpty()) {//right diagonal
-                        if (board.getTile(y - j, x - j).getPiece().getOwner() == PLAYER_ONE)
-                            openings.x++;
+                        if (board.getTile(y - j, x - j).getPiece().getOwner() == PLAYER_ONE) {
 
+                            if (pieceCounted[y - j][x - j])
+                                openings.x++;
+                            else
+                                openings.x += 3;
+
+                            pieceCounted[y - j][x - j] = true;
+                        }
                             rightBlockedOne = true;
                     }
                 }
