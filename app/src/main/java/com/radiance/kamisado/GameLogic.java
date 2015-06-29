@@ -43,6 +43,76 @@ public abstract class GameLogic {//contains methods used by gameControl, and all
         return (a >= 0 && a < 7);
     }//Finds available moves of each player
 
+
+    public static int findBlocks(Board board) {
+        int blockedPieces = 0;
+
+        for (int i = 0; i < board.getHeight(); i++) {
+            for (int j = 0; j < board.getWidth(); j++) {
+                if (!board.getTile(i, j).isEmpty() && board.getTile(i, j).getPiece().getOwner() == PLAYER_ONE) {
+
+                    int possibleBlocks = 0;
+                    int blockedPaths = 0;
+                    int rank = board.getTile(i, j).getPiece().getRank();
+
+                    //regular pieces
+                    if (valid(i - 1)) {
+                        possibleBlocks++;
+                        if (!board.getTile(i - 1, j).isEmpty())
+                            possibleBlocks--;
+                    }
+
+                    if (valid(i - 1) && valid(j - 1)) {
+                        possibleBlocks++;
+                        if (!board.getTile(i - 1, j - 1).isEmpty())
+                            possibleBlocks--;
+                    }
+                    if (valid(i - 1) && valid(j + 1)) {
+                        possibleBlocks++;
+                        if (!board.getTile(i - 1, j + 1).isEmpty())
+                            possibleBlocks--;
+                    }
+
+                    //single sumo
+                    if (rank > 0 && valid(j + 1)) {
+                        possibleBlocks++;
+                        if (!board.getTile(i, j + 1).isEmpty())
+                            possibleBlocks--;
+                    }
+                    if (rank > 0 && valid(j - 1)) {
+                        possibleBlocks++;
+                        if (!board.getTile(i, j - 1).isEmpty())
+                            possibleBlocks--;
+                    }
+
+                    //double sumo
+                    if (rank > 1 && valid(i + 1)) {
+                        possibleBlocks++;
+                        if (!board.getTile(i + 1, j).isEmpty())
+                            possibleBlocks--;
+                    }
+                    if (rank > 1 && valid(i + 1) && valid(j + 1)) {
+                        possibleBlocks++;
+                        if (!board.getTile(i + 1, j + 1).isEmpty())
+                            possibleBlocks--;
+                    }
+                    if (rank > 1 && valid(i + 1) && valid(j - 1)) {
+                        possibleBlocks++;
+                        if (!board.getTile(i + 1, j - 1).isEmpty())
+                            possibleBlocks--;
+                    }
+
+                    if (possibleBlocks == 0)
+                        blockedPieces++;
+
+
+                }
+            }
+        }
+
+        return blockedPieces;
+
+    }
     public static Point findOpenings (Board board) {
 
         Point openings = new Point(0, 0); //openings.x is player one openings, openings.y = player two openings
