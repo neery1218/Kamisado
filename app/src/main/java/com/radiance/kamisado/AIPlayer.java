@@ -165,9 +165,11 @@ public class AIPlayer extends Player {//AI player
             if (opponentMove.size() == 0) {//no moves for the opponent is good
                 curValue += 100;
             }
+            if(GameLogic.findBlocks(board) < GameLogic.findBlocks(temp))
+                curValue += 100;
             for (int j = 0; j < opponentMove.size(); j++) {
                 if (hasOpponentWinMove(opponentMove.get(j))) {//if they have a win, that's worst-case scenario
-                    curValue -= 1000;
+                    curValue -= 10000;
                     continue;
                 }
                 Board temp2 = new Board(temp);
@@ -184,18 +186,10 @@ public class AIPlayer extends Player {//AI player
                 }*/
 
                 for (int k = 0; k < playerMove.size(); k++) {//kinda useless?
+                    if(GameLogic.findBlocks(temp) < GameLogic.findBlocks(temp2))
+                        curValue += 100;
                     if (hasPlayerWinMove(playerMove.get(k))) {//if ai has win upon player's move
-                        /*Log.d("MOVES", "WIN" +  playerMove.get(k).x + " " + playerMove.get(k).y + " " + opponentMove.get(j).x + " " + opponentMove.get(j).y);
-                        for(int m = 0; m < 8; m++){
-                            String s = "";
-                            for(int l = 0; l < 8; l++){
-                                if(temp2.getTile(m,l).isEmpty())
-                                    s+="0";
-                                else
-                                    s+="1";
-                            }
-                            Log.d("MOVES", s);
-                        }*/
+
                         curValue+=10.0/playerMove.size();
                     }
                 }
