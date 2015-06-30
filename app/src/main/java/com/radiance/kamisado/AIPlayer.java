@@ -261,7 +261,7 @@ public class AIPlayer extends Player {//AI player
 
 
         /*if (GameLogic.findBlocks(board, PLAYER_ONE) < GameLogic.findBlocks(board,PLAYER_TWO));
-        value-=5000;*/
+            return */
 
         //if turn is ai's and it has a blocked piece but they do too, go ahead
         Point openings = GameLogic.findOpenings(temp);//using gamelogic method to find openings
@@ -272,11 +272,13 @@ public class AIPlayer extends Player {//AI player
 
     private int minMax(Board board, Piece selectedPiece, int depth, ArrayList<Point> availMoves) {
 
-        if (depth == MAX_DEPTH)
+        //base cases
+
+        if (depth == MAX_DEPTH)//depth level reached, return heuristic value of board state
             return heuristicValue(board, player);
 
         Point checkWin = GameLogic.win(board);
-        if (!checkWin.equals(-1, -1)) {
+        if (!checkWin.equals(-1, -1)) {//if someone has won, return it
 
             if (board.getTile(checkWin).getPiece().getOwner() == PLAYER_TWO)//opponent
                 return -10000;
@@ -284,7 +286,7 @@ public class AIPlayer extends Player {//AI player
                 return 10000;
         }
 
-        if (availMoves.size() == 0) {
+        if (availMoves.size() == 0) {//if player can't move
             selectedPiece = GameLogic.findPiece(board, selectedPiece.getOwner(), board.getTile(selectedPiece.getY(), selectedPiece.getX()).getColor());
             //ArrayList<Point> nextMove = findNextMoves(board, selectedPiece);
             ArrayList<Point> nextMove = new ArrayList<Point>();
