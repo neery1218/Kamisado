@@ -8,7 +8,6 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
@@ -257,7 +256,6 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
                             paint.setAlpha(0);
                         else
                             paint.setAlpha(animateAlpha - 256);
-                        Log.d("animate alphas", paint.getAlpha() + " " + previousAlpha);
                         if(gameControl.getFirstMove() && paint.getAlpha() == 255) {
                             if(previousAlpha < 500)
                                 paint.setAlpha(0);
