@@ -3,18 +3,21 @@ package com.radiance.kamisado;
 import android.graphics.Point;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * Created by Admin on 4/10/2015.
  */
 public class AIPlayer extends Player {//AI player
 
+    int MAX_DEPTH;
     private int difficulty = 0;
     private Board temp;
 
     public AIPlayer(int difficulty, int id) {//basic constructor
         super(id);
         this.difficulty = difficulty;
+        MAX_DEPTH = 6;
     }
 
     public ArrayList<Point> nextMove(Board b, Point movePoint, int nextPlayer) {
@@ -253,6 +256,72 @@ public class AIPlayer extends Player {//AI player
         }
         return false;
     }
+
+    private int heuristicValue(Board board, int turn) {
+
+
+        /*if (GameLogic.findBlocks(board, PLAYER_ONE) < GameLogic.findBlocks(board,PLAYER_TWO));
+        value-=5000;*/
+
+        //if turn is ai's and it has a blocked piece but they do too, go ahead
+        Point openings = GameLogic.findOpenings(temp);//using gamelogic method to find openings
+        return (openings.x - openings.y); //number of openings for player one - number of openings for player two
+
+
+    }
+
+    private int minMax(Board board, Piece selectedPiece, int depth, ArrayList<Point> availMoves) {
+
+        if (depth == MAX_DEPTH)
+            return heuristicValue(board, player);
+
+        Point checkWin = GameLogic.win(board);
+        if (!checkWin.equals(-1, -1)) {
+
+            if (board.getTile(checkWin).getPiece().getOwner() == PLAYER_TWO)//opponent
+                return -10000;
+            else
+                return 10000;
+        }
+
+        if (availMoves.size() == 0) {
+            selectedPiece = GameLogic.findPiece(board, selectedPiece.getOwner(), board.getTile(selectedPiece.getY(), selectedPiece.getX()).getColor());
+            //ArrayList<Point> nextMove = findNextMoves(board, selectedPiece);
+            ArrayList<Point> nextMove = new ArrayList<Point>();
+
+            if (nextMove.size() == 0)
+                return 0;
+
+            else
+                return minMax(board, selectedPiece, depth, nextMove);
+        }
+
+        if (selectedPiece.getOwner() == PLAYER_ONE) {//AI
+            int bestValue = -10000;
+            ArrayList<Integer> values = new ArrayList<Integer>();
+            for (int i = 0; i < availMoves.size(); i++) {
+                Board temp = new Board(board);
+                temp.move(new Point(selectedPiece.getY(), selectedPiece.getX()), availMoves.get(i));
+                values.add(minMax(board, selectedPiece, depth + 1, availMoves));//this is wrong, availMoves should be nextMoves
+            }
+
+            bestValue = Collections.max(values);
+            return bestValue;
+        } else {//opponent
+            ArrayList<Integer> values = new ArrayList<Integer>();
+            int bestValue = 10000;
+            for (int i = 0; i < availMoves.size(); i++) {
+                Board temp = new Board(board);
+                temp.move(new Point(selectedPiece.getY(), selectedPiece.getX()), availMoves.get(i));
+                values.add(minMax(board, selectedPiece, depth + 1, availMoves));//this is wrong, availMoves should be nextMoves
+            }
+
+            bestValue = Collections.min(values);
+            return bestValue;
+        }
+    }
+
+
 
 
 
