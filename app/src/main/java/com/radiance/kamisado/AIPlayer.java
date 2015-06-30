@@ -165,7 +165,7 @@ public class AIPlayer extends Player {//AI player
             if (opponentMove.size() == 0) {//no moves for the opponent is good
                 curValue += 100;
             }
-            if(GameLogic.findBlocks(board) < GameLogic.findBlocks(temp))
+            if(GameLogic.findBlocks(board, PLAYER_ONE) < GameLogic.findBlocks(temp, PLAYER_ONE))
                 curValue += 100;
             for (int j = 0; j < opponentMove.size(); j++) {
                 if (hasOpponentWinMove(opponentMove.get(j))) {//if they have a win, that's worst-case scenario
@@ -186,8 +186,10 @@ public class AIPlayer extends Player {//AI player
                 }*/
 
                 for (int k = 0; k < playerMove.size(); k++) {//kinda useless?
-                    if(GameLogic.findBlocks(temp) < GameLogic.findBlocks(temp2))
-                        curValue += 100;
+                    if(GameLogic.findBlocks(temp, PLAYER_TWO) < GameLogic.findBlocks(temp2, PLAYER_TWO))
+                        curValue -= 100;
+                    /*if(GameLogic.findBlocks(temp) < GameLogic.findBlocks(temp2))
+                        curValue += 100;*/
                     if (hasPlayerWinMove(playerMove.get(k))) {//if ai has win upon player's move
 
                         curValue+=10.0/playerMove.size();

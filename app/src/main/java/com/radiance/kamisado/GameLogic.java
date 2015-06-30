@@ -44,12 +44,12 @@ public abstract class GameLogic {//contains methods used by gameControl, and all
     }//Finds available moves of each player
 
 
-    public static int findBlocks(Board board) {
+    public static int findBlocks(Board board, int player) {
         int blockedPieces = 0;
 
         for (int i = 0; i < board.getHeight(); i++) {
             for (int j = 0; j < board.getWidth(); j++) {
-                if (!board.getTile(i, j).isEmpty() && board.getTile(i, j).getPiece().getOwner() == PLAYER_ONE) {
+                if (!board.getTile(i, j).isEmpty() && board.getTile(i, j).getPiece().getOwner() == player) {
 
                     int possibleBlocks = 0;
                     int blockedPaths = 0;
