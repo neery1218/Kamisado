@@ -82,6 +82,10 @@ public class Board implements Cloneable{//board object
         return board.length;
     }
 
+    public void setTiles(Tile[][] tiles){
+        this.board = tiles;
+    }
+
     public void move(Point a, Point b) {//moves piece from point a to point b
         if (!getTile(a).isEmpty()) {
             Piece temp = board[a.x][a.y].getPiece();
@@ -246,6 +250,18 @@ public class Board implements Cloneable{//board object
             }
         }
         board = temp;
+    }
+
+    public Board inverse(){
+        Tile[][] temp = new Tile[boardDimension][boardDimension];
+        for(int i = 0; i < boardDimension; i++){
+            for (int j = 0; j < boardDimension; j++){
+                temp[j][i] = board[boardDimension - 1 - j][boardDimension -1 - i];
+            }
+        }
+        Board b = new Board(this);
+        b.setTiles(temp);
+        return b;
     }
 
     @Override
