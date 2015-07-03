@@ -21,10 +21,10 @@ public class AIPlayer extends Player {//AI player
     }
 
     public ArrayList<Point> nextMove(Board b, Point movePoint, int nextPlayer) {
+        nextPlayer %= 2; //TODO: Is this right?
         ArrayList<Point> test = calcMoves(b, nextPlayer, GameLogic.findPiece(b, nextPlayer, b.getColor(movePoint)));
         return test;
     }
-
     public Point difficulty0(){
 
         int distance = 0;
@@ -295,7 +295,7 @@ public class AIPlayer extends Player {//AI player
                 return 0;
 
             else
-                return minMax(board, selectedPiece, depth, nextMove);
+                return minMax(board, selectedPiece, depth + 1, nextMove);
         }
 
         if (selectedPiece.getOwner() == PLAYER_ONE) {//AI
