@@ -189,8 +189,8 @@ public class AIPlayer extends Player {//AI player
                 }*/
 
                 for (int k = 0; k < playerMove.size(); k++) {//kinda useless?
-                    if(GameLogic.findBlocks(temp, PLAYER_TWO) < GameLogic.findBlocks(temp2, PLAYER_TWO))
-                        curValue -= 100;
+                    /*if(GameLogic.findBlocks(temp.inverse, PLAYER_TWO) < GameLogic.findBlocks(temp2.inverse, PLAYER_TWO))
+                        curValue -= 100;*/
                     /*if(GameLogic.findBlocks(temp) < GameLogic.findBlocks(temp2))
                         curValue += 100;*/
                     if (hasPlayerWinMove(playerMove.get(k))) {//if ai has win upon player's move
