@@ -1,4 +1,4 @@
-package com.radiance.kamisado;
+package com.radianceTOPS.constain;
 
 /**
  * Created by Michael on 6/20/2015.

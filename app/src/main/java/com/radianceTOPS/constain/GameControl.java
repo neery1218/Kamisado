@@ -1,4 +1,4 @@
-package com.radiance.kamisado;
+package com.radianceTOPS.constain;
 
 import android.graphics.Point;
 import android.os.AsyncTask;

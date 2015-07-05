@@ -1,4 +1,4 @@
-package com.radiance.kamisado;
+package com.radianceTOPS.constain;
 
 import android.graphics.Point;
 
@@ -21,7 +21,6 @@ public class AIPlayer extends Player {//AI player
     }
 
     public ArrayList<Point> nextMove(Board b, Point movePoint, int nextPlayer) {
-        nextPlayer %= 2; //TODO: Is this right?
         ArrayList<Point> test = calcMoves(b, nextPlayer, GameLogic.findPiece(b, nextPlayer, b.getColor(movePoint)));
         return test;
     }
@@ -149,7 +148,6 @@ public class AIPlayer extends Player {//AI player
 
     public Point difficulty2() {//if there is a winning move, it takes it, otherwise it returns a random move
         int distance = 0;
-
         for (int i = 0; i < availMoves.size(); i++) {//returns winning move immediately
             if (hasPlayerWinMove(availMoves.get(i)))
                 return availMoves.get(i);
