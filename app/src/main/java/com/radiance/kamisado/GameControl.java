@@ -306,19 +306,18 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
         undoLimit--;
 
         if (moveStack.isEmpty()) {
+            firstMove = true;
             return;
         }
         undoCount++;
         MoveGroup undo = moveStack.pop().reverse();
-        if(moveStack.isEmpty())
-            firstMove = true;
 
 
         counter = undo.getCounter();
 
 
 
-     /*   if (undo.size() == 1)
+        /*if (undo.size() == 1)
             counter = (counter + 1) % 2;*/
 
         //resolveNormalMove(undo.finish.y, undo.finish.x);
@@ -346,7 +345,6 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
                 undo();
             }
         }
-
     }
 
     public void attachGamePlayFragment(GamePlayFragment gamePlayFragment){
