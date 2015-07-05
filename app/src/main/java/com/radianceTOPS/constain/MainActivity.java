@@ -1,4 +1,4 @@
-package com.radiance.kamisado;
+package com.radianceTOPS.constain;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -49,7 +49,7 @@ public class MainActivity extends ActionBarActivity implements IntroFragment.OnI
         //initialize transaction and add to viewgroup
         getFragmentManager()
                 .beginTransaction()
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                 .add(R.id.fragment_container, introFragment)
                 .addToBackStack(null)
                 .commit();
@@ -114,7 +114,7 @@ public class MainActivity extends ActionBarActivity implements IntroFragment.OnI
                 fragmentManager = getFragmentManager();
                 fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.replace(R.id.fragment_container, tutorialFragment);
-                fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE);
+                fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
                 fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
                 tutorialPressed = true;
@@ -130,7 +130,7 @@ public class MainActivity extends ActionBarActivity implements IntroFragment.OnI
             matchLengthFragment = new MatchLengthFragment();
             fragmentManager = getFragmentManager();
             fragmentManager.beginTransaction()
-                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE)
+                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                     .replace(R.id.fragment_container, matchLengthFragment)
                     .addToBackStack(null)
                     .commit();
@@ -166,7 +166,7 @@ public class MainActivity extends ActionBarActivity implements IntroFragment.OnI
             fragmentManager = getFragmentManager();
             fragmentTransaction = fragmentManager.beginTransaction();
             fragmentTransaction.replace(R.id.fragment_container, aiDifficultyFragment);
-            fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE);
+            fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
             fragmentTransaction.addToBackStack(null);
             fragmentTransaction.commit();
         } else {//calls the listener that sets up gamePlayFragment

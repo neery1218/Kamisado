@@ -3,9 +3,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    tools:context="com.radiance.kamisado.IntroFragment">
+    tools:context="com.radianceTOPS.constain.IntroFragment">
 
-    <com.radiance.kamisado.introBoardView
+    <com.radianceTOPS.constain.introBoardView
         android:id="@+id/introBoardView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -72,20 +72,7 @@
                 android:layout_width="20px"
                 android:layout_height="10dp" />
 
-            <Button
-                android:id="@+id/onlineButton"
-                android:layout_width="150dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:background="@drawable/button_custom"
-                android:text="Play Online"
-                android:textAllCaps="false"
-                android:textColor="@color/text"
-                android:textSize="24sp" />
 
-            <Space
-                android:layout_width="20px"
-                android:layout_height="10dp" />
             <Button
                 android:id="@+id/tutorialButton"
                 android:layout_width="150dp"

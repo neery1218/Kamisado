@@ -1,12 +1,12 @@
 <resources>
-    <string name="app_name">Kamisado</string>
+    <string name="app_name">Constrain</string>
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="tapToContinue"><font size="24">Tap to Continue</font></string>
     <string name="p1Win"><font size="36">P1++</font></string>
     <string name="p2Win"><font size="36">P2++</font></string>
-    <string name="title">Konfine</string>
+    <string name="title">Constrain</string>
 
 
 </resources>

@@ -1,4 +1,4 @@
-package com.radiance.kamisado;
+package com.radianceTOPS.constain;
 
 import android.graphics.Color;
 import android.graphics.Point;
@@ -82,10 +82,6 @@ public class Board implements Cloneable{//board object
         return board.length;
     }
 
-    public void setTiles(Tile[][] tiles){
-        this.board = tiles;
-    }
-
     public void move(Point a, Point b) {//moves piece from point a to point b
         if (!getTile(a).isEmpty()) {
             Piece temp = board[a.x][a.y].getPiece();
@@ -120,6 +116,7 @@ public class Board implements Cloneable{//board object
             move(moveGroup.get(i));
         }
     }
+
     public Move undo() {//return move that has to be executed
         Move undo = new Move(new Point(-1, -1), new Point(-1, -1));
         if (!moveStack.empty()) {
@@ -132,6 +129,7 @@ public class Board implements Cloneable{//board object
 
 
     }
+
     public void rankUp(int r, int c) {//increases rank of a piece
         board[r][c].rankUp();
     }
@@ -174,6 +172,11 @@ public class Board implements Cloneable{//board object
 
         return temp;
     }
+
+    public void setTiles(Tile[][] tiles) {
+        this.board = tiles;
+    }
+
     public int getColor(Point p){
         return board[p.x][p.y].getColor();
     }

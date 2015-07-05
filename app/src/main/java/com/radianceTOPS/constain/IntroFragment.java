@@ -1,4 +1,4 @@
-package com.radiance.kamisado;
+package com.radianceTOPS.constain;
 
 import android.app.Activity;
 import android.app.Fragment;
@@ -73,14 +73,14 @@ public class IntroFragment extends Fragment {
             }
         });
         playerTwoButton.setTypeface(MainActivity.typefaceHeader);
-        onlineButton = (Button)view.findViewById(R.id.onlineButton);
+        /*onlineButton = (Button)view.findViewById(R.id.onlineButton);
         onlineButton.setTypeface(MainActivity.typefaceHeader);
         onlineButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 mListener.onIntroInteraction(MainActivity.ONLINE_PLAY_PRESSED);
             }
         });
-
+*/
         tutorialButton = (Button)view.findViewById(R.id.tutorialButton);
         tutorialButton.setTypeface(MainActivity.typefaceHeader);
         tutorialButton.setOnClickListener(new View.OnClickListener() {
