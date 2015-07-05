@@ -13,6 +13,7 @@ public class AIPlayer extends Player {//AI player
     int MAX_DEPTH;
     private int difficulty = 0;
     private Board temp;
+    private boolean undoPressed = false;
 
     public AIPlayer(int difficulty, int id) {//basic constructor
         super(id);
@@ -156,6 +157,9 @@ public class AIPlayer extends Player {//AI player
         Point maxPoint = new Point(-1, -1);
         double maxValue = -1, curValue = 0;
         for(int i = 0; i < availMoves.size(); i++){
+
+            if(undoPressed)
+                return new Point(-1, -1);
             curValue = 0;
             temp = new Board(board);
             temp.move(new Point(selectedPiece.getY(), selectedPiece.getX()), availMoves.get(i));

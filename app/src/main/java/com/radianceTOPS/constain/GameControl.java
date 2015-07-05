@@ -255,7 +255,6 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
             undoCount--;
         fin = new Piece(board.getTile(temp.x, temp.y).getPiece());
         Point openings = GameLogic.findOpenings(board);
-        Log.v("MinMax", "Player One:" + openings.x + "Player Two:" + openings.y);
     }
 
     public void resolveWin(){
