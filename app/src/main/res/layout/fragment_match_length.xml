@@ -3,9 +3,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    tools:context="com.radianceTOPS.constain.MatchLengthFragment">
+    tools:context="com.radianceTOPS.constrain.MatchLengthFragment">
 
-    <com.radianceTOPS.constain.introBoardView
+    <com.radianceTOPS.constrain.introBoardView
         android:id="@+id/introBoardView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

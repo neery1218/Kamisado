@@ -1,4 +1,4 @@
-package com.radianceTOPS.constain;
+package com.radianceTOPS.constrain;
 
 import android.animation.Animator;
 import android.animation.ValueAnimator;
