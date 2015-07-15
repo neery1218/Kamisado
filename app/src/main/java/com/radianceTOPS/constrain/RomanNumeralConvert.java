@@ -1,4 +1,4 @@
-package com.radianceTOPS.constain;
+package com.radianceTOPS.constrain;
 
 /**
  * Created by Michael on 6/20/2015.

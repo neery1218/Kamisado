@@ -1,4 +1,4 @@
-package com.radianceTOPS.constain;
+package com.radianceTOPS.constrain;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

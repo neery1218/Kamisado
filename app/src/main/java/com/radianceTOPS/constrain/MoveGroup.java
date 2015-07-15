@@ -1,4 +1,4 @@
-package com.radianceTOPS.constain;
+package com.radianceTOPS.constrain;
 
 import java.util.ArrayList;
 
