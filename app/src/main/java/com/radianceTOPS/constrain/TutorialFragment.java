@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 
 
@@ -16,6 +17,8 @@ public class TutorialFragment extends Fragment{
     private OnTutorialInteractionListener mListener;
     // private ViewAnimator viewAnimator;
     private ImageView tutorialScreen;
+    private Button previousButton;
+    private Button nextButton;
     private int[] id;
     private int startX, endX, startY, endY;
     public TutorialFragment() {
@@ -46,22 +49,51 @@ public class TutorialFragment extends Fragment{
         counter = 0;
     }
 
+    private void move(int direction) {
+        counter += direction;
+        if (counter == id.length)
+            getActivity().onBackPressed();
+        if (direction == -1 && counter == id.length - 2) {
+            counter = 0;
+            nextButton.setText("Next");
+            previousButton.setText("Previous");
+        }
+
+        if (counter < 0)
+            counter = 0;
+        if (counter >= 0 && counter < id.length) {
+            tutorialScreen.setImageResource(id[counter]);
+        }
+        if (counter == id.length - 1) {
+            nextButton.setText("Main Menu");
+            previousButton.setText("Restart");
+        }
+
+
+    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_tutorial, container, false);
         tutorialScreen = (ImageView) view.findViewById(R.id.imageView);
-        tutorialScreen.setOnClickListener(new View.OnClickListener() {
+        tutorialScreen.setImageResource(id[counter]);
+
+        previousButton = (Button) view.findViewById(R.id.previousButton);
+        previousButton.setTypeface(MainActivity.typefaceHeader);
+        previousButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
 
-                tutorialScreen = (ImageView) view.findViewById(R.id.imageView);
-                tutorialScreen.setImageResource(id[counter]);
-                counter++;
-                counter %= 8;
+                move(-1);
             }
         });
-        tutorialScreen.callOnClick();
+        nextButton = (Button) view.findViewById(R.id.nextButton);
+        nextButton.setTypeface(MainActivity.typefaceHeader);
+        nextButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                move(1);
+            }
+        });
 
         return view;
     }
