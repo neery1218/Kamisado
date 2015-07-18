@@ -1,19 +1,24 @@
 package com.radianceTOPS.constrain;
 
 import android.graphics.Point;
+import android.os.AsyncTask;
+import android.os.Handler;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Created by Admin on 4/10/2015.
  */
-public class AIPlayer extends Player {//AI player
+public class AIPlayer extends Player implements Runnable{//AI player
 
     int MAX_DEPTH;
     private int difficulty = 0;
     private Board temp;
     private boolean undoPressed = false;
+    private Point aiResultedMove;
+    public Point aiMove;
 
     public AIPlayer(int difficulty, int id) {//basic constructor
         super(id);
@@ -325,22 +330,51 @@ public class AIPlayer extends Player {//AI player
         }
     }
 
-
-
-
-
     @Override
     public Point resolveMove(Point point) {//overridden method, returns a move based on difficulty
-        if(difficulty == 0){
+        /*if(difficulty == 0){
             return difficulty0();
         }
         else if(difficulty == 1){
             return difficulty1();
         } else if (difficulty == 2) {
             return difficulty2();
-        }
-        return new Point(-1, -1);
+        }*/
+        new Thread(this).start();
+
+        Handler handler = new Handler();
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                aiMove = aiResultedMove;
+            }
+        });
+        return null;
     }
 
+    @Override
+    public void run() {
+        AiCalculations aiCalculations = new AiCalculations();
+        aiCalculations.execute(difficulty);
+        try {
+            aiResultedMove = aiCalculations.get();
+        } catch (InterruptedException e) {} catch (ExecutionException e) {}
+    }
 
+    private class AiCalculations extends AsyncTask<Integer, Point, Point>{
+
+        @Override
+        protected Point doInBackground(Integer... params) {
+
+            if(difficulty == 0){
+                return difficulty0();
+            }
+            else if(difficulty == 1){
+                return difficulty1();
+            } else if (difficulty == 2) {
+                return difficulty2();
+            }
+            return new Point(-1, -1);
+        }
+    }
 }
