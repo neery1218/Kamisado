@@ -393,7 +393,7 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
     public void undo() {
         //TODO: BUG. after an ai win, player can undo to take advantage of the ai's rng
         //TODO: BUG. counter doesn't get reset properly after undo-ing in an availMoves==0 scenario
-        if (gameControl.getWin().equals(new Point(-1, -1))) {
+        if (gameControl.getWin().equals(new Point(-1, -1)) && !gameControl.getFirstMove()) {
             gameControl.undo();
         }
 

@@ -198,10 +198,6 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
         firstMove = false;
 
         Point temp = players[counter % 2].resolveMove(new Point(y, x));//returns the point that the piece should be moved to
-        if(temp == null){
-            AIPlayer tempPlayer = (AIPlayer)(players[counter % 2]);
-            temp = tempPlayer.aiMove;
-        }
         if (!temp.equals(inValid)) {//check validity
 
             movePiece(temp);
@@ -398,7 +394,7 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
                                 gameStateListener.deadlock(winPiece.getPoint());
 
                             }
-                        }, 00);
+                        }, 200);
                     } else if (pieces[1].getPoint().x != -1 && pieces[1].getPoint().y != -1) {
                         handler.postDelayed(new Runnable() {
 
