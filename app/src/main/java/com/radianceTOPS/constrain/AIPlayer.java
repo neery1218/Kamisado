@@ -27,54 +27,13 @@ public class AIPlayer extends Player {//AI player
     }
     public Point difficulty0(){
 
-        int distance = 0;
-
         for (int i = 0; i < availMoves.size(); i++) {
             if (hasPlayerWinMove(availMoves.get(i)))
                 return availMoves.get(i);
         }
+        int i = (int) (Math.random() * availMoves.size());
 
-        Point maxPoint = new Point(-1, -1);
-        int maxValue = -1, curValue = 0;
-
-        for (int i = 0; i < availMoves.size(); i++) {
-            curValue = 0;
-            temp = new Board(board);
-            temp.move(new Point(selectedPiece.getY(), selectedPiece.getX()), availMoves.get(i));
-            int curColor = temp.getTile(availMoves.get(i).x, availMoves.get(i).y).getColor();
-            Piece selectedPiece2 = GameLogic.findPiece(temp, this.player + 1, curColor);
-            ArrayList<Point> opponentMove = nextMove(temp, availMoves.get(i), player + 1);
-
-            if (opponentMove.size() == 0) {//if the opponent can move, curValue gets added five points because it's favourable
-                curValue += 50;
-            }
-
-            for (int j = 0; j < opponentMove.size(); j++) {//but if opponent can win, subtract 100 from curValue
-                if (hasOpponentWinMove(opponentMove.get(j))) {
-                    curValue -= 100;
-                    continue;
-                }
-            }
-            Point openings = GameLogic.findOpenings(temp);//using gamelogic method to find openings
-            int difference = openings.x - openings.y; //number of openings for player one - number of openings for player two
-            curValue += difference;
-            if (i == 0) {//default setting
-                maxPoint = availMoves.get(i);
-                maxValue = curValue;
-            }
-            if (curValue > maxValue) {
-                maxPoint = availMoves.get(i);
-                maxValue = curValue;
-            }
-            else if (curValue == maxValue) {
-                double random = Math.random();
-                if (random > 0.95) {
-                    maxPoint = availMoves.get(i);
-                    maxValue = curValue;
-                }
-            }
-        }
-        return maxPoint;
+        return availMoves.get(i);
     }
 
     public Point difficulty1() {
