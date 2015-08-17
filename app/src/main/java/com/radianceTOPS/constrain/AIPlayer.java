@@ -261,7 +261,6 @@ public class AIPlayer extends Player {//AI player
 
     private int heuristicValue(Board board, int turn) {
 
-
         /*if (GameLogic.findBlocks(board, PLAYER_ONE) < GameLogic.findBlocks(board,PLAYER_TWO));
             return */
 

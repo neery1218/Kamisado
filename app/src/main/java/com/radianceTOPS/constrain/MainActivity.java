@@ -7,6 +7,7 @@ import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -35,8 +36,11 @@ public class MainActivity extends ActionBarActivity implements IntroFragment.OnI
     private TutorialFragment tutorialFragment;
     private MatchLengthFragment matchLengthFragment;
     private AIDifficultyFragment aiDifficultyFragment;
+    private InteractiveTutorial interactiveTutorial;
     private FragmentManager fragmentManager;
     private FragmentTransaction fragmentTransaction;
+
+    public boolean swapToInteractiveTutorial = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +85,7 @@ public class MainActivity extends ActionBarActivity implements IntroFragment.OnI
 
     @Override
     public void onBackPressed() {
+        Log.d("Interactive tutorial", "back pressed");
         fragmentManager = getFragmentManager();
         Fragment f = fragmentManager.findFragmentById(R.id.fragment_container);
         if (f instanceof IntroFragment) {
@@ -96,6 +101,18 @@ public class MainActivity extends ActionBarActivity implements IntroFragment.OnI
 
             if (fragmentManager.getBackStackEntryCount() > 0)
                 fragmentManager.popBackStack();
+        }
+
+        if(swapToInteractiveTutorial){
+            swapToInteractiveTutorial = false;
+            Log.d("Interactive tutorial", "created");
+            interactiveTutorial = new InteractiveTutorial();
+            fragmentManager = getFragmentManager();
+            fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.replace(R.id.fragment_container, interactiveTutorial);
+            fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+            fragmentTransaction.addToBackStack(null);
+            fragmentTransaction.commit();
         }
 
     }

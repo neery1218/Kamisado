@@ -116,7 +116,7 @@ public class GamePlayFragment extends Fragment implements GameControl.GameStateL
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+            Bundle savedInstanceState) {
 
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_game_play, container, false);

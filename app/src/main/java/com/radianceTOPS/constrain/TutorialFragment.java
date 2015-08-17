@@ -47,12 +47,15 @@ public class TutorialFragment extends Fragment{
         int[] id = {R.drawable.tutorialone, R.drawable.tutorialtwo, R.drawable.tutorialthree, R.drawable.tutorialfour, R.drawable.tutorialfive, R.drawable.tutorialsix, R.drawable.tutorialseven, R.drawable.tutorialeight};
         this.id = id;
         counter = 0;
+
     }
 
     private void move(int direction) {
         counter += direction;
-        if (counter == id.length)
+        if (counter == id.length) {
+            ((MainActivity)getActivity()).swapToInteractiveTutorial = true;
             getActivity().onBackPressed();
+        }
         if (direction == -1 && counter == id.length - 2) {
             counter = 0;
             nextButton.setText("Next");
