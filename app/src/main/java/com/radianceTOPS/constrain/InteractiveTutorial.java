@@ -27,7 +27,7 @@ public class InteractiveTutorial extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_game_play, container, false);
+        View view = inflater.inflate(R.layout.fragment_tutorial_interactive, container, false);
 
         tutorialView = (TutorialView)view.findViewById(R.id.tutorialView);
         return view;

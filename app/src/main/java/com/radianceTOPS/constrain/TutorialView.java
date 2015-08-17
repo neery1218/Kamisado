@@ -36,6 +36,7 @@ public class TutorialView extends View{
         super(context, attributeSet);
         paint = new Paint();
         paint.setTextSize(90);
+        board = new Board();
     }
 
     public void setup(){
@@ -84,5 +85,7 @@ public class TutorialView extends View{
     @Override
     public void onDraw(Canvas canvas){
         paint.setAntiAlias(true);
+        setup();
+        drawBoard(canvas);
     }
 }
