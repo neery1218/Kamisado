@@ -62,7 +62,7 @@ public class TutorialView extends View{
         //Finding the start and end point along the vertical axis
         //Calculated by subtracting half the remainder of height with the gameControl accounted for and then subtracting the gameControl height for start point
         //End point is same thing except without subtracting the gameControl width
-        startY = 0;
+        startY = height - (height - width) / 2 - width + borderWidth;
         endX = height - (height - width) / 2 + borderWidth;
 
         //Creates the piece objects
