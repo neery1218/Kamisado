@@ -6,10 +6,38 @@
     android:orientation="vertical"
     tools:context="com.radianceTOPS.constrain.InteractiveTutorial">
 
+    <LinearLayout
+        android:id="@+id/interactiveTop"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/topText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:color="@color/text"
+            android:text="@string/title" />
+    </LinearLayout>
+
     <com.radianceTOPS.constrain.TutorialView
         android:id="@+id/tutorialView"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_gravity="center_vertical" />
+
+    <LinearLayout
+        android:id="@+id/interactiveBottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/bottomText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:color="@color/text"
+            android:text="@string/title" />
+    </LinearLayout>
 
 </LinearLayout>

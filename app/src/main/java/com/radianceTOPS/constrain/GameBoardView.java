@@ -65,6 +65,7 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
 
     public GameBoardView(Context context, AttributeSet attrs) {
         super(context, attrs);
+        Log.d("Interactive Tutorial", "what");
 
         paint = new Paint();
         paint.setTextSize(90);
