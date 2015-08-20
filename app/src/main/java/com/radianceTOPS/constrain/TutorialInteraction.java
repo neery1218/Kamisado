@@ -9,6 +9,7 @@ public class TutorialInteraction {
 
     public TutorialInteraction(){
 
+
     }
 
     public void interact(int frame){
