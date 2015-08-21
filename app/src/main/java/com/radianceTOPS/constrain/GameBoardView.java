@@ -63,6 +63,9 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
 
     private OnUndoToastCreate onUndoToastCreate;
 
+    private boolean isDeadlock = false;
+    private Piece deadlock1, deadlock2;
+
     public GameBoardView(Context context, AttributeSet attrs) {
         super(context, attrs);
         Log.d("Interactive Tutorial", "what");
@@ -296,6 +299,12 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
 
     public void removeScoreText(){
         onBoardEvent.onSwipeLeft();
+    }
+
+    public void setDeadlock(Piece deadlock1, Piece deadlock2){
+        isDeadlock = true;
+        this.deadlock1 = deadlock1;
+        this.deadlock2 = deadlock2;
     }
 
     @Override

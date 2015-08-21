@@ -376,10 +376,10 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
     }
 
     public interface GameStateListener{
-        public void p1Win(Point winPoint);
-        public void p2Win(Point winPoint);
-        public void deadlock(Point winPoint);
-        public void gameLimitReached(int player);
+        void p1Win(Point winPoint);
+        void p2Win(Point winPoint);
+        void deadlock(Point winPoint);
+        void gameLimitReached(int player);
     }
 
     private class CallWinTask extends AsyncTask<Piece, Integer, Boolean> {
