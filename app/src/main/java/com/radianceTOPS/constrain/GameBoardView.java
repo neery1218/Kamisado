@@ -79,7 +79,7 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
 
         MATCH_TYPE = GamePlayFragment.getMATCH_TYPE();
         VERSUS_TYPE = GamePlayFragment.getVERSUS_TYPE();
-        gameControl = new GameControl(this, context,boardDimension, VERSUS_TYPE, MATCH_TYPE);
+        gameControl = new GameControl(this, context, boardDimension, VERSUS_TYPE, MATCH_TYPE);
         onBoardEvent = gameControl;
         animator = new ValueAnimator();
         animator.addUpdateListener(this);
@@ -230,8 +230,8 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
                 paint.setColor(board.getColor(i, j));
                 int boardColor = board.getColor(i, j);
                 int adjustedColor;
-                if(boardColor == Color.parseColor("#fff54c3c")) adjustedColor = Color.parseColor("#DADFE1");
-                else if(boardColor == Color.parseColor("#FA7000"))adjustedColor = Color.parseColor("#DADFE1");
+                if(boardColor == Color.parseColor("#fff54c3c")) adjustedColor = Color.parseColor("#CDAD00");
+                else if(boardColor == Color.parseColor("#FA7000"))adjustedColor = Color.parseColor("#FFE019");
                 else if(boardColor == Color.parseColor("#F7CA18"))adjustedColor = Color.parseColor("#F7FA9B");
                 else if(boardColor == Color.parseColor("#ff2ecc71"))adjustedColor = Color.parseColor("#CCFC1E");
                 else if(boardColor == Color.parseColor("#ff3498db"))adjustedColor = Color.parseColor("#3EE1FA");
