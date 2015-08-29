@@ -7,7 +7,8 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
-import android.os.Vibrator;
+import android.graphics.RadialGradient;
+import android.graphics.Shader;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -227,6 +228,8 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
         for (int i = 0; i < board.getHeight(); i++) {
             for (int j = 0; j < board.getWidth(); j++) {
                 paint.setColor(board.getColor(i, j));
+                Shader gradient = new RadialGradient(startX + j * unitSize, startY + i * unitSize, unitSize, new int[]{board.getColor(i, j), board.getColor(i, j), Color.argb(100, Color.red(board.getColor(i, j)), Color.green(board.getColor(i, j)), Color.blue(board.getColor(i, j)))}, new float[]{0.0f, 0.4f, 1.0f}, Shader.TileMode.CLAMP);
+                paint.setShader(gradient);
                 canvas.drawRect(startX + j * unitSize, startY + i * unitSize, startX + (j + 1) * unitSize, startY + (i + 1) * unitSize, paint);
 
                 if(selectedPiece != null) {
