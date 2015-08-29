@@ -120,6 +120,10 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
 
     public boolean resolveFirstMove(int x, int y) {//used to display moves when it's the first move of a game
         if (!board.getTile(y, x).isEmpty() && board.getTile(y, x).getPiece().getOwner() == counter % 2) {
+            if (players[counter%2] instanceof HumanPlayer) {
+                Vibrator v = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
+                v.vibrate(30);
+            }
             selectedPiece = board.getTile(y, x).getPiece();
             availMoves = players[counter % 2].calcMoves(board, counter % 2, selectedPiece);
             players[counter % 2].setAvailMoves(availMoves);
@@ -208,13 +212,15 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
                 return;
         }
         firstMove = false;
-        if (players[counter%2] instanceof HumanPlayer) {
-            Vibrator v = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
-            v.vibrate(30);
-        }
+
+
         Point temp = players[counter % 2].resolveMove(new Point(y, x));//returns the point that the piece should be moved to
         if (!temp.equals(inValid)) {//check validity
 
+            if (players[counter%2] instanceof HumanPlayer) {
+                Vibrator v = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
+                v.vibrate(30);
+            }
             movePiece(temp);
 
 
