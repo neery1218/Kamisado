@@ -7,6 +7,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
+import android.os.Vibrator;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -77,7 +78,7 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
 
         MATCH_TYPE = GamePlayFragment.getMATCH_TYPE();
         VERSUS_TYPE = GamePlayFragment.getVERSUS_TYPE();
-        gameControl = new GameControl(this, boardDimension, VERSUS_TYPE, MATCH_TYPE);
+        gameControl = new GameControl(this, context,boardDimension, VERSUS_TYPE, MATCH_TYPE);
         onBoardEvent = gameControl;
         animator = new ValueAnimator();
         animator.addUpdateListener(this);
@@ -370,8 +371,11 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
         else if(event.getAction() == 1){
             float x = event.getX(), y = event.getY();
             int convertedX = (int) ((x - startX) / unitSize), convertedY = (int) ((y - startY) / unitSize);//converts the passed coordinates into a location on the board
-            if (valid(convertedX) && valid(convertedY))
+            if (valid(convertedX) && valid(convertedY)) {
                 onBoardEvent.onTouch(convertedX, convertedY);
+
+
+            }
         }
         return true;
     }//Handles the touch events

@@ -1,8 +1,10 @@
 package com.radianceTOPS.constrain;
 
+import android.content.Context;
 import android.graphics.Point;
 import android.os.AsyncTask;
 import android.os.Handler;
+import android.os.Vibrator;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -43,15 +45,16 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
     private Stack<MoveGroup> moveStack;
     private int undoCount;
     private Handler handler;
-
+    private Context context;
     private GameStateListener gameStateListener;
 
 
-    public GameControl(GameBoardView gameBoardView, int bd, int VERSUS_TYPE, int MATCH_TYPE) {
+    public GameControl(GameBoardView gameBoardView,Context context, int bd, int VERSUS_TYPE, int MATCH_TYPE) {
         this.VERSUS_TYPE = VERSUS_TYPE;
         this.boardDimension = bd;
         this.gameBoardView = gameBoardView;
         this.MATCH_TYPE = MATCH_TYPE;
+        this.context = context;
         undoLimit = MATCH_TYPE * 2 / 3 - 100;
         handler = new Handler();
         players = new Player[2];
@@ -205,7 +208,8 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
                 return;
         }
         firstMove = false;
-
+        Vibrator v = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
+        v.vibrate(30);
         Point temp = players[counter % 2].resolveMove(new Point(y, x));//returns the point that the piece should be moved to
         if (!temp.equals(inValid)) {//check validity
 
