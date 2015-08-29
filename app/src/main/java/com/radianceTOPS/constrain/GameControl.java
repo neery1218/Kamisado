@@ -208,8 +208,10 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
                 return;
         }
         firstMove = false;
-        Vibrator v = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
-        v.vibrate(30);
+        if (players[counter%2] instanceof HumanPlayer) {
+            Vibrator v = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
+            v.vibrate(30);
+        }
         Point temp = players[counter % 2].resolveMove(new Point(y, x));//returns the point that the piece should be moved to
         if (!temp.equals(inValid)) {//check validity
 
