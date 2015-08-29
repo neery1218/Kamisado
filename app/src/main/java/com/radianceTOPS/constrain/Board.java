@@ -18,8 +18,8 @@ public class Board implements Cloneable{//board object
     private int undoCount; //this is so that reverted moves don't get added to the stack again
 
     //red,orange,yellow,green,blue,
-    private int[] colors = {Color.parseColor("#ffe74c3c"), //red
-            Color.parseColor("#F89406"), //orange
+    private int[] colors = {Color.parseColor("#fff54c3c"), //red
+            Color.parseColor("#FA7000"), //orange
             Color.parseColor("#F7CA18"),//yellow
             Color.parseColor("#ff2ecc71"),//green
             Color.parseColor("#ff3498db"),//blue
