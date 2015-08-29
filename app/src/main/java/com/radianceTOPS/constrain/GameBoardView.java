@@ -228,9 +228,10 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
         for (int i = 0; i < board.getHeight(); i++) {
             for (int j = 0; j < board.getWidth(); j++) {
                 paint.setColor(board.getColor(i, j));
-                Shader gradient = new RadialGradient(startX + j * unitSize, startY + i * unitSize, unitSize, new int[]{board.getColor(i, j), board.getColor(i, j), Color.argb(100, Color.red(board.getColor(i, j)), Color.green(board.getColor(i, j)), Color.blue(board.getColor(i, j)))}, new float[]{0.0f, 0.4f, 1.0f}, Shader.TileMode.CLAMP);
+                Shader gradient = new RadialGradient(startX + j * unitSize + unitSize / 2, startY + i * unitSize + unitSize / 2, unitSize, new int[]{board.getColor(i, j), board.getColor(i, j), Color.argb(50, Color.red(board.getColor(i, j)), Color.green(board.getColor(i, j)), Color.blue(board.getColor(i, j)))}, new float[]{0.0f, 0.1f, 1.0f}, Shader.TileMode.CLAMP);
                 paint.setShader(gradient);
                 canvas.drawRect(startX + j * unitSize, startY + i * unitSize, startX + (j + 1) * unitSize, startY + (i + 1) * unitSize, paint);
+                paint.setShader(null);
 
                 if(selectedPiece != null) {
                     paint.setColor(Color.parseColor("#090404"));
