@@ -231,7 +231,10 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
                 int boardColor = board.getColor(i, j);
                 int adjustedColor;
                 if(boardColor == Color.parseColor("#ffe74c3c")) adjustedColor = Color.parseColor("#CDAD00");
-                else if(boardColor == Color.parseColor("#F89406"))adjustedColor = Color.parseColor("#eeee5e");
+                else if(boardColor == Color.parseColor("#F89406"))adjustedColor = Color.parseColor("#FFE019");
+                else if(boardColor == Color.parseColor("#F7CA18"))adjustedColor = Color.parseColor("#BFFF00");
+                else if(boardColor == Color.parseColor("#ff2ecc71"))adjustedColor = Color.parseColor("#CCFC1E");
+                else if(boardColor == Color.parseColor("#ff3498db"))adjustedColor = Color.parseColor("#5FFAEA");
                 else {
                     adjustedColor = Color.argb(50, Color.red(boardColor), Color.green(boardColor), Color.blue(boardColor));
                 }
