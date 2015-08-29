@@ -239,8 +239,8 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
                 else if(boardColor == Color.parseColor("#D2527F"))adjustedColor = Color.parseColor("#F86EFF");
                 else if(boardColor == Color.parseColor("#ACA46F"))adjustedColor = Color.parseColor("#BFBABA");
                 else adjustedColor = Color.argb(50, Color.red(boardColor), Color.green(boardColor), Color.blue(boardColor));
-                int[] colors = new int[]{boardColor, boardColor, adjustedColor};
-                Shader gradient = new RadialGradient(startX + j * unitSize + unitSize / 2, startY + i * unitSize + unitSize / 2, unitSize, colors, new float[]{0.0f, 0.2f, 1.0f}, Shader.TileMode.CLAMP);
+                int[] colors = new int[]{boardColor, adjustedColor};
+                Shader gradient = new RadialGradient(startX + j * unitSize + unitSize / 2, startY + i * unitSize + unitSize / 2, unitSize, colors, new float[]{0.0f, 1.0f}, Shader.TileMode.CLAMP);
                 paint.setShader(gradient);
                 canvas.drawRect(startX + j * unitSize, startY + i * unitSize, startX + (j + 1) * unitSize, startY + (i + 1) * unitSize, paint);
                 paint.setShader(null);
