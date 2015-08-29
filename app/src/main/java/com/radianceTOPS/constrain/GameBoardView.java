@@ -160,6 +160,7 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
         previousAlpha = 0;
         if(boardReset){
             animationRunning = true;
+            isDeadlock = false;
             boardDim = false;
             animator = ValueAnimator.ofInt(256, 511);
             animator.setDuration(400);
@@ -345,6 +346,19 @@ public class GameBoardView extends View implements ValueAnimator.AnimatorUpdateL
                 fin.draw(canvas, paint, startX, startY, unitSize, PLAYER_TWO, PLAYER_ONE, animateAlpha);
             else
                 fin.draw(canvas, paint, startX, startY, unitSize, PLAYER_TWO, PLAYER_ONE, 255);
+        }
+
+        if(isDeadlock){
+            Log.d("TEST", "called");
+            paint.setColor(Color.BLACK);
+            int alpha = animateAlpha - 256;
+            if(alpha < 0)
+                alpha = 0;
+            else if(alpha > 100)
+                alpha = 100;
+            paint.setAlpha(alpha);
+            canvas.drawRect(startX + deadlock1.getX() * unitSize, startY + deadlock1.getY() * unitSize, startX + (deadlock1.getX() + 1) * unitSize, startY + (deadlock1.getY() + 1) * unitSize, paint);
+            canvas.drawRect(startX + deadlock2.getX() * unitSize, startY + deadlock2.getY() * unitSize, startX + (deadlock2.getX() + 1) * unitSize, startY + (deadlock2.getY() + 1) * unitSize, paint);
         }
     }//Draws on the fragment
 

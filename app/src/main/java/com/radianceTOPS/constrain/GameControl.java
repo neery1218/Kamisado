@@ -3,6 +3,7 @@ package com.radianceTOPS.constrain;
 import android.graphics.Point;
 import android.os.AsyncTask;
 import android.os.Handler;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Stack;
@@ -31,6 +32,8 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
     private Piece init;
     private Piece fin;
     private Piece winPiece;
+    private Piece deadlock1;
+    private Piece deadlock2;
     private Point win = new Point(-1, -1);
     private int deadlockCount = 0;
     private boolean aiWin = false;
@@ -137,7 +140,10 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
         players[counter % 2].setSelectedPiece(selectedPiece);
         if (availMoves.size() == 0 && win.equals(-1, -1)) {//if there are no available moves, it skips the player's turn
             deadlockCount++;
+            if(deadlock1 == null)
+                deadlock1 = selectedPiece;
             if (deadlockCount == 2) {//this means that both players can't move
+                deadlock2 = selectedPiece;
                 //win = new Point(selectedPiece.getY(), selectedPiece.getX());
                 deadlock = true;
                 win = new Point(-2, -2);
@@ -145,6 +151,8 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
                 // gameStateListener.deadlock(win);
                 //winPiece = board.getTile(win.x, win.y).getPiece();
                 winPiece = selectedPiece;
+                gameBoardView.setDeadlock(deadlock1, deadlock2);
+                Log.d("Interactive tutorial", "deadlock");
                 new CallWinTask().execute(winPiece, new Piece(-1, -1));
 
             } else {
@@ -152,7 +160,8 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
                 resolveNormalMove(selectedPiece.getX(), selectedPiece.getY(), 1);
             }
         } else {
-
+            deadlock1 = null;
+            deadlock2 = null;
             deadlockCount = 0;
         }
         if (!win.equals(-1, -1)) {
@@ -278,6 +287,8 @@ public class GameControl implements GameBoardView.OnBoardEvent {//runs the game 
         gameBoardView.setSelectedPiece(null);
         gameBoardView.setResetBoard(resetBoard);
         gameBoardView.drawBoard(board, selectedPiece, true);
+        deadlock1 = null;
+        deadlock2 = null;
         undoCount = 0;
         undoLimit = MATCH_TYPE * 2 / 3 - 100;
         moveStack = new Stack<>();

@@ -95,7 +95,6 @@ public class MainActivity extends ActionBarActivity implements IntroFragment.OnI
                     .beginTransaction()
                     .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE)
                     .replace(R.id.fragment_container, introFragment)
-
                     .commit();
         } else {
 
